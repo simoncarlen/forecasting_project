@@ -1,0 +1,10 @@
+.DS_Store
+air_weather_data
+plots
+report/*
+!report/*.tex
+!report/*.pdf
+!report/*.bib
+!report/*.tgn
+!report/chapters
+report/chapters/*.log

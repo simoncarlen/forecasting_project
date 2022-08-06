@@ -1,0 +1,132 @@
+%\documentclass[12pt, twoside]{report}
+\documentclass[12pt]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\graphicspath{ {figures/} }
+\usepackage[font=small,labelfont=bf]{caption}
+
+%\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm,bindingoffset=6mm]{geometry}
+\usepackage[a4paper, width=155mm, top=24mm, bottom=24mm]{geometry}
+
+\usepackage{amsmath}
+\numberwithin{equation}{section}
+
+\usepackage{booktabs} % table package
+%\usepackage{tabularx} % table package for width
+\usepackage{lscape}
+\usepackage{fancyhdr}
+\usepackage[nottoc,numbib]{tocbibind} % references in table of contents
+\usepackage[euler]{textgreek}
+\usepackage{hyperref}
+
+\usepackage{siunitx}
+%\usepackage{amsmath}
+\usepackage{float} % use H as argument to force figure placement
+\usepackage[dvipsnames]{xcolor} % color in text
+\usepackage{bm}
+
+
+%\pagestyle{fancy}
+%\fancyhead{}
+%\fancyhead[LE, RO]{Research project}
+%\fancyfoot{}
+%\fancyfoot[LE, RO]{\thepage}
+%\renewcommand{\headrulewidth}{0.4pt}
+%\renewcommand{\footrulewidth}{0.4pt}
+%\showthe\textwidth
+
+\usepackage{cite}
+
+% keeping report format without including chapters
+% https://tex.stackexchange.com/questions/62516/how-to-suppress-chapter-in-chapter-while-keeping-numbering
+\makeatletter
+\def\@makechapterhead#1{%
+  \vspace*{50\p@}%
+  {\parindent \z@ \raggedright \normalfont
+    \interlinepenalty\@M
+    \Huge\bfseries  \thechapter.\quad #1\par\nobreak
+    \vskip 40\p@
+  }}
+\makeatother
+
+
+\begin{document}
+
+% TITLEPAGE
+
+\input{chapters/titlepage}
+
+% ABSTRACT
+
+\chapter*{Abstract}
+\thispagestyle{empty}
+%The abstract and the keywords should not exceed the limit of this page
+%\newline\newline
+%\emph{Keywords:} Keywords should be written in order of relevance
+
+% SYNOPSIS
+
+\chapter*{Synopsis}
+\thispagestyle{empty}
+
+\subsection*{Background}
+%Some text here
+\subsection*{Problem}
+%Some text here
+\subsection*{Research Question}
+%Some text here
+\subsection*{Method}
+%Some text here
+\subsection*{Result}
+%Some text here
+\subsection*{Discussion}
+%Some text here
+
+% ACKNOWLEDGEMENTS
+\chapter*{Acknowledgements}
+\thispagestyle{empty}
+
+\tableofcontents
+\setcounter{page}{1}
+\pagenumbering{roman}
+\thispagestyle{plain}
+
+\listoffigures
+\thispagestyle{plain}
+
+\listoftables
+\thispagestyle{plain}
+
+\chapter*{List of Abbreviations}
+\addcontentsline{toc}{chapter}{List of Abbreviations}
+\addtocontents{toc}{\bigskip}
+
+
+\chapter{Introduction}
+\setcounter{page}{1}
+\pagenumbering{arabic}
+\input{chapters/introduction}
+
+\chapter{Extended Background}
+\input{chapters/extended_background}
+
+\chapter{Methodology}
+\input{chapters/methods}
+
+\chapter{Results}
+\input{chapters/results}
+
+\chapter{Discussion and Conclusions}
+\input{chapters/discussion}
+
+% references section
+\bibliography{references}{}
+\bibliographystyle{ieeetr}
+%\bibliographystyle{agsm}
+
+\appendix
+\chapter{Time series properties of }
+\input{chapters/appendix}
+
+\end{document}
