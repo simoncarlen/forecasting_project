@@ -1,13 +1,17 @@
 %General implementation of the stategy here before going into details about sources, preprocessing, hyperparameter tuning etc, ... Perhaps also a pic?
-The major steps of the implemented workflow is shown in Figure \ref{fig:dataflow}. Historical air pollution data from several monitoring stations, together with meteorological data from one station, was retrieved, preprocessed (with some features engineered), and divided into data windows. Three deep learning models (feed forward neural network, RNN, and LSTM) were trained and tested for short-term predictions (one hour ahead) of PM$_{10}$ for one station at Torkel Knutssongatan (measuring urban background levels, see Table \ref{tab:stations}). As baseline models for comparison, multiple linear regression and ARIMA were used. Detailed descriptions of each step in the process are given in subsequent sections. 
+The major steps of the implemented workflow were as follows; 
 
-\begin{figure}[htbp]
-\begin{center}
-\makebox[\textwidth][c]{\includegraphics[width=1\textwidth]{workflow}}
-\caption{Implemented workflow.}
-\label{fig:dataflow}
-\end{center}
-\end{figure}
+Detailed descriptions of each step in the process are given in subsequent sections
+
+%is shown in Figure \ref{fig:dataflow}. Historical air pollution data from several monitoring stations, together with meteorological data from one station, was retrieved, preprocessed (with some features engineered), and divided into data windows. Three deep learning models (feed forward neural network, RNN, and LSTM) were trained and tested for short-term predictions (one hour ahead) of PM$_{10}$ for one station at Torkel Knutssongatan (measuring urban background levels, see Table \ref{tab:stations}). As baseline models for comparison, multiple linear regression and ARIMA were used. Detailed descriptions of each step in the process are given in subsequent sections. 
+
+%\begin{figure}[htbp]
+%\begin{center}
+%\makebox[\textwidth][c]{\includegraphics[width=1\textwidth]{workflow}}
+%\caption{Implemented workflow.}
+%\label{fig:dataflow}
+%\end{center}
+%\end{figure}
 
 \section{Data retrieval and preprocessing}
 \label{chap:dataprocesschap}
@@ -15,70 +19,63 @@ The major steps of the implemented workflow is shown in Figure \ref{fig:dataflow
 \subsection{Data sources}
 \label{sec:data-sources}
 
-Air pollution data was retrieved from the Swedish Meteorological and Hydrological Institute's (SMHI) centralized database for air quality measurements \cite{smhi-luftmatningar}. This data is part of the national and regional environmental monitoring of Sweden, a program coordinated and funded by the Swedish Environmental Protection Agency (Swedish EPA) and the Swedish Agency for Marine and Water Management. There are in total ten different program areas, of which air is one, and all data are licensed under CC0 and therefore freely accessible to the public \cite{naturvardsverket-miljodata}. For the national air monitoring (under Swedish EPA's responsibility), SMHI acts as national data host and stores (quality checked) historical data reported on a yearly basis from municipalities in Sweden \cite{smhi-luftmatningar}.
+Air pollution data was retrieved from the Swedish Meteorological and Hydrological Institute's (SMHI) centralized database for air quality measurements \cite{smhi-luftmatningar}. This data is part of the national and regional environmental monitoring of Sweden, a program coordinated and funded by the Swedish Environmental Protection Agency (Swedish EPA) and the Swedish Agency for Marine and Water Management. There are in total ten different program areas, of which air is one, and all data are licensed under CC0 and therefore freely accessible to the public \cite{naturvardsverket-miljodata}. For the national air monitoring (under Swedish EPA's responsibility), SMHI acts as a national data host and stores (quality checked) historical data reported yearly from municipalities in Sweden \cite{smhi-luftmatningar}.
 
-In Stockholm County, there are 18 stationary monitoring sites, and initially, data from each station was considered. However, many stations had irregular data series, and not all of them measure the same set of parameters. Due to this, data from seven sites with hourly measurements of PM$_{10}$ and PM$_{2.5}$ (\textmugreek g/m$^3$) for the period 2016-01-01 (01:00 am) to 2020-09-16 (01:00 am) was chosen, giving in total 41,281 data points (per parameter). In six of these stations, hourly data for NO$_x$ was also available. Air pollution monitoring can be classified by the area surrounding the station (rural, rural-regional, rural-remote, suburban, and urban), and by the predominant emission sources (background, industrial, or traffic) \cite{smhi-luftmatningar}. The chosen stations included data from both traffic and background monitoring, in urban as well as rural-regional areas. Information about the stations from which data was used is summarized in Table \ref{tab:stations}. 
+In Stockholm County, there are 19 stationary monitoring sites \cite{slb-matningar}, and initially, data from each site was considered. However, many stations have irregular data series, and not all stations measure the same set of pollutants. Due to this, data from three sites with hourly measurements of PM$_{10}$ and PM$_{2.5}$ (in \textmugreek g/m$^3$) for the time period 2016-01-01 to 2022-01-01 was chosen, giving a total of 52,609 data points. For the station where PM predictions subsequently were to be made (Torkel Knutssonsgatan), hourly data of NO$_2$ was also included. As described in section \ref{air-pollution-stockholm}, SLB-analys also monitor several weather parameters, and hourly measurements of temperature (in $^\circ$C), precipitation (mm), atmospheric pressure (hPa), relative humidity (as \%), solar radiation (W/m$^2$), and wind speed (m/s) was also included from the station at Torkel Knutssonsgatan. The meteorological data were downloaded from SLB-analys' webpage \cite{slb-analys-meteorologi}. 
 
-As described in section \ref{air-pollution-stockholm}, SLB-analys also monitor a number of weather parameters, and hourly measurements of temperature (in $^\circ$C), precipitation (mm), atmospheric pressure (hPa), relative humidity (as \%), solar radiation (W/m$^2$), wind speed (m/s), and wind direction (in degrees) was included from the station at which the PM$_{10}$ predictions were made (Torkel Knutssongatan). The meteorological data was downloaded from SLB-analys' webpage \cite{slb-analys-meteorologi}. 
+In general, air pollution monitoring can be classified by the area surrounding the station (rural, rural-regional, rural-remote, suburban, and urban), and by the predominant emission sources (background, industrial, or traffic) \cite{smhi-luftmatningar}. The chosen stations included data from both traffic and background monitoring, in urban as well as rural-regional areas. Information about the stations from which data was included is given in Table \ref{tab:stations}. 
 
 % STATIONS TABLE
 % ##############
-
-\begin{table}[h]
-\caption{Summary of monitoring stations in Stockholm County.}
+\begin{table}[]
+\centering
+\caption{Monitoring stations in Stockholm County.}
 \label{tab:stations}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{@{}llllll@{}}
 \toprule
-Station                         & Station code & Longitude & Latitude  & Classification & Parameters                    \\ \midrule
-Norrtälje, Norr Malma &
-  18643 &
-  18.631313 &
-  59.832382 &
-  \begin{tabular}[c]{@{}l@{}}Rural-regional \\ background\end{tabular} &
-  PM$_{10}$, PM$_{2.5}$, NO$_x$ \\ \midrule
-Sollentuna, E4 Eriksbergsskolan  & 34399        & 17.957651 & 59.410175 & Urban background   & PM$_{10}$, PM$_{2.5}$         \\ \midrule
-Sollentuna, E4 Häggvik           & 20415        & 17.922358 & 59.443535 & Urban traffic      & PM$_{10}$, PM$_{2.5}$, NO$_x$ \\ \midrule
-Stockholm, E4/E20 Lilla Essingen & 18644        & 18.00439  & 59.325527 & Urban traffic      & PM$_{10}$, PM$_{2.5}$, NO$_x$ \\ \midrule
-Stockholm, Hornsgatan 108 Gata   & 8780         & 18.04866  & 59.317223 & Urban traffic      & PM$_{10}$, PM$_{2.5}$, NO$_x$ \\ \midrule
-Stockholm, Sveavägen 59 Gata     & 8779         & 8.058254  & 59.340828 & Urban traffic      & PM$_{10}$, PM$_{2.5}$, NO$_x$ \\ \midrule
-Stockholm, Torkel Knutssongatan &
-  8781 &
-  18.057808 &
-  59.316006 &
-  Urban background &
-  \begin{tabular}[c]{@{}l@{}}PM$_{10}$, PM$_{2.5}$, NO$_x$,\\ Meteorological \\ parameters\end{tabular} \\ \bottomrule
+Station                         & Station code & Longitude & Latitude  & Type of monitoring                                                   & Parameters                                                                                             \\ \midrule
+Norrtälje, Norr Malma           & 18643        & 18.631313 & 59.832382 & \begin{tabular}[c]{@{}l@{}}Rural-Regional \\ Background\end{tabular} & PM$_{10}$, PM$_{2.5}$                                                                                  \\ \midrule
+Stockholm, Hornsgatan 108       & 8780         & 18.04866  & 59.317223 & Urban Traffic                                                        & PM$_{10}$, PM$_{2.5}$                                                                                  \\ \midrule
+Stockholm, Torkel Knutssonsgatan & 8781         & 18.057808 & 59.316006 & Urban background                                                     & \begin{tabular}[c]{@{}l@{}}PM$_{10}$, PM$_{2.5}$, NO$_2$, \\ meteorological \\ parameters\end{tabular} \\ \bottomrule
 \end{tabular}%
 }
 \end{table}
-
 % ##############
 
 \subsection{Data preprocessing}
 
-Time series plots of the raw data for PM$_{10}$ and PM$_{2.5}$ is shown in Figure \ref{fig:time_series_plots}. 
+Time series plots of the raw PM$_{10}$ and PM$_{2.5}$ data are shown in Fig.\ \ref{fig:time_series_plots}. 
 %(station-wise, with PM$_{10}$ and PM$_{2.5}$ values in the left and right subplots, respectively). 
-As can be seen e.g. in plot (e) and (f), some stations had short periods with missing data, and linear interpolation was used to fill in the missing data points. Moreover, all data was min-max normalized (i.e., scaled to the range [0,1]) before use in any of the models. 
+As can be seen e.g.\ in Fig.\ \ref{fig:time_series_plots}c and Fig.\ \ref{fig:time_series_plots}e, some stations had short episodes with missing data, and linear interpolation was used to fill in these missing data points. However, for the PM$_{2.5}$ data at Torkel Knutssonsgatan (Fig.\ \ref{fig:time_series_plots}b), due to the rather big gap seen at the beginning of 2019, a train-test split was done to entirely avoid this time period (see below). Moreover, before use in any of the models, all data was normalized (i.e., scaled to standard units). 
 
-\paragraph{Feature engineering}
-From the meteorological data, wind vectors ($u$ and $v$) were derived from wind direction and wind speed, as wind vectors are more suitable model inputs \cite{tensorflow-timeseries}. After converting wind direction values to radians, $u$ and $v$ were obtained in the following way $$ u = ws * cos(\theta)$$ $$v = ws * sin(\theta)$$ where $ws$ denote wind speed and $\theta$ is the wind direction (in radians). From Figure \ref{fig:timeseriesPM10}, yearly periodicity in the data can be seen, where levels tend to be higher during spring. Daily periodicity is also expected since traffic intensity varies throughout the day. The meteorological parameters such as temperature, solar radiation, etc.\ also have yearly and daily periodicity. To account for this, time was converted to sine and cosine signals, both for year and day, as a way to model these cyclic features \cite{FaganeliPucer2018}. Sine and cosine for day were calculated in the following way
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[width=1.1\textwidth]{../plots/time_series_plots}}
+\caption{Time series plots for PM$_{10}$ and PM$_{2.5}$.}
+\label{fig:time_series_plots}
+\end{figure}
 
-$$ sine \: day = \frac{sin \Big (timestamp\: \cdot \frac{2\pi}{86,400} \Big)+1}{2} $$
+%\paragraph{Feature engineering}
+%From the meteorological data, wind vectors ($u$ and $v$) were derived from wind direction and wind speed, as wind vectors are more suitable model inputs \cite{tensorflow-timeseries}. After converting wind direction values to radians, $u$ and $v$ were obtained in the following way $$ u = ws * cos(\theta)$$ $$v = ws * sin(\theta)$$ where $ws$ denote wind speed and $\theta$ is the wind direction (in radians). 
+In Figure \ref{fig:time_series_plots}, yearly periodicity in the data can be seen, especially for PM$_{10}$ where levels tend to be higher during spring. Daily and weekly periodicity is also expected since traffic intensity varies throughout the day and week. The meteorological variables such as temperature, solar radiation, etc.\ also have periodicity. To account for this, timestamps were converted to temporal variables as sine and cosine signals for day, week, and year. For example, the sine and cosine signals for day were calculated in the following way
 
-$$ cosine \: day = \frac{cos \Big (timestamp\: \cdot \frac{2\pi}{86,400} \Big)+1}{2} $$
-where $timestamp$ is in seconds (and with 86,400 seconds in 24 hours, dividing by this term is necessary). The calculations were done similarly for year except for the term in the denominator which instead was set to seconds per year ($365.25 \cdot 86,400 $). The transformations were done so that the sine and cosine functions oscillate between zero and one. The resulting transforms for day (in a 24 hour time window) and year (time window of one year) are shown in Figure \ref{fig:time_sine_cos}a and Figure \ref{fig:time_sine_cos}b, respectively.
-
+$$ \text{sine day = sin} \Big (\text{timestamp} \cdot \frac{2\pi}{86,400} \Big)$$
+$$ \text{cosine day = cos} \Big (\text{timestamp} \cdot \frac{2\pi}{86,400} \Big)$$
+where timestamp is in seconds (and with 86,400 seconds in 24 hours, dividing by this term is necessary). The calculations were done similarly for week and year, except for the term in the denominator which instead was set to seconds per week and seconds per year, respectively. 
+%The transformations were done so that the sine and cosine functions oscillate between zero and one. 
+The temporal variables for day in a 24 hour time window are shown in Figure \ref{fig:time_sine_cos}.
 
 \begin{figure}[h] 
 \begin{center}
-%\includegraphics{/Users/simoncarlen/desktop/thesis/data_and_code/plots/time_of_day_year_signal}
-\makebox[\textwidth][c]{\includegraphics[width=1\textwidth]{/Users/simoncarlen/desktop/luftdata/plots/time_signals}}
-\caption{(a) Sine and cosine of day, and (b) sine and cosine of year.}
+%\makebox[\textwidth][c]{\includegraphics[width=.585\textwidth]{../plots/time_signals}}
+\includegraphics{../plots/time_signals}
+\caption{Temporal variables for day as sine and cosine signals.}
 \label{fig:time_sine_cos}
 \end{center}
 \end{figure}
+%\paragraph{Sliding windows}
 
-\paragraph{Sliding windows}
 Sliding windows from the data were also created. The sliding window approach is used for time-series forecasting where windows (or sequences of certain lengths, also called frames) are extracted from the input data \cite{Arsov2021, Gilik2021}. In each window, there are two "sub-windows"; the input window and the target window, and the target window is offset by some amount of time from the input window. For example, as shown in Figure \ref{fig:sliding-window}, the total window length is nine time steps, and the first eight time steps is the input window used to predict the target window (in this case having a length of one) one time step in the future. After extracting a data sequence, the window slides to the right one (or more) steps and extracts the next sequence. This is continued until time step $n$ at which point all the data have been processed. 
 In this work, input windows of different lengths were tested to make short-term predictions for a target window with a length of one (more details are given in section \ref{sec:tuning} below). 
 
@@ -101,12 +98,12 @@ In this work, input windows of different lengths were tested to make short-term 
 
 %/Users/simoncarlen/desktop/thesis/data_and_code/plots/PM10_2016_2020_2
 
-\begin{figure}[h]
-\centering
-\makebox[\textwidth][c]{\includegraphics[width=1.1\textwidth]{../plots/time_series_plots}}
-\caption{Time series plots for PM$_{10}$ and PM$_{2.5}$.}
-\label{fig:time_series_plots}
-\end{figure}
+%\begin{figure}[h]
+%\centering
+%\makebox[\textwidth][c]{\includegraphics[width=1.1\textwidth]{../plots/time_series_plots}}
+%\caption{Time series plots for PM$_{10}$ and PM$_{2.5}$.}
+%\label{fig:time_series_plots}
+%\end{figure}
 
 \section{Hyperparameter tuning and search}
 \label{sec:tuning}

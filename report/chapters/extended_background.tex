@@ -35,9 +35,9 @@ J(\bm{\hat{\beta}}) = \frac{1}{n} \sum_{i=1}^{n} \big(\hat{y}_i - y_i \big)^2
 \end{align}
 where $\bm{\hat{\beta}}$ is the vector of estimated model parameters ($\hat{\beta}_0, \: \hat{\beta}_1, ..., \: \hat{\beta}_n$), $\hat{y}_i$ is a prediction and $y_i$ is a training data value\cite{smlbook}. In Eq.\ \ref{eq:cost} the squared error loss is used as loss function, and the cost is simply the loss averaged over the training data.\footnote{What is meant by cost and loss functions can vary slightly in the literature, but in this work, the terminology of Lindholm et al. \cite{smlbook} is adopted.} Depending on the model, minimizing $J(\bm{\hat{\beta}})$ is approached differently, as explained further in the sections below. 
 
-\subsection{Linear models}
+\subsection{Multiple linear regression models}
 %\paragraph{Multiple linear regression}
-From the wealth of available regression techniques, multiple linear regression (MLR) has been extensively used to forecast and model air pollution \cite{atmos7020015}. If none of the basic model assumptions are violated (i.e., linearity, independence, normality, and constant variance), MLR is often a straightforward method, especially for data with no temporal dependencies (so-called cross-sectional data). However, for time series data, the assumption of independent errors is often not approptiate \cite{Montgomery2015}. 
+From the wealth of available regression techniques, multiple linear regression (MLR) has been extensively used to forecast and model air pollution \cite{atmos7020015}. Generally, if none of the basic model assumptions are violated (i.e., linearity, independence, normality, and constant variance), MLR is often a straightforward method, especially for data with no temporal dependencies (so-called cross-sectional data). However, for time series data, the assumption of independent errors is often not approptiate \cite{Montgomery2015}. 
 
 If fitting a MLR model to time series data, successive errors will typically be correlated (often referred to as autocorrelation), and this will cause several problems with the model if the correlation is not accounted for \cite{Montgomery2015}. To this end, adjustments to the MLR model can be made, some of which require other parameter estimation techniques than the usual least squares method (see below). However, a simple and commonly used procedure to get rid of the autocorrelation is to include one or more lagged values of the response variable as predictors. For example, if the value of the response variable at lag one is included, the MLR model will have the form 
 \begin{align}
@@ -55,13 +55,13 @@ and the least squares estimates of the model parameters will then be given by Eq
 \label{eq:normal_sol} 
 \end{align}
 
-Careful variable selection in regression is crucial as it can influence the performance of a model. In situations with several variables, one is often concerned with finding an optimal ”subset” of predictors, where multicollinearity should also not be an issue \cite{Montgomery2012}. To this end, variable selection techniques based on optimizing a criterion like the Akaike or Bayes information criterion are common, and typically multicollinearity is also tested for \cite{Montgomery2012}. However, if one is reluctant to exclude variables, but multicollinearity still might be an issue, regularized versions of MLR can be used \cite{smlbook, Montgomery2012}. 
+Careful variable selection in regression is crucial as it can influence the performance of a model. In situations with several variables, one is often concerned with finding an optimal ”subset” of predictors, where multicollinearity should also not be an issue \cite{Montgomery2012}. To this end, variable selection techniques based on optimizing a criterion like the Akaike or Bayes information criterion are common, and typically multicollinearity is also tested for \cite{Montgomery2012}. However, if one is reluctant to exclude variables, but multicollinearity still might be an issue, regularized versions of MLR can be used \cite{Montgomery2012}. 
 
-Two common techniques are $L_1$ and  $L_2$ regularization, in which an extra so-called "penalty" term is added to the cost function to shrink the estimated model parameters. In $L_2$ regularization (also called ridge regression), the parameters will be pushed towards small values, whereas in $L_1$ regularization (or lasso regression), some parameters will be driven to zero. The penalty terms for ridge and lasso regression are, respectively, 
+Two common techniques are $L_1$ and  $L_2$ regularization, in which an extra so-called "penalty" term is added to the cost function to shrink (and essentially stabilize) the model parameter estimates \cite{smlbook}. In $L_2$ regularization (also called ridge regression), the parameters will be pushed towards small values, whereas in $L_1$ regularization (or lasso regression), some parameters will be driven to zero. The penalty terms for ridge and lasso regression are, respectively, 
 $$\lambda \sum_{j=1}^{k}\beta_{j}^2\:\:\: \text{and}\:\:\: \lambda \sum_{j=1}^{k}|\beta_{j}|$$
-where $\lambda$ is a parameter controlling the shrinkage \cite{smlbook}. For ridge regression, the parameter estimates can be found by solving a modified version of Eq.\ \ref{eq:normal_eq}, while for lasso regression, no such analytical solution exists, and numerical optimization techniques have to be used instead \cite{smlbook}. By shrinking the parameters, ridge and lasso regression works as a variable selection method, while also preventing overfitting when used in more complex regression models \cite{smlbook}.
+where $\lambda$ is a parameter controlling the shrinkage \cite{smlbook}. For ridge regression, the parameter estimates can be found by solving a modified version of Eq.\ \ref{eq:normal_eq}, while for lasso regression, no such analytical solution exists, and numerical optimization techniques have to be used instead \cite{smlbook}. Generally, $L_1$ and $L_2$ regularization can be used to prevent overfitting, and also for $L_1$ where some input variables can be eliminated, as a variable selection technique \cite{smlbook}. 
 
-The extensive use of MLR for air pollution forecasts is many times motivated by its simplicity and straightforward implementation \cite{atmos7020015}. Another advantage is interpretability; for example, inference can be made on all input variables, allowing one to investigate their individual importance \cite{Montgomery2012}. However, the assumption of linearity might not always hold, and rather large prediction errors have been observed at times of pollution peaks \cite{atmos7020015}. Moreover, with data from several (but nearby) monitoring stations, collinearity can be an issue, which is why ridge or lasso regression are popular alternatives to the more classical non-regularized MLR model \cite{FaganeliPucer2018}. 
+The extensive use of MLR for air pollution forecasts is many times motivated by its simplicity and straightforward implementation \cite{atmos7020015}. Another advantage is interpretability; for example, inference can be made on all input variables, allowing one to investigate their individual importance \cite{Montgomery2012}. However, the assumption of linearity might not always hold, and rather large prediction errors have been observed at times of pollution peaks \cite{atmos7020015}. Moreover, with data from several (but nearby) monitoring stations, collinearity can be an issue, which is why ridge or lasso regression are popular alternatives to the non-regularized MLR model \cite{atmos7020015, FaganeliPucer2018}. 
 
 %Linear models for time-series analysis, such as auto-regressive moving average and auto-regressive \textit{integrated} moving average (ARMA and ARIMA, respectively) and variants thereof, are also common \cite{Arsov2021, Goyal2006}. These models make predictions of future values based on past data (i.e., taking dependencies over time into account), however, similar to MLR, linearity is assumed and errors can be large when there are temporary peaks in pollution levels \cite{atmos7020015}. 
 
@@ -91,27 +91,27 @@ Deep neural networks can have many such layers (hence the term "deep" \cite{Chol
 Many other deep learning architectures than the MLP exist, such as convolutional neural networks (CNNs), or recurrent neural networks (RNNs). CNNs are commonly used for image recognition while RNNs (and variants thereof) normally are applied to sequential data. 
 %\textcolor{red}{(This section will be expanded with some more theory for the deep learning models to be used. Also, some mathematical notation will added.)}
 
-\subsection{Variable selection}
-
-In any regression problem, variable/feature selection is crucial as it can influence the performance of a model. 
-%, and rarely are all available input features necessary or even desirable to include (as some might worsen performance) \cite{smlbook}. 
-%As pointed out in section \ref{sec:airpollutants}, 
-With regards to PM, as pointed out in section \ref{sec:airpollutants}, weather conditions can greatly affect pollution levels, and therefore meteorological data can be utilized to improve forecasts \cite{atmos7020015}.
-
-% ### CORRELATION PLOT ###
-\begin{figure}[h]
-\makebox[\textwidth][c]{\includegraphics[width=0.85\textwidth]{/Users/simoncarlen/desktop/luftdata/plots/Torkel Knutssongatan_correlation}}
-\caption{Pairwise correlations between air pollutants and some meteorological variables.}
-\label{fig:correlationplot}
-\end{figure}
-% #######################
-
-Additional variables can also be included in PM forecasts. For example, motor traffic data such as travel speeds, traffic flow and intensity, etc., can be utilized \cite{atmos7020015}. Data on other pollutants can also be important, especially SO$_2$ and NO$_x$ as they are involved in the formation of secondary PM \cite{Arsov2021}. Moreover, if forecasts focus solely on PM$_{10}$ (as in this work), data on PM$_{2.5}$ can further improve the results  \cite{Arsov2021}. Temporal variables such as time of the day and time of year are also useful since daily and seasonal variation of PM pollution is important \cite{Schwarzenbach2016, atmos7020015}. 
-%The selection and preprocessing of variables in this work is described in detail in section \ref{chap:dataprocesschap}. 
-%A detailed description of all variables utilized in this work (and how they were processed), is given in section \ref{chap:dataprocesschap}.
-
-In Figure \ref{fig:correlationplot} where pairwise correlations between a few meteorological variables and PM$_{10}$ at different stations in the Stockholm region are given (see Table \ref{tab:stations} for details about the different monitoring stations), it can be inferred that PM$_{10}$ correlate negatively with humidity, but positively with atmospheric pressure and solar radiation. It can also be seen that PM$_{10}$ levels are strongly correlated among some stations. 
-
-In this work, in addition to PM$_{10}$ data, meteorological data as well as data on PM$_{2.5}$ and NO$_x$ were utilized. Some features used as input to the models were also derived. A more detailed description of the variables and their preprocessing is given in section \ref{chap:dataprocesschap}.
+%\subsection{Variable selection}
+%
+%In any regression problem, variable/feature selection is crucial as it can influence the performance of a model. 
+%%, and rarely are all available input features necessary or even desirable to include (as some might worsen performance) \cite{smlbook}. 
+%%As pointed out in section \ref{sec:airpollutants}, 
+%With regards to PM, as pointed out in section \ref{sec:airpollutants}, weather conditions can greatly affect pollution levels, and therefore meteorological data can be utilized to improve forecasts \cite{atmos7020015}.
+%
+%% ### CORRELATION PLOT ###
+%\begin{figure}[h]
+%\makebox[\textwidth][c]{\includegraphics[width=0.85\textwidth]{/Users/simoncarlen/desktop/luftdata/plots/Torkel Knutssongatan_correlation}}
+%\caption{Pairwise correlations between air pollutants and some meteorological variables.}
+%\label{fig:correlationplot}
+%\end{figure}
+%% #######################
+%
+%Additional variables can also be included in PM forecasts. For example, motor traffic data such as travel speeds, traffic flow and intensity, etc., can be utilized \cite{atmos7020015}. Data on other pollutants can also be important, especially SO$_2$ and NO$_x$ as they are involved in the formation of secondary PM \cite{Arsov2021}. Moreover, if forecasts focus solely on PM$_{10}$ (as in this work), data on PM$_{2.5}$ can further improve the results  \cite{Arsov2021}. Temporal variables such as time of the day and time of year are also useful since daily and seasonal variation of PM pollution is important \cite{Schwarzenbach2016, atmos7020015}. 
+%%The selection and preprocessing of variables in this work is described in detail in section \ref{chap:dataprocesschap}. 
+%%A detailed description of all variables utilized in this work (and how they were processed), is given in section \ref{chap:dataprocesschap}.
+%
+%In Figure \ref{fig:correlationplot} where pairwise correlations between a few meteorological variables and PM$_{10}$ at different stations in the Stockholm region are given (see Table \ref{tab:stations} for details about the different monitoring stations), it can be inferred that PM$_{10}$ correlate negatively with humidity, but positively with atmospheric pressure and solar radiation. It can also be seen that PM$_{10}$ levels are strongly correlated among some stations. 
+%
+%In this work, in addition to PM$_{10}$ data, meteorological data as well as data on PM$_{2.5}$ and NO$_x$ were utilized. Some features used as input to the models were also derived. A more detailed description of the variables and their preprocessing is given in section \ref{chap:dataprocesschap}.
 
 \section{Summary and motivation for this work}
