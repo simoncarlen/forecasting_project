@@ -21,13 +21,11 @@ From a statistical perspective, predicting air pollution is a time series regres
 \section{Research problem}
 
 Forecasts, be it for weather, stock returns, or future pandemics, are always associated with uncertainty and errors. Erroneous predictions made by existing air pollution forecasting systems, both mechanistic and statistical and/or machine learning-based, can be attributed to many causes. 
-In the case of mechanistic models, there can be insufficient information about the necessary parameters needed for simulation and modeling \cite{atmos7020015}. For statistical and/or machine learning methods, too simplistic models, lack of data, irrelevant input features, overfitting, etc., can limit prediction accuracy \cite{atmos7020015}. 
-
-Nevertheless, atmospheric pollution is a very complex phenomenon depending on a multitude of factors across both space and time. Hence, the research problem addressed in this work is:
-
-\begin{itemize}
-\item To capture and model the complex dynamics of air pollution with modern machine learning methods, in particular deep learning.
-\end{itemize}
+In the case of mechanistic models, there can be insufficient information about the necessary parameters needed for simulation and modeling \cite{atmos7020015}. For statistical and/or machine learning methods, too simplistic models, lack of data, irrelevant input features, overfitting, etc., can limit prediction accuracy \cite{atmos7020015}. Nevertheless, atmospheric pollution is a very complex phenomenon depending on a multitude of factors across both space and time. Hence, the research problem addressed in this work is:
+\begin{quotation}
+\noindent
+\textit{To capture and model the complex dynamics of air pollution with modern machine learning methods, with an emphasis on deep learning.}
+\end{quotation}
 
 %\textit{using state-of-the-art machine learning methods, in particular deep learning, to more successfully capture and model the complex dynamics of air pollution.}
 
@@ -36,20 +34,16 @@ Nevertheless, atmospheric pollution is a very complex phenomenon depending on a 
 %and existing forecasting models/systems for air pollution make erroneous predictions which tend to be largest when pollution levels peak. In the case of mechanistic models, this is due to insufficient information about necessary parameters  and 
 
 \section{Research question}
+From a forecasting perspective, of special interest are episodes when pollution levels peak. Generally, this is also when existing forecasting models tend to give the largest prediction errors \cite{atmos7020015}. Therefore, the research question this thesis tries to answer is:
+\begin{quotation}
+\noindent
+\textit{How can machine learning, in particular deep learning, be used to forecast air pollution levels and pollution peaks?}
+\end{quotation}
 
-%The main research question for this thesis tries to answer is:
-
-%In this work, a number of machine learning models are tested, evaluated, and compared in order to answer the main research question: 
-%The main research question for this thesis is:
-%\textit{Can machine learning models accurately forecast air pollution levels in Stockholm?}
-
-%\begin{center} \textit{Can machine learning models accurately forecast air pollution levels in Stockholm?} \end{center}
-
-From a forecasting perspective, of special interest are episodes when pollution levels peak. Generally, this is also when existing forecasting models tend to give the largest prediction errors \cite{atmos7020015}. Therefore, the research question this thesis tries to answer is: 
-
-\begin{itemize}
-\item How can machine learning, in particular deep learning, be used to forecast air pollution levels and pollution peaks?
-\end{itemize}
+%\begin{itemize}
+%\item How can machine learning, in particular deep learning, be used to forecast air pollution levels and pollution peaks?
+%\makebox[\textwidth]{\textit{How can machine learning, in particular deep learning, be used to forecast air pollution levels and pollution peaks?}}
+%\end{itemize}
 
 %an additional sub-question related to the main research question is: \textit{Can machine learning models reliably predict peaks in pollution levels?}
 
@@ -60,6 +54,6 @@ From a forecasting perspective, of special interest are episodes when pollution 
 
 \section{Delimitations}
 
-In this work, historical air pollution and weather data is used. Therefore, the models cannot be tested in "operational mode", i.e., with real-time data to make predictions. Moreover, when forecasting air pollution (hours or days ahead), weather forecasts are often utilized in addition to monitoring data to improve forecast results. Again, with historical data, incorporating weather forecasts is not possible, and consequently the models make predictions based only on multivariate time-series of past observations. This also puts a limit on the time-horizon for the predictions, since without weather forecasts, medium to long-term forecasts of air quality would have large uncertainties.  
+%In this work, historical air pollution and weather data is used. Therefore, the models cannot be tested in "operational mode", i.e., with real-time data to make predictions. Moreover, when forecasting air pollution (hours or days ahead), weather forecasts are often utilized in addition to monitoring data to improve forecast results. Again, with historical data, incorporating weather forecasts is not possible, and consequently the models make predictions based only on multivariate time-series of past observations. This also puts a limit on the time-horizon for the predictions, since without weather forecasts, medium to long-term forecasts of air quality would have large uncertainties.  
 
-\textcolor{red}{pollution background levels...}
+%\textcolor{red}{pollution background levels...}
