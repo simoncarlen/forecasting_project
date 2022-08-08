@@ -30,7 +30,7 @@ While mechanistic models are based on mathematical modelling of atmospheric proc
 J(\bm{\hat{\beta}}) = \frac{1}{n} \sum_{i=1}^{n} \big(\hat{y}_i - y_i \big)^2
 \label{eq:cost}
 \end{align}
-where $\bm{\hat{\beta}}$ is the vector of estimated model parameters ($\hat{\beta}_0, \: \hat{\beta}_1, ..., \: \hat{\beta}_n$), $\hat{y}_i$ is a prediction and $y_i$ is a training data value\cite{smlbook}. In Eq.\ \ref{eq:cost} the squared error loss is used as loss function, and the cost is simply the loss averaged over the training data (or the mean squared error).\footnote{What is meant by cost and loss functions can vary slightly in the literature, but in this work, the terminology of Lindholm et al. \cite{smlbook} is adopted.} Depending on the model, minimizing $J(\bm{\hat{\beta}})$ is approached differently, as explained further in the sections below. 
+where $\bm{\hat{\beta}}$ is the vector of estimated model parameters ($\hat{\beta}_0, \: \hat{\beta}_1, ..., \: \hat{\beta}_n$), $\hat{y}_i$ is a prediction and $y_i$ is a training data value\cite{smlbook}. In \cref{eq:cost} the squared error loss is used as loss function, and the cost is simply the loss averaged over the training data (or the mean squared error).\footnote{What is meant by cost and loss functions can vary slightly in the literature, but in this work, the terminology of Lindholm et al. \cite{smlbook} is adopted.} Depending on the model, minimizing $J(\bm{\hat{\beta}})$ is approached differently, as explained further in the sections below. 
 
 \subsection{Multiple linear regression models}
 %\paragraph{Multiple linear regression}
@@ -41,14 +41,16 @@ If fitting a MLR model to time series data, successive errors will typically be 
 y_t = \beta_0 + \beta_{1} y_{t-1} + \beta_2 x_{2,t} + ... + \beta_{k} x_{k,t} + \varepsilon_t, \: \: \: t = 1, 2, ..., T
 \label{eq:mlr}
 \end{align}
-where the error term $\varepsilon_t \sim  N(0, \sigma^2)$, and $t$ denotes time steps \cite{Montgomery2015}. The model in Eq.\ \ref{eq:mlr} can be fit with the method of least squares, which in linear regression is the standard way of finding parameters so that $J(\bm{\hat{\beta}})$ is minimized \cite{smlbook}. This is done by solving the so-called normal equations
+where the error term $\varepsilon_t \sim  N(0, \sigma^2)$, and $t$ denotes time steps \cite{Montgomery2015}. The model in \cref{eq:mlr} can be fit with the method of least squares, which in linear regression is the standard way of finding parameters so that $J(\bm{\hat{\beta}})$ is minimized \cite{Montgomery2012}. This is done by solving the so-called normal equations,
+%\begin{align}
+%(\bm{X}^T\bm{X})\bm{\hat{\beta}} = \bm{X}^T\bm{y}
+%\label{eq:normal_eq}
+%\end{align}
+and the least squares estimates of the model parameters are given by
+%(provided that the inverse of $\bm{X}^T\bm{X}$ exists) 
+%are given by \cref{eq:normal_sol} below.
 \begin{align}
-(\bm{X}^T\bm{X})\bm{\hat{\beta}} = \bm{X}^T\bm{y}
-\label{eq:normal_eq}
-\end{align}
-and the least squares estimates of the model parameters will then be given by Eq.\ \ref{eq:normal_sol} below (provided that the inverse of $\bm{X}^T\bm{X}$ exists) \cite{smlbook}.
-\begin{align}
-\bm{\hat{\beta}} = (\bm{X}^T\bm{X})^{-1}\bm{X}^T\bm{y}
+\bm{\hat{\beta}} = (\bm{X}^T\bm{X})^{-1}\bm{X}^T\bm{y}.
 \label{eq:normal_sol} 
 \end{align}
 
@@ -56,9 +58,9 @@ Careful variable selection in regression is crucial as it can influence the perf
 
 Two common techniques are $L_1$ and  $L_2$ regularization, in which an extra so-called "penalty" term is added to the cost function to shrink (and essentially stabilize) the model parameter estimates \cite{smlbook}. In $L_2$ regularization (also called ridge regression), the parameters will be pushed towards small values, whereas in $L_1$ regularization (or lasso regression), some parameters will be driven to zero. The penalty terms for ridge and lasso regression are, respectively, 
 $$\lambda \sum_{j=1}^{k}\beta_{j}^2\:\:\: \text{and}\:\:\: \lambda \sum_{j=1}^{k}|\beta_{j}|$$
-where $\lambda$ is a parameter controlling the shrinkage \cite{smlbook}. For ridge regression, the parameter estimates can be found by solving a modified version of Eq.\ \ref{eq:normal_eq}, while for lasso regression, no such analytical solution exists, and numerical optimization techniques have to be used instead \cite{smlbook}. Generally, $L_1$ and $L_2$ regularization can be used to prevent overfitting, and also for $L_1$ where some input variables can be eliminated, as a variable selection technique \cite{smlbook}. 
+where $\lambda$ is a parameter controlling the shrinkage \cite{smlbook}. For ridge regression, the parameter estimates can be found by solving a modified version of \vref{eq:normal_sol}, while for lasso regression, no such analytical solution exists, and numerical optimization techniques have to be utilized instead \cite{smlbook}. Generally, $L_1$ and $L_2$ regularization can be used to prevent overfitting, and also for $L_1$ where some input variables can be eliminated, as a variable selection technique \cite{smlbook}. 
 
-The extensive use of MLR for air pollution forecasts is many times motivated by its simplicity and straightforward implementation \cite{atmos7020015}. Another advantage is interpretability; for example, inference can be made on all input variables, allowing one to investigate their individual importance \cite{Montgomery2012}. However, the assumption of linearity might not always hold, and rather large prediction errors have been observed at times of pollution peaks \cite{atmos7020015}. Moreover, with data from several (but nearby) monitoring stations, collinearity can be an issue, which is why ridge or lasso regression are popular alternatives to the non-regularized MLR model \cite{atmos7020015, FaganeliPucer2018}. 
+The extensive use of MLR for air pollution forecasts is many times motivated by its simplicity and straightforward implementation \cite{atmos7020015}. Another advantage is interpretability; for example, inference can be made on all input variables, allowing one to investigate their individual importance \cite{Montgomery2012}. However, the assumption of linearity might not always hold, and large prediction errors have been observed at times of pollution peaks \cite{atmos7020015}. Moreover, with data from several (but nearby) monitoring stations, collinearity can be an issue, which is why ridge or lasso regression are popular alternatives to the non-regularized MLR model \cite{atmos7020015}. 
 
 %Linear models for time-series analysis, such as auto-regressive moving average and auto-regressive \textit{integrated} moving average (ARMA and ARIMA, respectively) and variants thereof, are also common \cite{Arsov2021, Goyal2006}. These models make predictions of future values based on past data (i.e., taking dependencies over time into account), however, similar to MLR, linearity is assumed and errors can be large when there are temporary peaks in pollution levels \cite{atmos7020015}. 
 
