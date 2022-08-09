@@ -21,6 +21,8 @@
 \usepackage{varioref}
 \usepackage{hyperref}
 \usepackage[capitalise]{cleveref}
+\usepackage[hang,flushmargin]{footmisc} % no indent in footnote
+
 
 \usepackage{siunitx}
 %\usepackage{amsmath}
@@ -28,6 +30,7 @@
 \usepackage[dvipsnames]{xcolor} % color in text
 \usepackage{bm}
 
+\usepackage{chngcntr}
 
 %\pagestyle{fancy}
 %\fancyhead{}
@@ -127,8 +130,18 @@
 \bibliographystyle{ieeetr}
 %\bibliographystyle{agsm}
 
-\appendix
-\chapter{Summary of Monitoring Stations}
-\input{chapters/appendix}
+%\appendix
+%\chapter{Monitoring Stations}
+%\input{chapters/appendix_A}
+\chapter*{Appendices}
+\counterwithin{figure}{section}
+\counterwithin{table}{section}
+%% provide three setup instructions:
+\addcontentsline{toc}{chapter}{Appendices} % write to the toc file
+\setcounter{section}{0}
+\renewcommand\thesection{\Alph{section}}
 
+\section{Monitoring Stations}
+\input{chapters/appendix_A}
+\section{Results}
 \end{document}
