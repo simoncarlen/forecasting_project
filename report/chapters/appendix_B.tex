@@ -1,0 +1,97 @@
+Diagnostics plots are shown in \ref{fig:residuals_MLR_PM10} and \ref{fig:residuals_MLR_PM2.5} below and models statistics are shown in tables... 
+
+%\begin{figure}[h]
+%\centering
+%\makebox[\textwidth][c]{\includegraphics[width=0.95\textwidth]{../plots/Residual_plots_MLR_PM10}}
+%\caption{Residual plots for the PM$_{10}$ MLR model.}
+%\label{fig:residuals_MLR_PM10}
+%\end{figure}
+%
+%\begin{figure}[h]
+%\centering
+%\makebox[\textwidth][c]{\includegraphics[width=0.95\textwidth]{../plots/Residual_plots_MLR_PM2.5}}
+%\caption{Residual plots for the PM$_{2.5}$ MLR model.}
+%\label{fig:residuals_MLR_PM2.5}
+%\end{figure}
+
+% PM10
+\begin{landscape}
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{lclc}
+\toprule
+\textbf{Dep. Variable:}                           & PM$_{10}$, Torkel Knutssonsgatan & \textbf{  R-squared:         } &     0.755   \\
+\textbf{Model:}                                   &                 OLS                 & \textbf{  Adj. R-squared:    } &     0.755   \\
+\textbf{Method:}                                  &            Least Squares            & \textbf{  F-statistic:       } & 2.026e+04   \\
+\textbf{Date:}                                    &           Thu, 11 Aug 2022          & \textbf{  Prob (F-statistic):} &     0.00    \\
+\textbf{Time:}                                    &               23:46:52              & \textbf{  Log-Likelihood:    } &   -10505.   \\
+\textbf{No. Observations:}                        &                 26328               & \textbf{  AIC:               } & 2.102e+04   \\
+\textbf{Df Residuals:}                            &                 26323               & \textbf{  BIC:               } & 2.106e+04   \\
+\textbf{Df Model:}                                &                     4               & \textbf{                     } &             \\
+\textbf{Covariance Type:}                         &              nonrobust              & \textbf{                     } &             \\
+\bottomrule
+\end{tabular}
+\begin{tabular}{lcccccc}
+                                                  & \textbf{coef} & \textbf{std err} & \textbf{t} & \textbf{P$> |$t$|$} & \textbf{[0.025} & \textbf{0.975]}  \\
+\midrule
+\textbf{intercept}                                &       0.0656  &        0.009     &     6.974  &         0.000        &        0.047    &        0.084     \\
+\textbf{PM\$\_{10}\$, Torkel Knutssonsgatan lag1} &       0.6335  &        0.007     &    96.861  &         0.000        &        0.621    &        0.646     \\
+\textbf{PM\$\_{10}\$, Torkel Knutssonsgatan lag2} &       0.1072  &        0.006     &    17.494  &         0.000        &        0.095    &        0.119     \\
+\textbf{PM\$\_{10}\$, Hornsgatan lag1}            &       0.1234  &        0.004     &    30.778  &         0.000        &        0.116    &        0.131     \\
+\textbf{PM\$\_{10}\$, Norr Malma lag1}            &       0.0808  &        0.004     &    19.644  &         0.000        &        0.073    &        0.089     \\
+\bottomrule
+\end{tabular}
+\begin{tabular}{lclc}
+\textbf{Omnibus:}       & 7362.227 & \textbf{  Durbin-Watson:     } &     1.976   \\
+\textbf{Prob(Omnibus):} &   0.000  & \textbf{  Jarque-Bera (JB):  } & 122434.478  \\
+\textbf{Skew:}          &  -0.906  & \textbf{  Prob(JB):          } &      0.00   \\
+\textbf{Kurtosis:}      &  13.408  & \textbf{  Cond. No.          } &      21.8   \\
+\bottomrule
+\end{tabular}
+\caption{OLS Regression Results for PM$_{10}$}
+\end{center}
+\end{table}
+\end{landscape}
+
+% PM2.5
+\begin{landscape}
+\begin{table}[h]
+\begin{center}
+%\resizebox{\textwidth}{!}{%
+\begin{tabular}{lclc}
+\toprule
+\textbf{Dep. Variable:}                            & PM$_{2.5}$, Torkel Knutssonsgatan & \textbf{  R-squared:         } &     0.927   \\
+\textbf{Model:}                                    &                 OLS                  & \textbf{  Adj. R-squared:    } &     0.927   \\
+\textbf{Method:}                                   &            Least Squares             & \textbf{  F-statistic:       } & 8.370e+04   \\
+\textbf{Date:}                                     &           Thu, 11 Aug 2022           & \textbf{  Prob (F-statistic):} &     0.00    \\
+\textbf{Time:}                                     &               23:20:09               & \textbf{  Log-Likelihood:    } &    4594.4   \\
+\textbf{No. Observations:}                         &                 26328                & \textbf{  AIC:               } &    -9179.   \\
+\textbf{Df Residuals:}                             &                 26323                & \textbf{  BIC:               } &    -9138.   \\
+\textbf{Df Model:}                                 &                     4                & \textbf{                     } &             \\
+\textbf{Covariance Type:}                          &              nonrobust               & \textbf{                     } &             \\
+\bottomrule
+\end{tabular}
+%}
+%\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccc}
+                                                   & \textbf{coef} & \textbf{std err} & \textbf{t} & \textbf{P$> |$t$|$} & \textbf{[0.025} & \textbf{0.975]}  \\
+\midrule
+\textbf{intercept}                                 &       0.0386  &        0.003     &    11.092  &         0.000        &        0.032    &        0.045     \\
+\textbf{PM\$\_{2.5}\$, Torkel Knutssonsgatan lag1} &       1.1199  &        0.007     &   167.681  &         0.000        &        1.107    &        1.133     \\
+\textbf{PM\$\_{2.5}\$, Torkel Knutssonsgatan lag2} &      -0.2116  &        0.006     &   -35.111  &         0.000        &       -0.223    &       -0.200     \\
+\textbf{PM\$\_{2.5}\$, Hornsgatan, lag1}           &       0.0340  &        0.004     &     8.867  &         0.000        &        0.026    &        0.041     \\
+\textbf{PM\$\_{2.5}\$, Norr Malma, lag1}           &       0.0218  &        0.001     &    15.576  &         0.000        &        0.019    &        0.025     \\
+\bottomrule
+\end{tabular}
+%}
+\begin{tabular}{lclc}
+\textbf{Omnibus:}       & 5704.682 & \textbf{  Durbin-Watson:     } &     1.987   \\
+\textbf{Prob(Omnibus):} &   0.000  & \textbf{  Jarque-Bera (JB):  } & 161104.434  \\
+\textbf{Skew:}          &  -0.393  & \textbf{  Prob(JB):          } &      0.00   \\
+\textbf{Kurtosis:}      &  15.093  & \textbf{  Cond. No.          } &      21.3   \\
+\bottomrule
+\end{tabular}
+\caption{OLS Regression Results for PM$_{2.5}$}
+\end{center}
+\end{table}
+\end{landscape}

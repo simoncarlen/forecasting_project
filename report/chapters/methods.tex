@@ -84,7 +84,7 @@ The temporal variables for day in a 24 hour time window are shown in \vref{fig:t
 \begin{figure}[h] 
 \begin{center}
 %\makebox[\textwidth][c]{\includegraphics[width=.585\textwidth]{../plots/time_signals}}
-\includegraphics{../plots/time_signals}
+\includegraphics[scale=1.05]{../plots/time_signals}
 \caption{Temporal variables for day as sine and cosine signals.}
 \label{fig:time_sine_cos}
 \end{center}
@@ -122,6 +122,11 @@ In this work, input windows of different lengths were tested to make short-term 
 
 \section{Hyperparameter tuning and model fitting}
 \label{sec:tuning}
+
+\subsection{Multiple linear regression models}
+With data from three stations in the Stockholm area, some collinearity was expected, and regularized MLR models were initially tried. However, 
+
+\subsection{Deep learning models}
 
 %The Keras Tuner library \cite{omalley2019kerastuner} was used to find the best set of hyperparameters for each model (except for the MLR and ARIMA models used as baseline). 
 %%Hyperparameters at both the model architecture-level as well as the input data-level were included in the search space. More specifically, at the input data-level, the width of the windows were set to 3 h, 6 h, or 12 h, and the models were fit with the different versions of the input data. 
