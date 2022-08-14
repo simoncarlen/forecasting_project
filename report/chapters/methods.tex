@@ -44,9 +44,10 @@ In Stockholm County, there are 19 stationary sites for air pollution monitoring 
 
 \subsection{Data preprocessing}
 \subsubsection{Initial preprocessig}
-Time series plots for PM$_{10}$ and PM$_{2.5}$ at Torkel Knutssonsgatan are shown in \vref{fig:time_series_plots}. (Similar plots for all stations are given in Fig.\ \ref{fig:time_series_plots_all} in appendix \ref{chapt:appendix_A}.)
+Time series plots for PM$_{10}$ and PM$_{2.5}$ at Torkel Knutssonsgatan are shown in \vref{fig:time_series_plots}. (Similar plots but for all stations are given in Fig.\ \ref{fig:time_series_plots_all} in appendix \ref{chapt:appendix_A}.)
 %(station-wise, with PM$_{10}$ and PM$_{2.5}$ in the left and right subplots, respectively)
-Some stations had short episodes with missing data, and linear interpolation was used to fill in the missing values. However, for the PM$_{2.5}$ data at Torkel Knutssonsgatan (plot (b) in \vref{fig:time_series_plots}), due to the rather big gap at the beginning of 2019, a train-test split was done to entirely avoid this period (see below). Missing weather data was also linearly interpolated, except for the variables atmospheric pressure and wind speed for which mean imputation was deemed more appropriate. Moreover, before use in any of the models, all data were min-max normalized (i.e., scaled to the interval $[0,1]$). 
+Some stations had short episodes with missing data, and linear interpolation was used to fill in the missing values. However, for the PM$_{2.5}$ data at Torkel Knutssonsgatan (plot (b) in \vref{fig:time_series_plots}), due to the rather big gap at the beginning of 2019, a train-test split was done to entirely avoid this period (see below). Missing weather data was also linearly interpolated, except for the variables atmospheric pressure and wind speed for which mean imputation was deemed more appropriate. 
+%Moreover, before use in any of the models, all data were min-max normalized (i.e., scaled to the interval $[0,1]$). 
 
 It should be noted that some PM values were negative.
 %this is seen clearly in e.g.\ plot (f) in \vref{fig:time_series_plots}, for the time period Jan.\ 2016 up to about Sep.\ 2019. 
@@ -69,8 +70,8 @@ However, negative values are expected since automated measuring instruments for 
 
 %\paragraph{Feature engineering}
 %From the meteorological data, wind vectors ($u$ and $v$) were derived from wind direction and wind speed, as wind vectors are more suitable model inputs \cite{tensorflow-timeseries}. After converting wind direction values to radians, $u$ and $v$ were obtained in the following way $$ u = ws * cos(\theta)$$ $$v = ws * sin(\theta)$$ where $ws$ denote wind speed and $\theta$ is the wind direction (in radians). 
-\paragraph{Feature engineering}
-In \vref{fig:time_series_plots}, yearly periodicity in the data can be seen, especially for PM$_{10}$ where levels tend to be higher during spring. Daily and weekly periodicity is also expected since traffic intensities vary throughout the day and week. 
+\subsubsection{Feature engineering}
+In \cref{fig:time_series_plots}, yearly periodicity in the data can be seen, especially for PM$_{10}$ where levels tend to be higher during spring. Daily and weekly periodicity is also expected since traffic intensities vary throughout the day and week. 
 %The meteorological variables such as temperature, solar radiation, etc.\ also have periodicity. 
 To account for this, timestamps were converted to temporal variables as sine and cosine signals for day, week, and year. For example, the sine and cosine signals for day were calculated in the following way
 
@@ -88,8 +89,8 @@ The temporal variables for day in a 24 hour time window are shown in \vref{fig:t
 \label{fig:time_sine_cos}
 \end{center}
 \end{figure}
-%\paragraph{Sliding windows}
 
+\paragraph{Sliding windows}
 Sliding windows from the data were also created. The sliding window approach is used for time-series forecasting where windows (or sequences of certain lengths, also called frames) are extracted from the input data \cite{Arsov2021, Gilik2021}. In each window, there are two "sub-windows"; the input window and the target window, and the target window is offset by some amount of time from the input window. For example, as shown in Figure \ref{fig:sliding-window}, the total window length is nine time steps, and the first eight time steps is the input window used to predict the target window (in this case having a length of one) one time step in the future. After extracting a data sequence, the window slides to the right one (or more) steps and extracts the next sequence. This is continued until time step $n$ at which point all the data have been processed. 
 In this work, input windows of different lengths were tested to make short-term predictions for a target window with a length of one (more details are given in section \ref{sec:tuning} below). 
 
@@ -123,8 +124,9 @@ In this work, input windows of different lengths were tested to make short-term 
 \label{sec:tuning}
 
 \subsection{Multiple linear regression models}
-Initially, a simple linear regression model was fit with OLS where a value of the response variable at lag 1 was used as predictor. This model did not display any autocorrelation. However, when also including the response variable at lag 2 as predictor, the Durbin-Watson statistic improved (i.e., brought it closer to 2). It should be noted that a log transformation of the variables were required to stabilize the variance and also bring the residuals closer to a normal distribution. 
-Including more predictors 
+Initially, a simple linear regression model was fit with OLS where a value of the response variable at lag one was used as predictor. This model did not display any autocorrelation, but when also including the response variable at lag two as predictor, the Durbin-Watson statistic improved (i.e., was brought closer to 2). Including additional response variables after the first two lags did not lead to further improvements in terms of eliminating autocorrelation. It should be noted that a log transformation of the variables were required to stabilize the variance and also bring the residuals closer to a normal distribution. Even so, deviation from normality was indicated, as can be seen in the residual plots in \cref{fig:residuals_MLR_PM10} in appendix \ref{chapt:appendix_B}. Generally, this is less of a problem if prediction (and not inference) is the sole purpose of a regression analysis, and the central limit theorem also ensures that confidence intervals, t-tests, etc.\ will be increasingly accurate as the sample size increases, even if the distribution of the residuals is not normal \cite{Montgomery2012}. 
+
+Including data (also log transformed) from other stations improved the MLR model, as did including the temporal variables for day, but the temporal variables for week and year were not significant ($p$-values $>$ 0.05). Data from other stations were, similar as for the response variable, entered into the model as the values at lag one (since the values at time $t+1$ cannot be known). Despite having data from several nearby stations, the condition number did not indicate strong multicollinearity. However, when also including weather parameters in the model, the condition number rose considerably. 
 
 % lagged response variables as predictors was fit with OLS. The Durbin-Watson test showed that for both PM$_{10}$ and PM$_{2.5}$, including one response variable ($y_{t-1}$ and $y_{t-2}$) was enough to eliminate any autocorrelation, but 
 %With data from three stations in the Stockholm area, some collinearity was expected, and regularized MLR models were initially tried. However, 
