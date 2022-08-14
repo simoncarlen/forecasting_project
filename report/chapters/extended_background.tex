@@ -26,7 +26,7 @@ Having the possibility to forecast air pollution levels hours or days ahead can 
 
 \subsection{Forecasting as a regression problem}
 \label{sec:forecasting}
-While mechanistic models are based on mathematical modelling of atmospheric processes along with other factors governing the distribution of air pollution (such as emission source characteristics, physico-chemical properties of pollutants, terrain and building design, etc.) statistical and/or machine learning models are entirely data-driven, being derived directly from measurements on the variables of interest \cite{ElHarbawi2013}. From a statistical (or machine learning) perspective, forecasting air pollution can be viewed as a regression problem, in which a function $f$, mapping input data to a numerical output, is being approximated (or learned) from a training set of labeled input-output examples \cite{smlbook}. Learning the function $f$ amounts to finding a set of parameters (or weights) for the model, which in the case of a simpler regression technique can be only a handful, but possibly millions if a deep neural network is used \cite{smlbook}. Generally in regression, the weights are learned by minimizing a cost function
+While mechanistic models are based on mathematical modelling of atmospheric processes along with other factors governing the distribution of air pollution (such as emission source characteristics, physico-chemical properties of pollutants, terrain and building design, etc.) statistical and/or machine learning models are entirely data-driven, being derived directly from measurements on the variables of interest \cite{ElHarbawi2013}. From a statistical (or machine learning) perspective, forecasting air pollution can be viewed as a regression problem, in which a function $f$, mapping input data to a numerical output, is being approximated (or learned) from a training set of labeled input-output examples \cite{smlbook}. Learning the function $f$ amounts to finding a set of parameters (or weights/coefficients) for the model, which in the case of a simpler regression technique can be only a handful, but possibly millions if a deep neural network is used \cite{smlbook}. Generally in regression, the weights are learned by minimizing a cost function
 \begin{align}
 J(\bm{\hat{\beta}}) = \frac{1}{n} \sum_{i=1}^{n} \big(\hat{y}_i - y_i \big)^2
 \label{eq:cost}
@@ -44,31 +44,31 @@ If fitting a MLR model to time series data, successive errors will typically be 
 y_t = \beta_0 + \beta_{1} y_{t-1} + \beta_2 x_{2,t} + ... + \beta_{k} x_{k,t} + \varepsilon_t, \: \: \: t = 1, 2, ..., T
 \label{eq:mlr}
 \end{align}
-where $\varepsilon_t$ is the the error term, and $t$ denotes time steps \cite{Montgomery2015}. The model in \cref{eq:mlr} can be fit with ordinary least squares (OLS), which in linear regression is the standard way of finding parameters so that $J(\bm{\hat{\beta}})$ is minimized \cite{Montgomery2012}. This is done by solving the so-called normal equations,
+where $\varepsilon_t$ is the the error term, and $t$ denotes time steps \cite{Montgomery2015}. The model in \cref{eq:mlr} can be fit OLS, which in linear regression is the standard way of finding parameters so that $J(\bm{\hat{\beta}})$ is minimized \cite{Montgomery2012}. This is done by solving the so-called normal equations,
 %\begin{align}
 %(\bm{X}^T\bm{X})\bm{\hat{\beta}} = \bm{X}^T\bm{y}
 %\label{eq:normal_eq}
 %\end{align}
-and the least squares estimates of the model parameters are then given by
+and the least squares estimates of the model parameters are (in matrix notation) then given by
 %(provided that the inverse of $\bm{X}^T\bm{X}$ exists) 
 %are given by \cref{eq:normal_sol} below.
 \begin{align}
 \bm{\hat{\beta}} = (\bm{X}^T\bm{X})^{-1}\bm{X}^T\bm{y}.
 \label{eq:normal_sol} 
 \end{align}
-A commonly used test for detecting autocorrelation is the Durbin-Watson test, where a value of $\sim 2$ is expected if the errors are uncorrelated \cite{Montgomery2015}.
+A commonly used test for detecting autocorrelation is the Durbin-Watson test, where a value of $\sim 2$ is expected in the case if uncorrelated errors \cite{Montgomery2015}.
 
 \subsubsection{Ridge and lasso regression}
 Careful variable selection in MLR is crucial as it can influence the performance of a model, and one is often concerned with finding an optimal ”subset” of predictors, where multicollinearity should also not be an issue \cite{Montgomery2012}. To this end, variable selection techniques based on optimizing a criterion like the Akaike or Bayes information criterion are common, and typically multicollinearity is also tested for \cite{Montgomery2012}. However, if one is reluctant to exclude variables, but multicollinearity still might be an issue, regularized versions of MLR can be used \cite{Montgomery2012}. 
 
 Two common techniques are $L_1$ and  $L_2$ regularization, in which an extra so-called "penalty" term is added to the cost function to shrink (and essentially stabilize) the model parameter estimates \cite{smlbook}. In $L_2$ regularization (also called ridge regression), the parameters will be pushed towards small values, whereas in $L_1$ regularization (or lasso regression), some parameters will be driven to zero. 
-%The penalty terms for ridge and lasso regression are, respectively, 
-%$$\lambda \sum_{j=1}^{k}\beta_{j}^2\:\:\: \text{and}\:\:\: \lambda \sum_{j=1}^{k}|\beta_{j}|$$
-%where $\lambda$ is a parameter controlling the shrinkage \cite{smlbook}. For ridge regression, the parameter estimates can be found by solving a modified version of \vref{eq:normal_sol}, while for lasso regression, no such analytical solution exists, and numerical optimization techniques have to be utilized \cite{smlbook}. 
+The penalty terms for ridge and lasso regression are, respectively, 
+$$\lambda \sum_{j=1}^{k}\beta_{j}^2\:\:\: \text{and}\:\:\: \lambda \sum_{j=1}^{k}|\beta_{j}|$$
+where $\lambda$ is a parameter controlling the shrinkage \cite{smlbook}. For ridge regression, the parameter estimates can be found by solving a modified version of \vref{eq:normal_sol}, while for lasso regression, no such analytical solution exists, and numerical optimization techniques have to be utilized \cite{smlbook}. 
 Generally, $L_1$ and $L_2$ regularization can be used to prevent overfitting, and also for $L_1$ where some input variables can be eliminated, as a variable selection technique \cite{smlbook}. 
 
-\subsubsection{Other considerations}
-The extensive use of MLR for air pollution forecasts is many times motivated by its simplicity and straightforward implementation \cite{atmos7020015}. Another advantage is interpretability; for example, inference can be made on all input variables, allowing one to investigate their individual importance \cite{Montgomery2012}. However, the assumption of linearity might not always hold, and large prediction errors have been observed at times of pollution peaks \cite{atmos7020015}. Moreover, with data from several (but nearby) monitoring stations, multicollinearity among the input variables can be an issue, which is why ridge or lasso regression are popular alternatives to the non-regularized MLR model \cite{atmos7020015}. 
+\subsubsection{Additional considerations}
+The extensive use of MLR for air pollution forecasts is many times motivated by its simplicity and straightforward implementation \cite{atmos7020015}. Another advantage is interpretability; for example, inference can often be made on all input variables, allowing one to investigate their individual importance \cite{Montgomery2012}. However, the assumption of linearity might not always hold, and large forecast errors have been observed at times of pollution peaks \cite{atmos7020015}. Moreover, with data from several (but nearby) monitoring stations, multicollinearity among the input variables can be an issue, which is why ridge or lasso regression are popular alternatives to the non-regularized MLR model \cite{atmos7020015}. 
 
 %Linear models for time-series analysis, such as auto-regressive moving average and auto-regressive \textit{integrated} moving average (ARMA and ARIMA, respectively) and variants thereof, are also common \cite{Arsov2021, Goyal2006}. These models make predictions of future values based on past data (i.e., taking dependencies over time into account), however, similar to MLR, linearity is assumed and errors can be large when there are temporary peaks in pollution levels \cite{atmos7020015}. 
 

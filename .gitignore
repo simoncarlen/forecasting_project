@@ -8,3 +8,4 @@ report/*
 !report/*.tgn
 !report/chapters
 report/chapters/*.log
+jupyter_notebooks/__pycache__/

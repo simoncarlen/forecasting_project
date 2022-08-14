@@ -43,7 +43,7 @@ In Stockholm County, there are 19 stationary sites for air pollution monitoring 
 %% ##############
 
 \subsection{Data preprocessing}
-%\paragraph{Initial preprocessig}
+\subsubsection{Initial preprocessig}
 Time series plots for PM$_{10}$ and PM$_{2.5}$ at Torkel Knutssonsgatan are shown in \vref{fig:time_series_plots}. (Similar plots for all stations are given in Fig.\ \ref{fig:time_series_plots_all} in appendix \ref{chapt:appendix_A}.)
 %(station-wise, with PM$_{10}$ and PM$_{2.5}$ in the left and right subplots, respectively)
 Some stations had short episodes with missing data, and linear interpolation was used to fill in the missing values. However, for the PM$_{2.5}$ data at Torkel Knutssonsgatan (plot (b) in \vref{fig:time_series_plots}), due to the rather big gap at the beginning of 2019, a train-test split was done to entirely avoid this period (see below). Missing weather data was also linearly interpolated, except for the variables atmospheric pressure and wind speed for which mean imputation was deemed more appropriate. Moreover, before use in any of the models, all data were min-max normalized (i.e., scaled to the interval $[0,1]$). 
@@ -123,9 +123,10 @@ In this work, input windows of different lengths were tested to make short-term 
 \label{sec:tuning}
 
 \subsection{Multiple linear regression models}
-Initially, a simple model with data only from regional background monitoring as well as the target station (Norr Malma station and Torkel Knutssonsgatan, respectively, see \cref{tab:stations} in appendix \ref{chapt:appendix_A}) 
+Initially, a simple linear regression model was fit with OLS where a value of the response variable at lag 1 was used as predictor. This model did not display any autocorrelation. However, when also including the response variable at lag 2 as predictor, the Durbin-Watson statistic improved (i.e., brought it closer to 2). It should be noted that a log transformation of the variables were required to stabilize the variance and also bring the residuals closer to a normal distribution. 
+Including more predictors 
 
- lagged response variables as predictors was fit with OLS. The Durbin-Watson test showed that for both PM$_{10}$ and PM$_{2.5}$, including one response variable ($y_{t-1}$ and $y_{t-2}$) was enough to eliminate any autocorrelation, but 
+% lagged response variables as predictors was fit with OLS. The Durbin-Watson test showed that for both PM$_{10}$ and PM$_{2.5}$, including one response variable ($y_{t-1}$ and $y_{t-2}$) was enough to eliminate any autocorrelation, but 
 %With data from three stations in the Stockholm area, some collinearity was expected, and regularized MLR models were initially tried. However, 
 
 \subsection{Deep learning models}
