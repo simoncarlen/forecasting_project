@@ -58,4 +58,10 @@ def add_sine_cosine(df):
     df['Cosine week'] = 0.5*(np.cos(timestamp_s * (2 * np.pi / week))+1)
     df['Sine year'] = 0.5*(np.sin(timestamp_s * (2 * np.pi / year))+1)
     df['Cosine year'] = 0.5*(np.cos(timestamp_s * (2 * np.pi / year))+1)
+    # df['Sine day'] = 0.5*(np.sin(timestamp_s * (2 * np.pi / day))+1)
+    # df['Cosine day'] = 0.5*(np.cos(timestamp_s * (2 * np.pi / day))+1)
+    # df['Sine week'] = 0.5*(np.sin(timestamp_s * (2 * np.pi / week))+1)
+    # df['Cosine week'] = 0.5*(np.cos(timestamp_s * (2 * np.pi / week))+1)
+    # df['Sine year'] = 0.5*(np.sin(timestamp_s * (2 * np.pi / year))+1)
+    # df['Cosine year'] = 0.5*(np.cos(timestamp_s * (2 * np.pi / year))+1)
     return df

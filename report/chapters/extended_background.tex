@@ -6,10 +6,12 @@ Ambient air pollution is one of the greatest environmental and health concerns o
 \label{sec:airpollutants}
 In densely populated urban areas, air pollution levels can periodically be severe, and with an accelerating urbanization, it has become imperative for regulatory authorities to closely monitor city air and try to mitigate the harmful effects of pollution. Commonly monitored substances include sulphur dioxide (SO$_2$), nitrogen oxides (NO$_x$, i.e., NO and NO$_2$), carbon monoxide (CO), ground-level ozone (O$_3$), volatile organic compounds (VOCs), and particulate matter (PM) \cite{VanLoon2010}. Vehicular traffic is a major source of the gaseous pollutants NO$_x$, SO$_2$, CO, and VOCs, but certain industrial processes also contribute to emissions \cite{VanLoon2010}. Ground-level O$_3$ (also a gas) is a so-called secondary pollutant that forms when NO$_x$ and VOCs react on sunny days with little wind \cite{VanLoon2010}. 
 
-\paragraph{Particulate matter}
-PM, the group of pollutants being the focus of this work, are atmospheric aerosol particles (i.e., particles suspended in the air). They have diverse origins, both natural and anthropogenic, and a complex chemical composition consisting of both solid and liquid species \cite{Schwarzenbach2016}. Some important sources of PM are forest fires, volcanic eruptions, sand/dust storms, sea spray, vehicular traffic, certain industrial processes, construction sites, and domestic combustion \cite{Querol2004, Schwarzenbach2016}. When entering the atmosphere directly by these routes, one denotes the PM as primary. However, PM can also be formed by the oxidation of gases such as SO$_2$, NO$_x$, and VOCs (followed by a complex chemical reaction process), in which case the PM is said to be secondary \cite{Schwarzenbach2016}. PM is also categorized by particle size (or more specifically, the aerodynamic diameter), and particles measuring smaller than 2.5 \textmugreek m and 10 \textmugreek m are denoted as PM$_{2.5}$ and PM$_{10}$, respectively \cite{Schwarzenbach2016}.
+\textcolor{red}{NO$_2$...}
 
-Both PM$_{10}$ and PM$_{2.5}$ can travel long distances from point sources (though PM$_{2.5}$ has a longer residence time in the atmosphere than PM$_{10}$), and local pollution can be affected by regional background levels \cite{Schwarzenbach2016, slbanalys}. PM levels are also dependent on weather conditions \cite{Schwarzenbach2016}. For example, temperature and solar radiation are related to the formation of secondary PM, and PM emission from roads, tires, brake wear, etc., can be affected by precipitation and humidity \cite{slbanalys, atmos7020015}. Both PM$_{10}$ and PM$_{2.5}$ are hazardous and cause a wide range of health problems, though PM$_{2.5}$ can more easily penetrate the lungs \cite{Schwarzenbach2016}. In the European Union, annual mean limits are set to 40 \textmugreek g/m$^3$ for PM$_{10}$ and 20 \textmugreek g/m$^3$ for PM$_{2.5}$ \cite{eu-airquality}. 
+%\paragraph{Particulate matter}
+%PM, the group of pollutants being the focus of this work, are atmospheric aerosol particles (i.e., particles suspended in the air). They have diverse origins, both natural and anthropogenic, and a complex chemical composition consisting of both solid and liquid species \cite{Schwarzenbach2016}. Some important sources of PM are forest fires, volcanic eruptions, sand/dust storms, sea spray, vehicular traffic, certain industrial processes, construction sites, and domestic combustion \cite{Querol2004, Schwarzenbach2016}. When entering the atmosphere directly by these routes, one denotes the PM as primary. However, PM can also be formed by the oxidation of gases such as SO$_2$, NO$_x$, and VOCs (followed by a complex chemical reaction process), in which case the PM is said to be secondary \cite{Schwarzenbach2016}. PM is also categorized by particle size (or more specifically, the aerodynamic diameter), and particles measuring smaller than 2.5 \textmugreek m and 10 \textmugreek m are denoted as PM$_{2.5}$ and PM$_{10}$, respectively \cite{Schwarzenbach2016}.
+
+%Both PM$_{10}$ and PM$_{2.5}$ can travel long distances from point sources (though PM$_{2.5}$ has a longer residence time in the atmosphere than PM$_{10}$), and local pollution can be affected by regional background levels \cite{Schwarzenbach2016, slbanalys}. PM levels are also dependent on weather conditions \cite{Schwarzenbach2016}. For example, temperature and solar radiation are related to the formation of secondary PM, and PM emission from roads, tires, brake wear, etc., can be affected by precipitation and humidity \cite{slbanalys, atmos7020015}. Both PM$_{10}$ and PM$_{2.5}$ are hazardous and cause a wide range of health problems, though PM$_{2.5}$ can more easily penetrate the lungs \cite{Schwarzenbach2016}. In the European Union, annual mean limits are set to 40 \textmugreek g/m$^3$ for PM$_{10}$ and 20 \textmugreek g/m$^3$ for PM$_{2.5}$ \cite{eu-airquality}. 
 
 \subsection{Ambient air pollution in Stockholm}
 \label{air-pollution-stockholm}
@@ -26,50 +28,67 @@ Having the possibility to forecast air pollution levels hours or days ahead can 
 
 \subsection{Forecasting as a regression problem}
 \label{sec:forecasting}
-While mechanistic models are based on mathematical modelling of atmospheric processes along with other factors governing the distribution of air pollution (such as emission source characteristics, physico-chemical properties of pollutants, terrain and building design, etc.) statistical and/or machine learning models are entirely data-driven, being derived directly from measurements on the variables of interest \cite{ElHarbawi2013}. From a statistical (or machine learning) perspective, forecasting air pollution can be viewed as a regression problem, in which a function $f$, mapping input data to a numerical output, is being approximated (or learned) from a training set of labeled input-output examples \cite{smlbook}. Learning the function $f$ amounts to finding a set of parameters (or weights/coefficients) for the model, which in the case of a simpler regression technique can be only a handful, but possibly millions if a deep neural network is used \cite{smlbook}. Generally in regression, the weights are learned by minimizing a cost function
+While mechanistic models are based on mathematical modelling of atmospheric processes along with other factors governing the distribution of air pollution (such as emission source characteristics, physico-chemical properties of pollutants, terrain and building design, etc.) statistical and/or machine learning models are entirely data-driven, being derived directly from measurements on the variables of interest \cite{ElHarbawi2013}. 
+
+From a statistical learning perspective, forecasting air pollution can be viewed as a regression problem, in which a function $f$, mapping input data to a numerical output, is being approximated (or learned) from a training set of labeled input-output examples \cite{smlbook}. Learning the function $f$ amounts to finding a set of parameters (or weights/coefficients) for the model, which in the case of a simpler regression technique can be only a handful, but possibly millions if a deep neural network is used \cite{smlbook}. Generally in regression, the weights are learned by minimizing a cost function
 \begin{align}
 J(\bm{\hat{\beta}}) = \frac{1}{n} \sum_{i=1}^{n} \big(\hat{y}_i - y_i \big)^2
 \label{eq:cost}
 \end{align}
-where $\bm{\hat{\beta}}$ is the vector of estimated model parameters ($\hat{\beta}_0, \: \hat{\beta}_1, ..., \: \hat{\beta}_n$), $\hat{y}_i$ is a prediction and $y_i$ is a training data value\cite{smlbook}. In \cref{eq:cost} the squared error loss is used as loss function, and the cost is simply the loss averaged over the training data.\footnote{What is meant by cost and loss functions can vary slightly in the literature, but in this work, the terminology of Lindholm et al. \cite{smlbook} is adopted.} Depending on the model, minimizing $J(\bm{\hat{\beta}})$ is approached differently, as explained further in the sections below. 
+where $\bm{\hat{\beta}}$ is the vector of estimated model parameters ($\hat{\beta}_0, \: \hat{\beta}_1, ..., \: \hat{\beta}_n$), $\hat{y}_i$ is a prediction and $y_i$ is a training data value\cite{smlbook}. In \cref{eq:cost} the squared error loss is used as loss function, and the cost is simply the loss averaged over the training data.\footnote{What is meant by cost and loss functions can vary slightly in the literature, but in this work, the same terminology as in Lindholm et al. \cite{smlbook} is adopted.} Depending on the model, minimizing $J(\bm{\hat{\beta}})$ is approached differently, as explained further in the sections below. 
 
 \subsection{Linear regression models}
 
 %\paragraph{Multiple linear regression}
-From the wealth of available regression techniques, multiple linear regression (MLR) has been extensively used to forecast and model air pollution \cite{atmos7020015}. Generally, if none of the basic model assumptions are violated (i.e., linearity, independence, normality, and constant variance), MLR is often a straightforward method, especially for data with no temporal dependencies (so-called cross-sectional data). However, for time series data, the assumption of independent errors is often not appropriate \cite{Montgomery2015}. 
+From the wealth of available regression techniques, multiple linear regression (MLR) has been extensively used to forecast and model air pollution \cite{atmos7020015}. Generally, if none of the basic model assumptions are violated, MLR is a straightforward method, especially for data with no temporal dependencies (so-called cross-sectional data). However, for time series data, the assumption of independent errors is often not appropriate \cite{Montgomery2015}. 
 
 \subsubsection{Linear regression for time series data}
-If fitting a MLR model to time series data, successive errors will typically be correlated (often referred to as autocorrelation), and this will cause several problems with the model if the correlation is not accounted for \cite{Montgomery2015}. To this end, adjustments to the MLR model can be made, some of which require other parameter estimation techniques than the usual method of ordinary least squares (OLS, see below). However, a simple and commonly used procedure to eliminate the autocorrelation is to include one or more lagged values of the response variable as predictors. For example, if the value of the response variable at lag one ($y_{t-1}$) is included, the MLR model will have the form 
+If fitting a MLR model to time series data, successive errors will typically be correlated (often referred to as autocorrelation), and this will cause several problems with the model if the correlation is not accounted for \cite{Montgomery2015}. To this end, adjustments to the MLR model can be made, some of which will require other parameter estimation techniques than the standard method of ordinary least squares (OLS). However, a simple and commonly used procedure to eliminate the autocorrelation is to include one or more lagged values of the response variable as predictors. For example, if the value of the response variable at lag one ($y_{t-1}$) is included, the MLR model will have the form 
 \begin{align}
 y_t = \beta_0 + \beta_{1} y_{t-1} + \beta_2 x_{2,t} + ... + \beta_{k} x_{k,t} + \varepsilon_t, \: \: \: t = 1, 2, ..., T
 \label{eq:mlr}
 \end{align}
-where $\varepsilon_t$ is the the error term, and $t$ denotes time steps \cite{Montgomery2015}. The model in \cref{eq:mlr} can be fit OLS, which in linear regression is the standard way of finding parameters so that $J(\bm{\hat{\beta}})$ is minimized \cite{Montgomery2012}. This is done by solving the so-called normal equations,
+where $\varepsilon_t$ is the the error term, and $t$ denotes time steps \cite{Montgomery2015}. The model in \cref{eq:mlr} can be fit with OLS, which in linear regression is the standard way of finding model parameters so that $J(\bm{\hat{\beta}})$ is minimized \cite{Montgomery2012}. This is done by solving the so-called normal equations,
 %\begin{align}
 %(\bm{X}^T\bm{X})\bm{\hat{\beta}} = \bm{X}^T\bm{y}
 %\label{eq:normal_eq}
 %\end{align}
-and the least squares estimates of the model parameters are (in matrix notation) then given by
+and the least squares estimates of the model parameters are then (in matrix notation) given by
 %(provided that the inverse of $\bm{X}^T\bm{X}$ exists) 
 %are given by \cref{eq:normal_sol} below.
 \begin{align}
 \bm{\hat{\beta}} = (\bm{X}^T\bm{X})^{-1}\bm{X}^T\bm{y}.
 \label{eq:normal_sol} 
 \end{align}
-A commonly used test for detecting autocorrelation is the Durbin-Watson test, where the statistic will have a value of $\sim 2$ in the case if uncorrelated errors \cite{Montgomery2015}.
+A commonly used test for detecting autocorrelation is the Durbin-Watson test, where the statistic will have a value of $\sim 2$ in the case if uncorrelated errors \cite{Montgomery2015}. 
 %where a value of the $\sim 2$ is expected in the case if uncorrelated errors \cite{Montgomery2015}.
 
-\subsubsection{Ridge and lasso regression}
-Careful variable selection in MLR is crucial as it can influence the performance of a model, and one is often concerned with finding an optimal ”subset” of predictors, where multicollinearity should also not be an issue \cite{Montgomery2012}. To this end, variable selection techniques based on optimizing a criterion like the Akaike or Bayes information criterion are common, and typically multicollinearity is also tested for (e.g.\ by examining the condition number, where a value below 100 is preferable) \cite{Montgomery2012}. However, if one is reluctant to exclude variables, but multicollinearity still might be an issue, regularized versions of MLR can be used \cite{Montgomery2012}. 
+\subsubsection{Robust regression}
+The errors of a MLR model should ideally be independent, have constant variance, and be approximately normally distributed \cite{Montgomery2012}. If any inference is to be made, the normality assumption is important. Deviations from normality can in some cases be reasonably ignored, however, when the distribution of the errors have long (or heavy) tails, this can be a sign of frequent extreme values in the data, in which case so-called robust model fitting techniques are more appropriate \cite{Montgomery2012}.
 
-Two common techniques are $L_1$ and  $L_2$ regularization, in which an extra so-called "penalty" term is added to the cost function to shrink (and essentially stabilize) the model parameter estimates \cite{smlbook}. In $L_2$ regularization (also called ridge regression), the parameters will be pushed towards small values, whereas in $L_1$ regularization (or lasso regression), some parameters will be driven to zero. 
-The penalty terms for ridge and lasso regression are, respectively, 
-$$\lambda \sum_{j=1}^{k}\beta_{j}^2\:\:\: \text{and}\:\:\: \lambda \sum_{j=1}^{k}|\beta_{j}|$$
-where $\lambda$ is a parameter controlling the shrinkage \cite{smlbook}. For ridge regression, the parameter estimates can be found by solving a modified version of \vref{eq:normal_sol}, while for lasso regression, no such analytical solution exists, and numerical optimization techniques have to be utilized \cite{smlbook}. 
-Generally, $L_1$ and $L_2$ regularization can be used to prevent overfitting, and also for $L_1$ where some input variables can be eliminated, as a variable selection technique \cite{smlbook}. 
+One such technique is M-estimation, where a modified version of \cref{eq:cost} is used to find the parameters estimates:
+\begin{align}
+J(\bm{\hat{\beta}}) = \frac{1}{n} \sum_{i=1}^{n} \rho \big(\hat{y}_i - y_i \big)^2
+\label{eq:robust}
+\end{align}
+where $\rho$ is 
 
-\subsubsection{Additional considerations}
-The extensive use of MLR for air pollution forecasts is many times motivated by its simplicity and straightforward implementation \cite{atmos7020015}. Another advantage is interpretability; for example, inference can often be made on all input variables, allowing one to investigate their individual importance \cite{Montgomery2012}. However, the assumption of linearity might not always hold, and large forecast errors have been observed at times of pollution peaks \cite{atmos7020015}. Moreover, with data from several (but nearby) monitoring stations, multicollinearity among the input variables can be an issue, which is why ridge or lasso regression are common alternatives to the non-regularized MLR model \cite{atmos7020015}. 
+
+%that places less weight on the errors in the tails of the distribution
+
+%\subsubsection{Ridge and lasso regression}
+%Careful variable selection in MLR is crucial as it can influence the performance of a model, and one is often concerned with finding an optimal ”subset” of predictors, where multicollinearity should also not be an issue \cite{Montgomery2012}. To this end, variable selection techniques based on optimizing a criterion like the Akaike or Bayes information criterion are common, and typically multicollinearity is also tested for (e.g.\ by examining the condition number, where a value below 100 is preferable) \cite{Montgomery2012}. 
+%
+%However, if one is reluctant to exclude variables, but multicollinearity still might be an issue, regularized versions of MLR can be used \cite{Montgomery2012}. Two common techniques are $L_1$ and  $L_2$ regularization, in which an extra so-called "penalty" term is added to the cost function to shrink (and essentially stabilize) the model parameter estimates \cite{smlbook}. In $L_2$ regularization (also called ridge regression), the parameters will be pushed towards small values, whereas in $L_1$ regularization (or lasso regression), some parameters will be driven to zero. 
+%The penalty terms for ridge and lasso regression are, respectively, 
+%$$\lambda \sum_{j=1}^{k}\beta_{j}^2\:\:\: \text{and}\:\:\: \lambda \sum_{j=1}^{k}|\beta_{j}|$$
+%where $\lambda$ is a parameter controlling the shrinkage \cite{smlbook}. For ridge regression, the parameter estimates can be found by solving a modified version of \vref{eq:normal_sol}, while for lasso regression, no such analytical solution exists, and numerical optimization techniques have to be utilized \cite{smlbook}. 
+%Generally, $L_1$ and $L_2$ regularization can be used to prevent overfitting, and also for $L_1$ where some input variables can be eliminated, as a variable selection technique \cite{smlbook}. 
+
+\subsubsection{Additional considerations for linear models}
+The extensive use of MLR for air pollution forecasts is many times motivated by its simplicity and straightforward implementation \cite{atmos7020015}. Another advantage is interpretability; for example, inference can be made on all input variables, allowing one to investigate their individual importance and relationship to the response variable \cite{Montgomery2012}. However, the model assumptions of MLR makes it quite restrictive as a model, and not all violations of the assumptions can be corrected for (e.g.\ if the linear assumption does not hold) \cite{Montgomery2015}. 
+
+%and large forecast errors have been observed at times of pollution peaks \cite{atmos7020015}. Moreover, with data from several (but nearby) monitoring stations, multicollinearity among the input variables can be an issue, which is why ridge or lasso regression are common alternatives to the non-regularized MLR model \cite{atmos7020015}. \textcolor{red}{ARIMA models???}
 
 %Linear models for time-series analysis, such as auto-regressive moving average and auto-regressive \textit{integrated} moving average (ARMA and ARIMA, respectively) and variants thereof, are also common \cite{Arsov2021, Goyal2006}. These models make predictions of future values based on past data (i.e., taking dependencies over time into account), however, similar to MLR, linearity is assumed and errors can be large when there are temporary peaks in pollution levels \cite{atmos7020015}. 
 
@@ -77,14 +96,14 @@ The extensive use of MLR for air pollution forecasts is many times motivated by 
 %While the forecasting techniques discussed above produce point-predictions of a pollutant, Bayesian methods can be used to predict distributions (or put another way, make density forecasts) \cite{FaganeliPucer2018}. A Bayesian approach can offer some advantages if thresholds are of interest, since with a density forecast, the probability of pollution levels exceeding a certain value can be estimated \cite{FaganeliPucer2018, smlbook}. For example, in Pucer et al. \cite{FaganeliPucer2018}, a Gaussian process model was used to give Gaussian density predictions of PM$_{10}$ and O$_3$. Bayesian methods have also been used for spatial predictions of PM by spatial interpolation (using values from monitored locations to estimate levels at other locations without any monitoring) \cite{atmos7020015}. 
 
 \subsection{Extensions of the linear model}
-More versatile and flexible regression models tend to give better forecasting results than linear models \cite{atmos7020015}. Some examples include regression trees, generalized additive models, and support vector machines (SVM) \cite{atmos7020015, FaganeliPucer2018}. These models can handle more complex non-linear input-output relationships, and especially SVM has been successfully applied for PM$_{10}$ prediction, sometimes with better results than artificial neural networks \cite{atmos7020015}. 
-
-Artificial neural networks (ANNs), in particular the multilayer perceptron (MLP), have also been extensively used as a forecasting technique \cite{atmos7020015}. ANNs are flexible models able to handle non-linear input-output relationships, however, over-fitting can be an issue, especially with high-dimensional input and if training data is limited \cite{atmos7020015, FaganeliPucer2018}. 
-
-%The MLP is a so-called feedforward neural network, in which a set of inputs are taken, passed through several layers of so-called hidden units, eventually producing an output \cite{LeCun2015}. 
-The MLP is a so-called feedforward neural network, in which a set of input data is taken and passed through several "hidden" layers made up of neurons (also called units), before an output is produced \cite{LeCun2015}.
-%A common way to illustrate a MLP is given in Figure \ref{fig:ANN}, where a network consisting of the input layer, two hidden layers (where units are represented with circles), and a single output, is shown. 
-Deep neural networks can have many such layers (hence the term "deep" \cite{Chollet2017}), and each layer can have hundreds of units. Every layer produces a slightly more abstract representation of its input by non-linear transformations, and with several such transformations, complex relationships in the data can be learned \cite{LeCun2015}.
+%More versatile and flexible regression models tend to give better forecasting results than linear models \cite{atmos7020015}. Some examples include regression trees, generalized additive models, and support vector machines (SVM) \cite{atmos7020015, FaganeliPucer2018}. These models can handle more complex non-linear input-output relationships, and especially SVM has been successfully applied for PM$_{10}$ prediction, sometimes with better results than artificial neural networks \cite{atmos7020015}. 
+%
+%Artificial neural networks (ANNs), in particular the multilayer perceptron (MLP), have also been extensively used as a forecasting technique \cite{atmos7020015}. ANNs are flexible models able to handle non-linear input-output relationships, however, over-fitting can be an issue, especially with high-dimensional input and if training data is limited \cite{atmos7020015, FaganeliPucer2018}. 
+%
+%%The MLP is a so-called feedforward neural network, in which a set of inputs are taken, passed through several layers of so-called hidden units, eventually producing an output \cite{LeCun2015}. 
+%The MLP is a so-called feedforward neural network, in which a set of input data is taken and passed through several "hidden" layers made up of neurons (also called units), before an output is produced \cite{LeCun2015}.
+%%A common way to illustrate a MLP is given in Figure \ref{fig:ANN}, where a network consisting of the input layer, two hidden layers (where units are represented with circles), and a single output, is shown. 
+%Deep neural networks can have many such layers (hence the term "deep" \cite{Chollet2017}), and each layer can have hundreds of units. Every layer produces a slightly more abstract representation of its input by non-linear transformations, and with several such transformations, complex relationships in the data can be learned \cite{LeCun2015}.
 
 %\begin{figure}[h]
 %\begin{center}
@@ -96,7 +115,7 @@ Deep neural networks can have many such layers (hence the term "deep" \cite{Chol
 
 %Training the neural network is an iterative process, in which the weights (or parameters) of the network are adjusted until the measured error stops decreasing.
 
-Many other deep learning architectures than the MLP exist, such as convolutional neural networks (CNNs), or recurrent neural networks (RNNs). CNNs are commonly used for image recognition while RNNs (and variants thereof) normally are applied to sequential data. 
+%Many other deep learning architectures than the MLP exist, such as convolutional neural networks (CNNs), or recurrent neural networks (RNNs). CNNs are commonly used for image recognition while RNNs (and variants thereof) normally are applied to sequential data. 
 %\textcolor{red}{(This section will be expanded with some more theory for the deep learning models to be used. Also, some mathematical notation will added.)}
 
 %\subsection{Variable selection}
