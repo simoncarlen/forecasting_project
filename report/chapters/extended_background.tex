@@ -64,15 +64,14 @@ A commonly used test for detecting autocorrelation is the Durbin-Watson test, wh
 %where a value of the $\sim 2$ is expected in the case if uncorrelated errors \cite{Montgomery2015}.
 
 \subsubsection{Robust regression}
-The errors of a MLR model should ideally be independent, have constant variance, and be approximately normally distributed \cite{Montgomery2012}. If any inference is to be made, the normality assumption is important. Deviations from normality can in some cases be reasonably ignored, however, when the distribution of the errors have long (or heavy) tails, this can be a sign of frequent extreme values in the data, in which case so-called robust model fitting techniques are more appropriate \cite{Montgomery2012}.
+The errors of a MLR model should ideally be independent, have constant variance, and be approximately normally distributed \cite{Montgomery2012}. If inference is to be made, the normality assumption is important. Deviations from normality can sometimes be reasonably ignored, however, when the error distribution has long (or heavy) tails, this can be a sign of frequent extreme values in the data, in which case so-called robust model fitting techniques are more appropriate than OLS \cite{Montgomery2012}.
 
-One such technique is M-estimation, where a modified version of \cref{eq:cost} is used to find the parameters estimates:
+One such technique is M-estimation, where a modified version of \cref{eq:cost} is used to find the parameter estimates:
 \begin{align}
 J(\bm{\hat{\beta}}) = \frac{1}{n} \sum_{i=1}^{n} \rho \big(\hat{y}_i - y_i \big)^2
 \label{eq:robust}
 \end{align}
-where $\rho$ is 
-
+\textcolor{red}{where $\rho$ is...}
 
 %that places less weight on the errors in the tails of the distribution
 
@@ -86,7 +85,12 @@ where $\rho$ is
 %Generally, $L_1$ and $L_2$ regularization can be used to prevent overfitting, and also for $L_1$ where some input variables can be eliminated, as a variable selection technique \cite{smlbook}. 
 
 \subsubsection{Additional considerations for linear models}
-The extensive use of MLR for air pollution forecasts is many times motivated by its simplicity and straightforward implementation \cite{atmos7020015}. Another advantage is interpretability; for example, inference can be made on all input variables, allowing one to investigate their individual importance and relationship to the response variable \cite{Montgomery2012}. However, the model assumptions of MLR makes it quite restrictive as a model, and not all violations of the assumptions can be corrected for (e.g.\ if the linear assumption does not hold) \cite{Montgomery2015}. 
+%As pointed out in \cref{sec:airpollutants}, weather conditions can affect pollution levels, which is why meteorological parameters often is included as input variables \cite{atmos7020015}. 
+The extensive use of MLR for air pollution forecasts is many times motivated by its simplicity and straightforward implementation \cite{atmos7020015}. Another advantage is interpretability; for example, inference can be made on all input variables, allowing one to investigate their individual importance and relationship to the response variable \cite{Montgomery2012}. However, the statistical properties of MLR make it rather restrictive, and not all violations of the assumptions can be remedied (e.g.\ non-linearity) \cite{Montgomery2015}. 
+
+Careful variable selection in MLR is also crucial as it can influence the performance of a model, and one is often concerned with finding an optimal ”subset” of predictors, where multicollinearity should also not be an issue \cite{Montgomery2012}. To this end, variable selection techniques based on optimizing a criterion like the Akaike information criterion are common, and the condition number can be used as a diagnostic for multicollinearity (where a value below 100 is preferred) \cite{Montgomery2012}. With many input variables, it is also common to use regularized versions of MLR such as ridge or lasso regression, in which an extra so-called "penalty" term is added to the cost function to shrink (and essentially stabilize) the model parameter estimates \cite{Montgomery2012, smlbook}. 
+
+%Other assumptions typically checked are the presence of (multi)collinearity among the predictors, and this can be done by examining the condition number, which preferably should be below 100 \cite{Montgomery2012}.  
 
 %and large forecast errors have been observed at times of pollution peaks \cite{atmos7020015}. Moreover, with data from several (but nearby) monitoring stations, multicollinearity among the input variables can be an issue, which is why ridge or lasso regression are common alternatives to the non-regularized MLR model \cite{atmos7020015}. \textcolor{red}{ARIMA models???}
 

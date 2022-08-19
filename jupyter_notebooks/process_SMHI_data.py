@@ -41,8 +41,8 @@ def stationinfo_and_parameter(metadata):
             parameters = parameters.lstrip('#').rstrip('\n')
             parameters = parameters.split(',')
     # return station_info[0].replace('Gata', ''), parameters[0].replace('PM10', 'PM$_{10}$') 
-    return station_info[0].replace('Gata', ''), parameters[0].replace('NO2', 'NO$_2$') 
-    # return station_info[0].replace('Gata', ''), parameters[0].replace('NOX as NO2', 'NO$_x$')
+    # return station_info[0].replace('Gata', ''), parameters[0].replace('NO2', 'NO$_2$') 
+    return station_info[0].replace('Gata', ''), parameters[0].replace('NOX as NO2', 'NO$_x$')
     # return station_info[0].replace('Gata', ''), parameters[0].replace('O3', 'O$_3$') 
     # return station_info[0].replace('Gata', ''), parameters[0].replace('PM2.5', 'PM$_{2.5}$') 
 

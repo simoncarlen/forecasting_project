@@ -113,12 +113,24 @@ In this work, rolling windows were used as input to the deep learning models, an
 Lastly, the data was split into training, validation, and test sets, where the validation set was used for hyperparameter tuning for the deep learning models. The test set was taken as the most recent year of data (from 2021-01-01 to 2022-01-01). For the validation set, the data from 2019 was used (since 2020 was an unusual year with regards to air pollution levels). The remaining data was used for training (2016-01-01 to 2019-01-01). This ordered (as opposed to random) split is motivated by the time dependence in the data.
 %Being sequence data, the sampling was done consecutively, without random shuffling, so that order information would be preserved 
 
-\section{Hyperparameter tuning and model fitting}
+\section{Model fitting and hyperparameter tuning}
 
 \subsection{Multiple linear regression models}
-Initially, a simple linear regression model was fit with OLS where the response variable at lag one was used as predictor. This model did not have any significant autocorrelation, but when also including the response variable at lag two as predictor, the Durbin-Watson statistic improved (i.e., was brought closer to 2). Including additional response variables after the first two lags did not lead to further improvements in terms of eliminating autocorrelation, however, the response variable at lag 24 turned out to also be significant. 
+Initially, a simple linear regression model was fit with OLS where the response variable at lag one was used as predictor. No significant autocorrelation was seen with this model, but when also including the response variable at lag two as predictor, the Durbin-Watson statistic improved (i.e., was brought closer to 2). Including additional response variables after the first two lags did not lead to further improvements in terms of eliminating autocorrelation, however, the response variables at lag 24 and 25 turned out to also be highly significant. 
 
-It should be noted that a log transformation of the response as well as input variables were required to stabilize the variance of the residuals, and also bring them closer to a normal distribution. Even so, deviation from normality was indicated, as can be seen in the residual plots in \cref{fig:residuals_MLR_PM10} in appendix \ref{chapt:appendix_B}. For inference, this is not optimal, however, by the central limit theorem, confidence intervals, t-tests, etc.\ are ensured to be increasingly accurate as the sample size increases, even if the distribution of the residuals is not normal \cite{Montgomery2012}. For the problem at hand, given the large amount of data points available, and the fact that the deviation from normality was not severe, this issue was regarded as largely unproblematic. (A more thorough interpretation of the residual plots is given in appendix \ref{chapt:appendix_B}.)
+It should be noted that a log transformation of the response as well as input variables were required to stabilize the variance of the errors, and also bring them closer to a normal distribution. Even so, deviation from normality was indicated, as can be seen in the residual plots in \cref{fig:residuals_MLR} in Appendix \ref{chapt:appendix_B}. More specifically, an examination of the residuals implied long-tailed errors, which is why a robust regression with $M$-estimates (and Huber's method) were used instead of OLS. Summary statistics for the OLS and robust regression are given in Table \ref{tab:OLS_table} and \ref{tab:Robust_table} in Appendix \ref{chapt:appendix_B}. 
+
+
+Including data (also log transformed) from other stations improved the MLR model, as did the meteorological parameters and the temporal variables. Data from other stations were, similar as for the response variable, fit with the values at lag one (since future values of the predictors cannot be known). 
+
+
+% ORDER
+% initial fit 
+% more variables 
+% 
+
+
+%With many variables in the model, a regularized approach was tested, namely ridge regression. However, \\
 
 %Including data (also log transformed) from other stations improved the MLR model, as did including the temporal variables for day, but the temporal variables for week and year were not significant ($p$-values $>$ 0.05). Data from other stations were, similar as for the response variable, fit with the values at lag one (since future values of the predictors cannot be known). Despite having data from several nearby stations, the condition number did not indicate any strong multicollinearity. However, when also including weather parameters in the model, the condition number rose to well above 100. Due to this, 
 

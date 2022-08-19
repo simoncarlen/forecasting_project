@@ -1,58 +1,104 @@
 \label{chapt:appendix_B}
-Summary statistics for the OLS regression are shown in Table \ref{tab:OLS_results}, and in \vref{fig:residuals_MLR_PM10} residual plots are shown.
-
-\begin{table}[h]
-\begin{center}
-\caption{OLS Regression Results.}
-\label{tab:OLS_results}
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{lclc}
-\toprule
-\textbf{Dep. Variable:}                                      & PM$_{10}$, Stockholm Torkel Knutssonsgatan & \textbf{  R-squared:         } &     0.765   \\
-\textbf{Model:}                                              &                      OLS                      & \textbf{  Adj. R-squared:    } &     0.765   \\
-\textbf{Method:}                                             &                 Least Squares                 & \textbf{  F-statistic:       } & 1.073e+04   \\
-\textbf{Date:}                                               &                Sun, 14 Aug 2022               & \textbf{  Prob (F-statistic):} &     0.00    \\
-\textbf{Time:}                                               &                    01:45:38                   & \textbf{  Log-Likelihood:    } &   -9929.0   \\
-\textbf{No. Observations:}                                   &                      26328                    & \textbf{  AIC:               } & 1.988e+04   \\
-\textbf{Df Residuals:}                                       &                      26319                    & \textbf{  BIC:               } & 1.995e+04   \\
-\textbf{Df Model:}                                           &                          8                    & \textbf{                     } &             \\
-\textbf{Covariance Type:}                                    &                   nonrobust                   & \textbf{                     } &             \\
-\bottomrule
-\end{tabular}}
-
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{lcccccc}
-                                                             & \textbf{coef} & \textbf{std err} & \textbf{t} & \textbf{P$> |$t$|$} & \textbf{[0.025} & \textbf{0.975]}  \\
-\midrule
-\textbf{intercept}                                           &      -0.0620  &        0.011     &    -5.888  &         0.000        &       -0.083    &       -0.041     \\
-\textbf{PM\$\_{10}\$, Stockholm Torkel Knutssonsgatan, lag1} &       0.5840  &        0.007     &    88.783  &         0.000        &        0.571    &        0.597     \\
-\textbf{PM\$\_{10}\$, Stockholm Torkel Knutssonsgatan, lag2} &       0.0895  &        0.006     &    14.683  &         0.000        &        0.078    &        0.101     \\
-\textbf{PM\$\_{10}\$, Stockholm Hornsgatan 108 , lag1}       &       0.0725  &        0.004     &    16.670  &         0.000        &        0.064    &        0.081     \\
-\textbf{PM\$\_{10}\$, Stockholm E4/E20 Lilla Essingen, lag1} &       0.1117  &        0.005     &    24.789  &         0.000        &        0.103    &        0.121     \\
-\textbf{PM\$\_{10}\$, Norr Malma, lag1}                      &       0.0892  &        0.004     &    21.909  &         0.000        &        0.081    &        0.097     \\
-\textbf{PM\$\_{10}\$, Sollentuna Ekmans Väg 11, lag1}        &       0.0354  &        0.004     &    10.085  &         0.000        &        0.028    &        0.042     \\
-\textbf{Sine day}                                            &       0.0403  &        0.003     &    12.230  &         0.000        &        0.034    &        0.047     \\
-\textbf{Cosine day}                                          &      -0.0250  &        0.003     &    -7.742  &         0.000        &       -0.031    &       -0.019     \\
-\bottomrule
-\end{tabular}}
-
-\begin{tabular}{lclc}
-\textbf{Omnibus:}       & 8158.025 & \textbf{  Durbin-Watson:     } &     1.964   \\
-\textbf{Prob(Omnibus):} &   0.000  & \textbf{  Jarque-Bera (JB):  } & 135118.531  \\
-\textbf{Skew:}          &  -1.051  & \textbf{  Prob(JB):          } &      0.00   \\
-\textbf{Kurtosis:}      &  13.897  & \textbf{  Cond. No.          } &      31.6   \\
-\bottomrule
-\end{tabular}
-%\caption{OLS Regression Results}
-\end{center}
-\end{table}
+Residual plots from the OLS regression are shown in \cref{fig:residuals_MLR} below. From plot (a) and (c), the long-tailed distribution of the errors can be seen, especially in plot (a) where the long tails are indicated by deviations from the straight line. Looking at plot (b), the variance appears stable, and the residuals are scattered in a reasonably random fashion and there is also no signs of non-linearity. The variance also appear stable over time, as indicated in plot (d). An additional numeric test for constant variance was performed where a regression line was fit to $\sqrt{|\hat{\varepsilon}}|$. This line had a non-significant slope (with $x = -0.0045$ and $p=0.262$), giving further support to the homoscedasticity assumption \cite{Montgomery2012}. In Table \ref{tab:OLS_table} and \ref{tab:Robust_table}, summary statistics are shown for the OLS regression and robust regression, respectively. 
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics[width=0.625\textwidth]{../plots/Residual_plots_MLR_NO2}}
-\caption{Residual plots for the PM$_{10}$ MLR model.}
-\label{fig:residuals_MLR_PM10}
+\makebox[\textwidth][c]{\includegraphics[width=.95\textwidth]{../plots/Residual_plots_MLR_NO2}}
+\caption{Residual plots for the OLS regression model.}
+\label{fig:residuals_MLR}
 \end{figure}
+
+\begin{landscape}
+\begin{table}
+\begin{center}
+\begin{tabular}{lclc}
+\toprule
+\textbf{Dep. Variable:}                                     & NO\$\_2\$, Torkel Knutssonsgatan & \textbf{  R-squared:         } &     0.858   \\
+\textbf{Model:}                                             &               OLS                & \textbf{  Adj. R-squared:    } &     0.858   \\
+\textbf{Method:}                                            &          Least Squares           & \textbf{  F-statistic:       } & 1.136e+04   \\
+\textbf{Date:}                                              &         Fri, 19 Aug 2022         & \textbf{  Prob (F-statistic):} &     0.00    \\
+\textbf{Time:}                                              &             12:42:52             & \textbf{  Log-Likelihood:    } &    39712.   \\
+\textbf{No. Observations:}                                  &               26281              & \textbf{  AIC:               } & -7.939e+04  \\
+\textbf{Df Residuals:}                                      &               26266              & \textbf{  BIC:               } & -7.927e+04  \\
+\textbf{Df Model:}                                          &                  14              & \textbf{                     } &             \\
+\textbf{Covariance Type:}                                   &            nonrobust             & \textbf{                     } &             \\
+\bottomrule
+\end{tabular}
+\begin{tabular}{lcccccc}
+                                                            & \textbf{coef} & \textbf{std err} & \textbf{t} & \textbf{P$> |$t$|$} & \textbf{[0.025} & \textbf{0.975]}  \\
+\midrule
+\textbf{intercept}                                          &       0.1269  &        0.005     &    23.332  &         0.000        &        0.116    &        0.138     \\
+\textbf{NO\$\_2\$, Stockholm Torkel Knutssonsgatan, lag1}   &       0.9222  &        0.006     &   142.835  &         0.000        &        0.910    &        0.935     \\
+\textbf{NO\$\_2\$, Stockholm Torkel Knutssonsgatan, lag2}   &      -0.2021  &        0.006     &   -35.796  &         0.000        &       -0.213    &       -0.191     \\
+\textbf{NO\$\_2\$, Stockholm Torkel Knutssonsgatan, lag 24} &       0.0512  &        0.003     &    18.420  &         0.000        &        0.046    &        0.057     \\
+\textbf{NO\$\_2\$, Stockholm Hornsgatan 108 , lag1}         &       0.0484  &        0.004     &    11.632  &         0.000        &        0.040    &        0.057     \\
+\textbf{NO\$\_2\$, Stockholm Sveavägen 59 , lag1}           &      -0.0414  &        0.004     &   -10.076  &         0.000        &       -0.049    &       -0.033     \\
+\textbf{NO\$\_2\$, Stockholm E4/E20 Lilla Essingen, lag1}   &       0.1133  &        0.005     &    23.308  &         0.000        &        0.104    &        0.123     \\
+\textbf{Sine day}                                           &       0.0017  &        0.001     &     1.370  &         0.171        &       -0.001    &        0.004     \\
+\textbf{Cosine day}                                         &      -0.0524  &        0.001     &   -37.946  &         0.000        &       -0.055    &       -0.050     \\
+\textbf{Sine week}                                          &      -0.0105  &        0.001     &   -10.986  &         0.000        &       -0.012    &       -0.009     \\
+\textbf{Cosine week}                                        &       0.0132  &        0.001     &    13.325  &         0.000        &        0.011    &        0.015     \\
+\textbf{Temperature}                                        &      -0.0038  &        0.003     &    -1.501  &         0.133        &       -0.009    &        0.001     \\
+\textbf{Relative humidity}                                  &      -0.0188  &        0.002     &    -8.710  &         0.000        &       -0.023    &       -0.015     \\
+\textbf{Solar radiation}                                    &      -0.0864  &        0.003     &   -32.090  &         0.000        &       -0.092    &       -0.081     \\
+\textbf{Wind speed}                                         &      -0.1473  &        0.004     &   -37.139  &         0.000        &       -0.155    &       -0.140     \\
+\bottomrule
+\end{tabular}
+\begin{tabular}{lclc}
+\textbf{Omnibus:}       & 1882.435 & \textbf{  Durbin-Watson:     } &    1.939  \\
+\textbf{Prob(Omnibus):} &   0.000  & \textbf{  Jarque-Bera (JB):  } & 6919.847  \\
+\textbf{Skew:}          &   0.298  & \textbf{  Prob(JB):          } &     0.00  \\
+\textbf{Kurtosis:}      &   5.442  & \textbf{  Cond. No.          } &     58.2  \\
+\bottomrule
+\end{tabular}
+\caption{OLS Regression Results.}
+\label{tab:OLS_table}
+\end{center}
+\end{table}
+\end{landscape}
+
+
+\begin{landscape}
+\begin{table}
+\begin{center}
+\begin{tabular}{lclc}
+\toprule
+\textbf{Dep. Variable:}                                     & NO\$\_2\$, Torkel Knutssonsgatan & \textbf{  No. Observations:  } &    26281    \\
+\textbf{Model:}                                             &               RLM                & \textbf{  Df Residuals:      } &    26266    \\
+\textbf{Method:}                                            &               IRLS               & \textbf{  Df Model:          } &       14    \\
+\textbf{Norm:}                                              &              HuberT              & \textbf{                     } &             \\
+\textbf{Scale Est.:}                                        &               mad                & \textbf{                     } &             \\
+\textbf{Cov Type:}                                          &                H1                & \textbf{                     } &             \\
+\textbf{Date:}                                              &         Fri, 19 Aug 2022         & \textbf{                     } &             \\
+\textbf{Time:}                                              &             12:45:23             & \textbf{                     } &             \\
+\textbf{No. Iterations:}                                    &                23                & \textbf{                     } &             \\
+\bottomrule
+\end{tabular}
+\begin{tabular}{lcccccc}
+                                                            & \textbf{coef} & \textbf{std err} & \textbf{z} & \textbf{P$> |$z$|$} & \textbf{[0.025} & \textbf{0.975]}  \\
+\midrule
+\textbf{intercept}                                          &       0.1178  &        0.005     &    24.229  &         0.000        &        0.108    &        0.127     \\
+\textbf{NO\$\_2\$, Stockholm Torkel Knutssonsgatan, lag1}   &       0.9596  &        0.006     &   166.213  &         0.000        &        0.948    &        0.971     \\
+\textbf{NO\$\_2\$, Stockholm Torkel Knutssonsgatan, lag2}   &      -0.2101  &        0.005     &   -41.615  &         0.000        &       -0.220    &       -0.200     \\
+\textbf{NO\$\_2\$, Stockholm Torkel Knutssonsgatan, lag 24} &       0.0453  &        0.002     &    18.244  &         0.000        &        0.040    &        0.050     \\
+\textbf{NO\$\_2\$, Stockholm Hornsgatan 108 , lag1}         &       0.0375  &        0.004     &    10.086  &         0.000        &        0.030    &        0.045     \\
+\textbf{NO\$\_2\$, Stockholm Sveavägen 59 , lag1}           &      -0.0351  &        0.004     &    -9.571  &         0.000        &       -0.042    &       -0.028     \\
+\textbf{NO\$\_2\$, Stockholm E4/E20 Lilla Essingen, lag1}   &       0.1014  &        0.004     &    23.344  &         0.000        &        0.093    &        0.110     \\
+\textbf{Sine day}                                           &      -0.0001  &        0.001     &    -0.130  &         0.896        &       -0.002    &        0.002     \\
+\textbf{Cosine day}                                         &      -0.0485  &        0.001     &   -39.317  &         0.000        &       -0.051    &       -0.046     \\
+\textbf{Sine week}                                          &      -0.0088  &        0.001     &   -10.269  &         0.000        &       -0.010    &       -0.007     \\
+\textbf{Cosine week}                                        &       0.0111  &        0.001     &    12.624  &         0.000        &        0.009    &        0.013     \\
+\textbf{Temperature}                                        &      -0.0027  &        0.002     &    -1.207  &         0.228        &       -0.007    &        0.002     \\
+\textbf{Relative humidity}                                  &      -0.0180  &        0.002     &    -9.309  &         0.000        &       -0.022    &       -0.014     \\
+\textbf{Solar radiation}                                    &      -0.0803  &        0.002     &   -33.360  &         0.000        &       -0.085    &       -0.076     \\
+\textbf{Wind speed}                                         &      -0.1320  &        0.004     &   -37.219  &         0.000        &       -0.139    &       -0.125     \\
+\bottomrule
+\end{tabular}
+\caption{Robust linear Model Regression Results.}
+\label{tab:Robust_table}
+\end{center}
+\end{table}
+\end{landscape}
 
 %
 %\begin{figure}[h]
