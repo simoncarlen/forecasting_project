@@ -44,15 +44,14 @@ In Stockholm County, there are 19 stationary sites for air pollution monitoring 
 
 \subsection{Data preprocessing}
 \subsubsection{Initial preprocessig}
-The NO$_2$ data for Torkel Knutssonsgatan is shown in \vref{fig:time_series_plots}. (Similar plots for all stations are given in Fig.\ \ref{fig:time_series_plots_all} in appendix \ref{chapt:appendix_A}.)
+%(Similar plots for all stations are given in Fig.\ \ref{fig:time_series_plots_all} in appendix \ref{chapt:appendix_A}.)
 %(station-wise, with PM$_{10}$ and PM$_{2.5}$ in the left and right subplots, respectively)
-Some stations had short episodes with missing data, and linear interpolation was used to fill in the missing values. Missing weather data was also linearly interpolated, except for the variables atmospheric pressure and wind speed for which mean imputation was deemed more appropriate. 
+All stations had short episodes with missing data, and linear interpolation was used to fill in the missing values. Missing weather data was also linearly interpolated, except atmospheric pressure and wind speed for which mean imputation was deemed more appropriate. Moreover, before use in any of the models, all data were min-max normalized (i.e., scaled to the interval $[0,1]$). 
 %However, for the PM$_{2.5}$ data at Torkel Knutssonsgatan (plot (b) in \vref{fig:time_series_plots}), due to the rather big gap at the beginning of 2019,
 
-In \vref{fig:time_series_plots}, a notable reduction in NO$_2$ levels can be seen during 2020 and early 2021. This reduction is most likely due to the COVID-19 pandemic, and by late 2021, pre-pandemic NO$_2$ levels are again approached.  Because of this, a train-test split (see below) was done to entirely avoid using the data for 2020.
+In \vref{fig:time_series_plots}, the NO$_2$ data for Torkel Knutssonsgatan is shown. A notable reduction in NO$_2$ levels can be seen during 2020 and early 2021; this reduction is most likely due to the COVID-19 pandemic (by late 2021, pre-pandemic NO$_2$ levels are again approached).  Because of this, a train-test split (see below) was done to entirely avoid using the data for 2020.
 % (which was an unusual year with regards to air pollution levels). 
 %a train-test split was done to entirely avoid this period (see below). Missing weather data was also linearly interpolated, except for the variables atmospheric pressure and wind speed for which mean imputation was deemed more appropriate. 
-%Moreover, before use in any of the models, all data were min-max normalized (i.e., scaled to the interval $[0,1]$). 
 
 %It should be noted that some PM values were negative.
 %%this is seen clearly in e.g.\ plot (f) in \vref{fig:time_series_plots}, for the time period Jan.\ 2016 up to about Sep.\ 2019. 
@@ -101,7 +100,8 @@ In this work, rolling windows were used as input to the deep learning models, an
 % for short-term predictions of a target window one step ahead (i.e., the next hour). More details are given in section \ref{sec:tuning_deep_learning} below. 
  \begin{figure}[h]
 \begin{center}
-\includegraphics{sliding-windows}
+%\includegraphics{sliding-windows}
+\makebox[\textwidth][c]{\includegraphics[width=1\textwidth]{sliding-windows}}
 \caption{Rolling window approach for time-series data.}
 \label{fig:sliding-window}
 \end{center}
@@ -110,25 +110,46 @@ In this work, rolling windows were used as input to the deep learning models, an
 %In this work, the window lengths were set to 12 hours, and both single time-step predictions (target windows of length one) and multi-time-step predictions (target windows of length $n$) were tested. Moreover, prediction models giving both single-outputs (the target value at one monitoring station) as well as multi-outputs (target value at all stations) were constructed.
 %\paragraph{Train-test split} Lastly, the data was split into training (60\%), validation (20\%), and test (20\%) sets, where the validation set was used for hyperparameter tuning (described in more detail in section \ref{sec:tuning}). Being sequence data, the sampling was done consecutively, without random shuffling, so that order information would be preserved \cite{Gilik2021}. 
 \subsubsection{Train-test split} 
-Lastly, the data was split into training, validation, and test sets, where the validation set was used for hyperparameter tuning for the deep learning models. The test set was taken as the most recent year of data (from 2021-01-01 to 2022-01-01). For the validation set, the data from 2019 was used (since 2020 was an unusual year with regards to air pollution levels). The remaining data was used for training (2016-01-01 to 2019-01-01). This ordered (as opposed to random) split is motivated by the time dependence in the data.
+Lastly, the data was split into training, validation, and test sets, where the validation set was used for hyperparameter tuning. The test set was taken as the most recent year of data (from 2021-01-25 to 2022-01-01, where the first days of January were skipped due to a rather big gap in the data for the station at Lilla Essingen). For the validation set, the data from 2019 was used (since 2020 was an unusual year with regards to air pollution levels). The remaining data was used for training (2016-01-01 to 2019-01-01). This ordered (as opposed to random) split is motivated by the time dependence in the data.
 %Being sequence data, the sampling was done consecutively, without random shuffling, so that order information would be preserved 
 
 \section{Model fitting and hyperparameter tuning}
 
 \subsection{Multiple linear regression models}
-Initially, a simple linear regression model was fit with OLS where the response variable at lag one was used as predictor. No significant autocorrelation was seen with this model, but when also including the response variable at lag two as predictor, the Durbin-Watson statistic improved (i.e., was brought closer to 2). Including additional response variables after the first two lags did not lead to further improvements in terms of eliminating autocorrelation, however, the response variables at lag 24 and 25 turned out to also be highly significant. 
+Initially, a simple linear regression model was fit with OLS where the response variable at lag one was used as predictor. No significant autocorrelation was seen with this model, but when also including the response variable at lag two as predictor, the Durbin-Watson statistic improved (i.e., was brought closer to 2). Including additional response variables after the first two lags did not lead to further improvements in terms of eliminating autocorrelation, however, the response variables at lag 24 and 25 turned out to also be important. 
 
-It should be noted that a log transformation of the response as well as input variables were required to stabilize the variance of the errors, and also bring them closer to a normal distribution. Even so, deviation from normality was indicated, as can be seen in the residual plots in \cref{fig:residuals_MLR} in Appendix \ref{chapt:appendix_B}. More specifically, an examination of the residuals implied long-tailed errors, which is why a robust regression with $M$-estimates (and Huber's method) were used instead of OLS. Summary statistics for the OLS and robust regression are given in Table \ref{tab:OLS_table} and \ref{tab:Robust_table} in Appendix \ref{chapt:appendix_B}. 
+NO$_2$ data from other stations, meteorological variables, and the temporal variables were subsequently added to the model (and still the condition number was lower than 100). The NO$_2$ data was fit with the values at lag one, since for a forecast at time $t+1$, these predictors cannot be known. However, lagged values of the meteorological variables were not used as these can more easily be replaced with their forecasted values. A similar MLR approach to the one taken here, but for predicting daily means of PM$_{10}$, can be found Stadlober et al. \cite{Stadlober2008}. 
 
+A log transformation of all NO$_2$ data was required before normalization to stabilize the variance of the errors, and also make the error distribution more normal. Even so, deviation from normality was indicated, and as can be seen in \cref{fig:residuals_MLR} in Appendix \ref{chapt:appendix_B}, the error distribution had long/heavy tails. For this reason, a robust regression model with $M$-estimates (and Huber's function) was judged to be a more suitable alternative to OLS regression.
+%as can be seen in the residual plots in \cref{fig:residuals_MLR} in Appendix \ref{chapt:appendix_B}. More specifically, the error distribution had long tails, which is why robust regression with $M$-estimates (and Huber's function) was judged to be a more suitable alternative to OLS regression. 
 
-Including data (also log transformed) from other stations improved the MLR model, as did the meteorological parameters and the temporal variables. Data from other stations were, similar as for the response variable, fit with the values at lag one (since future values of the predictors cannot be known). 
+At this point, with many input variables in the model, recursive feature elimination (RFE) was used as a variable selection technique, in which the model is repeatedly re-fit after having removed the least significant predictor \cite{Faraway2020}. Each candidate model generated by RFE was evaluated on the validation set (as well as the training set for comparison), and the results are shown in \vref{fig:RFE}. 
+\begin{figure}[h] 
+\begin{center}
+\includegraphics[scale=1.05]{../plots/RMSE_predictors}
+\caption{RMSE for each candidate model generated by RFE.}
+\label{fig:RFE}
+\end{center}
+\end{figure}
 
+From \cref{fig:RFE}, it is evident that the least important predictors brought essentially no improvements to the model, and they were therefore removed. More specifically, these variables were; precipitation, atmospheric pressure, the Norr Malma NO$_2$ data, and the temporal variables for week and year. The final MLR model had the form
+\begin{align}
+\log y_t = \beta_0 + \sum_{\mathclap{\substack{i=1,\\ l\in\{1,2,23,24\}\\}}}^{4} \beta_{i} \log y_{i,t-l} + \sum_{i=5}^{7} \beta_{i} \log x_{i,t-1} + \sum_{i=8}^{11} \beta_{i} z_{i,t}  + \sum_{i=12}^{13} \beta_{i} w_{i,t} +  \varepsilon_t
+\label{eq:mlr}
+\end{align}
+where $x$ denotes variables with NO$_2$ data from other stations than Torkel Knutssonsgatan, $z$ denotes meteorological variables, $w$ denotes the temporal variables for day, and t = 1, 2, ..., T. Also, the errors ($\varepsilon_t$) in \cref{eq:mlr} are assumed to follow some heavy-tailed probability distribution (see \cref{fig:residuals_MLR}b in Appendix \ref{chapt:appendix_B}). Summary statistics for this model, together with values and inference for the estimated parameters, are given in \cref{tab:Robust_table} in Appendix \ref{chapt:appendix_B}. Also, in \cref{tab:OLS_table} in Appendix \ref{chapt:appendix_B}, summary statistics for the OLS regression model are given, though the OLS model was not used to make any forecasts. 
 
-% ORDER
-% initial fit 
-% more variables 
-% 
+%\begin{equation}
+%\sum_{\mathclap{\substack{i=1,\\ j\in\{1,2,23,24\}\\}}}^{4}
+%\end{equation}
 
+%However, with many input variables in the model, an $L_1$-regularized robust regression was tested. 
+
+%(Summary statistics for the OLS regression is given in Table \ref{tab:OLS_table} in Appendix \ref{chapt:appendix_B}.)
+
+%It should be noted that a log transformation of all NO$_2$ data was required to stabilize the variance of the errors, and also bring them closer to a normal distribution. Even so, deviation from normality was indicated, as can be seen in the residual plots in \cref{fig:residuals_MLR} in Appendix \ref{chapt:appendix_B}. More specifically, the error distribution had long tails, which is why robust regression with $M$-estimates (and Huber's method) was used instead of OLS. Summary statistics for both the OLS and robust regression are given, respectively, in Table \ref{tab:OLS_table} and \ref{tab:Robust_table} in Appendix \ref{chapt:appendix_B}. 
+
+%Some input variables were not significant as indicated by their $p$-values. (These variables were the NO$_2$ data from Norr Malma, precipitation, and temperature.) Removing them lowered the condition number to below 100 and improved the model, as indicated by the $R^2$-value and the RMSE (when making new predictions on the test data). Still, with many input variables, an $L_1$-regularized version of robust regression was tested \cite{Huber2009}. This model shrunk the coefficients somewhat, but only brought minimal improvements in terms of RMSE (less than one tenth of a percent), which is why the non-regularized robust regression model was deemed sufficient as a base model for comparison. The final model had the form 
 
 %With many variables in the model, a regularized approach was tested, namely ridge regression. However, \\
 

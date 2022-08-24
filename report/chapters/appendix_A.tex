@@ -1,7 +1,8 @@
 \label{chapt:appendix_A}
 % STATIONS TABLE
 % ##############
-Information about the monitoring stations from which data was used is summarized in \vref{tab:stations}. In \vref{fig:time_series_plots_all}, time series plots of PM$_{10}$ and PM$_{2.5}$ at each station are shown. 
+Information about the monitoring stations from which data was used is summarized in \vref{tab:stations}.
+
 \begin{table}[h]
 \centering
 \caption{Monitoring stations.}
@@ -9,10 +10,12 @@ Information about the monitoring stations from which data was used is summarized
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{@{}llllll@{}}
 \toprule
-Station                         & Station code & Longitude & Latitude  & Type of monitoring                                                   & Parameters                                                                                             \\ \midrule
-Norrtälje, Norr Malma           & 18643        & 18.631313 & 59.832382 & \begin{tabular}[c]{@{}l@{}}Rural-Regional \\ Background\end{tabular} & PM$_{10}$, PM$_{2.5}$                                                                                  \\ \midrule
-Stockholm, Hornsgatan 108       & 8780         & 18.04866  & 59.317223 & Urban Traffic                                                        & PM$_{10}$, PM$_{2.5}$                                                                                  \\ \midrule
-Stockholm, Torkel Knutssonsgatan & 8781         & 18.057808 & 59.316006 & Urban background                                                     & \begin{tabular}[c]{@{}l@{}}PM$_{10}$, PM$_{2.5}$, NO$_2$, \\ meteorological \\ parameters\end{tabular} \\ \bottomrule
+Station                          & Station code & Longitude & Latitude  & Type of monitoring                                                   & Parameters                                                                     \\ \midrule
+Norrtälje, Norr Malma            & 18643        & 18.631313 & 59.832382 & \begin{tabular}[c]{@{}l@{}}Rural-Regional \\ Background\end{tabular} & NO$_2$                                                                         \\ \midrule
+Stockholm, E4/E20 Lilla Essingen & 18644        & 18.00439  & 59.325527 & Urban Traffic                                                        & NO$_2$                                                                         \\ \midrule
+Stockholm, Hornsgatan 108        & 8780         & 18.04866  & 59.317223 & Urban Traffic                                                        & NO$_2$                                                                         \\ \midrule
+Stockholm, Sveavägen 59 Gata     & 8779         & 18.058254 & 59.340828 & Urban Traffic                                                        & NO$_2$                                                                         \\ \midrule
+Stockholm, Torkel Knutssongatan  & 8781         & 18.057808 & 59.316006 & Urban background                                                     & \begin{tabular}[c]{@{}l@{}}NO$_2$,\\ meteorological \\ parameters\end{tabular} \\ \bottomrule
 \end{tabular}%
 }
 \end{table}
@@ -20,10 +23,9 @@ Stockholm, Torkel Knutssonsgatan & 8781         & 18.057808 & 59.316006 & Urban 
 %% ##############
 %\begin{figure}[h]
 %\centering
-%\makebox[\textwidth][c]{\includegraphics[width=1\textwidth]{../plots/time_series_plots_all}}
-%%\includegraphics[width=\textwidth]{../plots/time_series_plots}
+%\makebox[\textwidth][c]{\includegraphics[width=.75\textwidth]{../plots/NO2_all_stations}}
 %\caption{Time series plots for PM$_{10}$ and PM$_{2.5}$ at all stations.}
 %\label{fig:time_series_plots_all}
 %\end{figure}
 
-\pagebreak
+\pagebreak % needed to have appendices on different pages
