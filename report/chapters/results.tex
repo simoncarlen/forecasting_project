@@ -1,1 +1,42 @@
-\section{Multiple linear regression models}
+
+\section{Regression metrics}
+Forecasts on the original scale of a time series (in this case \textmugreek g/m$^3$) are easier to interpret, and therefore the transformations made before model fitting were reversed. This required inverting the normalization, and also in the case of the MLR model, using exp($\hat{y}$) for the predictions. For all deep learning architectures, the 12 h input window gave better predictions than with the 24 h input window, and in \cref{tab:metrics}, common performance metrics for the best performing deep learning models are summarized together with the corresponding performance for the MLR model.
+
+From \cref{tab:metrics}, it can be inferred that the dense model had the best performance in terms of MSE/RMSE, closely followed by the LSTM model. The RNN model, however, only had slightly better performance than the (baseline) MLR model. Interestingly, the MAPE follows an entirely different pattern, where the MLR model had the lowest value (20\%), and the LSTM model the highest (29.6\%). This indicates a stronger bias in the predictions by the deep learning models compared to the MLR model. 
+
+\begin{table}[h]
+\centering
+\caption{Performance metrics for the MLR and deep learning models.}
+\label{tab:metrics}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Model            & \multicolumn{1}{l}{MSE} & \multicolumn{1}{l}{RMSE} & \multicolumn{1}{l}{MAPE} \\ \midrule
+Robust MLR model & 12.341                  & 3.513                    & 0.20                     \\
+Dense model      & 10.621                  & 3.259                    & 0.243                    \\
+RNN model        & 12.174                  & 3.489                    & 0.265                    \\
+LSTM model       & 11.0                    & 3.317                    & 0.296                    \\ \bottomrule
+\end{tabular}
+\end{table}
+
+In \cref{fig:correlations}, where observed vs.\ predicted NO$_2$ levels are shown for each model together with the corresponding correlation coefficient, the bias in the predictions for the deep learning models can be seen. For example, looking at plots (b)--(d), there is a consistent pattern of too high predictions (indicated by the unequal distribution of observations around the red line). For the MLR model (\cref{fig:correlations}a), though less biased, the bias goes in the opposite direction, with a tendency to make too low predictions. The correlation coefficients followed the same pattern as MSE/RMSE, with the dense model having the highest $\rho$. 
+
+In \cref{fig:predictions}, predicted and observed NO$_2$ levels for all models during a 9 day window (1st to 9th of Dec) from the test set are shown. Comparing the MLR model with the deep learning models in \cref{fig:predictions}, it is clear that the MLR model performed worse during pollution peaks (e.g.\ the peak observed around 7--8 of Dec was not predicted very accurately). The model best predicting peaks during this time window appears to be the RNN model, but again the RNN model is clearly biased and also had the lowest $\rho$ among the deep learning models. 
+ 
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[width=1\textwidth]{../plots/correlations}}
+\caption{Actual vs.\ predicted NO$_2$ levels. }
+\label{fig:correlations}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[width=1\textwidth]{../plots/predictions}}
+\caption{Actual and predicted NO$_2$ for 10 days in Dec.}
+\label{fig:predictions}
+\end{figure}
+
+\clearpage
+\section{Classification of predictions}
+
+% sine and cosine for hours important for hourly predictions... but day and year unimportant

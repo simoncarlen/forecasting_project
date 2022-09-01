@@ -51,31 +51,44 @@ If fitting a MLR model to time series data, successive errors will typically be 
 y_t = \beta_0 + \beta_{1} y_{t-1} + \beta_2 x_{2,t} + ... + \beta_{k} x_{k,t} + \varepsilon_t, \: \: \: t = 1, 2, ..., T
 \label{eq:mlr}
 \end{align}
-where $\varepsilon_t$ is the the error term, and $t$ denotes time steps \cite{Montgomery2015}. The model in \cref{eq:mlr} can be fit with OLS, which in linear regression is the standard way of finding model parameters so that $J(\bm{\hat{\beta}})$ is minimized \cite{Montgomery2012}. This is done by solving the so-called normal equations,
+where $\varepsilon_t$ is the the error term, and $t$ denotes time steps \cite{Montgomery2015}. The model in \cref{eq:mlr} can be fit with OLS, which in linear regression is the standard way of finding model parameters so that $J(\bm{\hat{\beta}})$ is minimized \cite{Montgomery2012}. This is done by solving the so-called least squares normal equations,
 %\begin{align}
 %(\bm{X}^T\bm{X})\bm{\hat{\beta}} = \bm{X}^T\bm{y}
 %\label{eq:normal_eq}
 %\end{align}
-and the least squares estimates of the model parameters are then given by
+and the least squares estimates of the model parameters are then given by \cref{eq:normal_sol} below, where $X$ is a matrix of regressor variables and $y$ is a vector of response variables. 
 %(provided that the inverse of $\bm{X}^T\bm{X}$ exists) 
 %are given by \cref{eq:normal_sol} below.
 \begin{align}
-\bm{\hat{\beta}} = (\bm{X}^T\bm{X})^{-1}\bm{X}^T\bm{y}.
+\bm{\hat{\beta}} = (\bm{X}^T\bm{X})^{-1}\bm{X}^T\bm{y}
 \label{eq:normal_sol} 
 \end{align}
-\textcolor{red}{where $X$ is and $y$ is...}
 A commonly used test for detecting autocorrelation is the Durbin-Watson test, where the statistic will have a value of $\sim 2$ in the case if uncorrelated errors \cite{Montgomery2015}. 
 %where a value of the $\sim 2$ is expected in the case if uncorrelated errors \cite{Montgomery2015}.
 
 \subsubsection{Robust linear regression models}
-The errors of a MLR model should ideally be independent, have constant variance, and be approximately normally distributed \cite{Montgomery2012}. For inference and prediction, the normality assumption is important. Deviations from normality can sometimes be reasonably ignored, however, when the error distribution has long (or heavy) tails, this can be a sign of frequent extreme values in the data, in which case so-called robust model fitting techniques are more appropriate than OLS \cite{Montgomery2012}.
+The errors of a MLR model should ideally be independent, have constant variance, and be approximately normally distributed \cite{Montgomery2012}. For inference and prediction, the normality assumption is important. Deviations from normality can sometimes be reasonably ignored, however, when the error distribution has long (or heavy) tails, this can be a sign of frequent extreme values in the data, in which case so-called robust estimation techniques are more appropriate than OLS \cite{Montgomery2012}.
 
-One such technique is M-estimation, where a modified version of \cref{eq:cost} is used to find the best sparameter estimates:
+$M$-estimators is a class of robust estimators where a modified version of \cref{eq:cost} is used to find the best parameter estimates:
 \begin{align}
-J(\bm{\hat{\beta}}) = \frac{1}{n} \sum_{i=1}^{n} \rho \big(\hat{y}_i - y_i \big)^2
-\label{eq:robust}
+J(\bm{\hat{\beta}}) = \sum_{i=1}^{n} \rho \big(\hat{y}_i - y_i \big)^2.
+\label{eq:robust_eq} 
 \end{align}
-\textcolor{red}{where $\rho$ is some function of the residuals. A common choice... }
+In \cref{eq:robust_eq}, $\rho$ is a so-called robust criterion function, for which there are several alternatives, but a popular choice is the Huber's $t$ function (or Huber's method), where 
+$$
+\rho (z) =  \begin{cases}
+\hfil \frac{1}{2}z^2, & \text{if} \:\: |z| \le t \\
+|z|t - \frac{1}{2}t^2, & \text{if}\:\: |z| > t
+\end{cases}
+\label{eq:robust}
+$$
+where $t$ is a robust estimate of $\sigma$ \cite{Faraway2020}. Minimizing \cref{eq:robust_eq} is done iteratively by solving weighted versions of the least squares normal equations and recomputing the weights until convergence is reached \cite{Montgomery2012}. In effect, this results in less importance being put on outliers and extreme observations in the data. 
+
+%Air pollution typically has periodicity where frequent extreme values are more common during certain seasons...
+
+% the difference between regular
+
+% air pollution data... extreme values ...depending on the traffic and weather conditions, peaks 
 
 %that places less weight on the errors in the tails of the distribution
 
@@ -93,7 +106,7 @@ J(\bm{\hat{\beta}}) = \frac{1}{n} \sum_{i=1}^{n} \rho \big(\hat{y}_i - y_i \big)
 Careful variable selection in MLR is also crucial as it can influence the performance of a model, and one is often concerned with finding an optimal ”subset” of predictors, where multicollinearity should also not be an issue \cite{Montgomery2012}. To this end, variable selection techniques based on optimizing a quantity of interest, e.g.\ the Akaike information criterion or the root mean squared error (RMSE) are common, and a widely used diagnostic for multicollinearity is the condition number, where a value below 100 is preferred \cite{Montgomery2012}. 
 %With many input variables, it is common to use regularized versions of MLR such as ridge or lasso regression, in which an extra so-called "penalty" term is added to the cost function to shrink (and essentially stabilize) the model parameter estimates \cite{Montgomery2012, smlbook}.
 
-The extensive use of MLR for air pollution forecasts is many times motivated by its simplicity and straightforward implementation \cite{atmos7020015}. Another advantage is interpretability; for example, inference can be made on all input variables, allowing one to investigate their individual importance and relationship to the response variable \cite{Montgomery2012}. However, the statistical properties of MLR make it rather restrictive as a model, and not all violations of the assumptions can be remedied (like non-linearity) \cite{Montgomery2015}. Regression models better suited to capture non-linear input-output relationships have found extensive use in air pollution forecasts, and in the next section, some of these models are reviewed. 
+The extensive use of MLR for air pollution forecasts is many times motivated by its simplicity and straightforward implementation \cite{atmos7020015}. Another advantage is interpretability; for example, inference can be made on all input variables, allowing one to investigate their individual importance and relationship to the response variable \cite{Montgomery2012}. However, the statistical properties of MLR make it rather restrictive as a model, and not all violations of the assumptions can be remedied (like non-linearity) \cite{Montgomery2015}. Non-linear regression models, better suited to capture complex input-output relationships, have also found extensive use in air pollution forecasts, and in the next section, some of these models are reviewed. 
 
 %and large forecast errors have been observed at times of pollution peaks \cite{atmos7020015}. Moreover, with data from several (but nearby) monitoring stations, multicollinearity among the input variables can be an issue, which is why ridge or lasso regression are common alternatives to the non-regularized MLR model \cite{atmos7020015}. \textcolor{red}{ARIMA models???}
 
@@ -102,8 +115,15 @@ The extensive use of MLR for air pollution forecasts is many times motivated by 
 %\paragraph{Bayesian methods}
 %While the forecasting techniques discussed above produce point-predictions of a pollutant, Bayesian methods can be used to predict distributions (or put another way, make density forecasts) \cite{FaganeliPucer2018}. A Bayesian approach can offer some advantages if thresholds are of interest, since with a density forecast, the probability of pollution levels exceeding a certain value can be estimated \cite{FaganeliPucer2018, smlbook}. For example, in Pucer et al. \cite{FaganeliPucer2018}, a Gaussian process model was used to give Gaussian density predictions of PM$_{10}$ and O$_3$. Bayesian methods have also been used for spatial predictions of PM by spatial interpolation (using values from monitored locations to estimate levels at other locations without any monitoring) \cite{atmos7020015}. 
 
-\subsection{Extensions of the linear model}
-If the linearity assumption does not hold, a linear model is not an appropriate model choice.   
+\subsection{Non-linear regression models and deep neural networks}
+
+\subsection{Evaluating regression models}
+
+\subsubsection{Common evaluation metrics}
+
+\subsubsection{Classifying prediction results}
+%If the linearity assumption does not hold, a linear model is not an appropriate choice.  
+
 %More versatile and flexible regression models tend to give better forecasting results than linear models \cite{atmos7020015}. Some examples include regression trees, generalized additive models, and support vector machines (SVM) \cite{atmos7020015, FaganeliPucer2018}. These models can handle more complex non-linear input-output relationships, and especially SVM has been successfully applied for PM$_{10}$ prediction, sometimes with better results than artificial neural networks \cite{atmos7020015}. 
 %
 %Artificial neural networks (ANNs), in particular the multilayer perceptron (MLP), have also been extensively used as a forecasting technique \cite{atmos7020015}. ANNs are flexible models able to handle non-linear input-output relationships, however, over-fitting can be an issue, especially with high-dimensional input and if training data is limited \cite{atmos7020015, FaganeliPucer2018}. 

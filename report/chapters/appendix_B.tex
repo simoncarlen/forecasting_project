@@ -1,12 +1,12 @@
 \label{chapt:appendix_B}
-Residual plots from the OLS regression are shown in \cref{fig:residuals_MLR}. From plot (a) and (c), the long-tailed error distribution can be seen, especially in plot (a) where the long tails are indicated by deviations from the straight line. Looking at plot (b), the variance appears stable, and the residuals are scattered in a reasonably random fashion, with no indications of non-linearity. The variance also appear stable over time, as indicated in plot (d). 
+Residual plots for the OLS regression are shown in \cref{fig:residuals_MLR}. From plot (a) and (c), the long-tailed error distribution can be seen, especially in plot (a) where the long tails are indicated by deviations from the straight line. Looking at plot (b), the variance appears stable, and the residuals are scattered in a reasonably random fashion, with no indications of non-linearity. The variance of the residuals also appear stable over time, as indicated in plot (d). 
 %An additional numeric test for constant variance was performed where a regression line was fit to $\sqrt{|\hat{\varepsilon}}|$. This line had a non-significant slope (with $x = -0.0045$ and $p=0.262$), giving further support to the homoscedasticity assumption \cite{Montgomery2012}. 
 
-In Table \ref{tab:OLS_table} and \ref{tab:Robust_table}, summary statistics are shown for the OLS regression and robust regression, respectively. For the OLS regression (\cref{tab:OLS_table}), the Durbin-Watson statistic (with a value of 1.957) did not indicate any autocorrelation, and judging from the condition number (57.2), there were no serious issues with multicollinearity among the predictors. The coefficients in the OLS and robust regression models had very similar values (though not identical), and for both models it is clear that the NO$_2$ value at lag 1 dominated in terms of importance. (This is easily seen when the data has been normalized and all variables are on the same scale.) 
+In Table \ref{tab:OLS_table} and \ref{tab:Robust_table}, summary statistics are shown for the OLS regression and robust regression, respectively. For the OLS regression (\cref{tab:OLS_table}), the Durbin-Watson statistic (with a value of 1.943) did not indicate any autocorrelation, and judging from the condition number (52.5), there were no serious issues with multicollinearity among the predictors. The coefficients in the OLS and robust regression models had very similar values (though not identical), and for both models it is clear that the response variable at lag 1 dominated in terms of importance. Also, for both models, the sine wave variable had a high $p$-value, however, it was not removed as both the sine and cosine waves are needed to model the periodicity.   
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics[width=.95\textwidth]{../plots/Residual_plots_MLR_NO2}}
+\makebox[\textwidth][c]{\includegraphics[width=1\textwidth]{../plots/Residual_plots_MLR_NO2}}
 \caption{Residual plots for the OLS regression model.}
 \label{fig:residuals_MLR}
 \end{figure}
@@ -17,44 +17,42 @@ In Table \ref{tab:OLS_table} and \ref{tab:Robust_table}, summary statistics are 
 \begin{center}
 \begin{tabular}{lclc}
 \toprule
-\textbf{Dep. Variable:}                                     & NO$_2$, Torkel Knutssonsgatan & \textbf{  R-squared:         } &     0.857   \\
-\textbf{Model:}                                             &               OLS                & \textbf{  Adj. R-squared:    } &     0.856   \\
-\textbf{Method:}                                            &          Least Squares           & \textbf{  F-statistic:       } & 1.207e+04   \\
-\textbf{Date:}                                              &         Wed, 24 Aug 2022         & \textbf{  Prob (F-statistic):} &     0.00    \\
-\textbf{Time:}                                              &             21:33:38             & \textbf{  Log-Likelihood:    } &    39469.   \\
-\textbf{No. Observations:}                                  &               26305              & \textbf{  AIC:               } & -7.891e+04  \\
-\textbf{Df Residuals:}                                      &               26291              & \textbf{  BIC:               } & -7.879e+04  \\
-\textbf{Df Model:}                                          &                  13              & \textbf{                     } &             \\
-\textbf{Covariance Type:}                                   &            nonrobust             & \textbf{                     } &             \\
+\textbf{Dep. Variable:}                                   & NO$_2$, Torkel Knutssonsgatan & \textbf{  R-squared:         } &     0.852   \\
+\textbf{Model:}                                           &               OLS                & \textbf{  Adj. R-squared:    } &     0.852   \\
+\textbf{Method:}                                          &          Least Squares           & \textbf{  F-statistic:       } & 1.381e+04   \\
+\textbf{Date:}                                            &         Mon, 29 Aug 2022         & \textbf{  Prob (F-statistic):} &     0.00    \\
+\textbf{Time:}                                            &             18:02:49             & \textbf{  Log-Likelihood:    } &    39098.   \\
+\textbf{No. Observations:}                                &               26305              & \textbf{  AIC:               } & -7.817e+04  \\
+\textbf{Df Residuals:}                                    &               26293              & \textbf{  BIC:               } & -7.807e+04  \\
+\textbf{Df Model:}                                        &                  11              & \textbf{                     } &             \\
+\textbf{Covariance Type:}                                 &            nonrobust             & \textbf{                     } &             \\
 \bottomrule
 \end{tabular}
 \begin{tabular}{lcccccc}
-                                                            & \textbf{coef} & \textbf{std err} & \textbf{t} & \textbf{P$> |$t$|$} & \textbf{[0.025} & \textbf{0.975]}  \\
+                                                          & \textbf{coef} & \textbf{std err} & \textbf{t} & \textbf{P$> |$t$|$} & \textbf{[0.025} & \textbf{0.975]}  \\
 \midrule
-\textbf{intercept}                                          &       0.1205  &        0.005     &    22.393  &         0.000        &        0.110    &        0.131     \\
-\textbf{NO$_2$, Stockholm Torkel Knutssonsgatan, lag1}   &       0.9179  &        0.006     &   142.856  &         0.000        &        0.905    &        0.931     \\
-\textbf{NO$_2$, Stockholm Torkel Knutssonsgatan, lag2}   &      -0.1784  &        0.006     &   -31.468  &         0.000        &       -0.190    &       -0.167     \\
-\textbf{NO$_2$, Stockholm Torkel Knutssonsgatan, lag 24} &       0.1538  &        0.006     &    27.114  &         0.000        &        0.143    &        0.165     \\
-\textbf{NO$_2$, Stockholm Torkel Knutssonsgatan, lag 25} &      -0.1239  &        0.006     &   -21.813  &         0.000        &       -0.135    &       -0.113     \\
-\textbf{NO$_2$, Stockholm Hornsgatan 108 , lag1}         &       0.0426  &        0.004     &    11.432  &         0.000        &        0.035    &        0.050     \\
-\textbf{NO$_2$, Stockholm Sveavägen 59 , lag1}           &      -0.0401  &        0.004     &    -9.986  &         0.000        &       -0.048    &       -0.032     \\
-\textbf{NO$_2$, Stockholm E4/E20 Lilla Essingen, lag1}   &       0.1277  &        0.005     &    25.472  &         0.000        &        0.118    &        0.137     \\
-\textbf{Sine day}                                           &       0.0021  &        0.001     &     1.699  &         0.089        &       -0.000    &        0.004     \\
-\textbf{Cosine day}                                         &      -0.0493  &        0.001     &   -35.138  &         0.000        &       -0.052    &       -0.047     \\
-\textbf{Temperature}                                        &      -0.0079  &        0.003     &    -3.090  &         0.002        &       -0.013    &       -0.003     \\
-\textbf{Relative humidity}                                  &      -0.0182  &        0.002     &    -7.605  &         0.000        &       -0.023    &       -0.013     \\
-\textbf{Solar radiation}                                    &      -0.0859  &        0.003     &   -31.584  &         0.000        &       -0.091    &       -0.081     \\
-\textbf{Wind speed}                                         &      -0.1141  &        0.003     &   -33.888  &         0.000        &       -0.121    &       -0.107     \\
+\textbf{intercept}                                        &       0.1381  &        0.005     &    25.753  &         0.000        &        0.128    &        0.149     \\
+\textbf{NO$_2$, Stockholm Torkel Knutssonsgatan, lag1} &       0.9342  &        0.006     &   144.333  &         0.000        &        0.922    &        0.947     \\
+\textbf{NO$_2$, Stockholm Torkel Knutssonsgatan, lag2} &      -0.1933  &        0.006     &   -33.866  &         0.000        &       -0.204    &       -0.182     \\
+\textbf{NO$_2$, Stockholm Hornsgatan 108 , lag1}       &       0.0420  &        0.004     &    11.113  &         0.000        &        0.035    &        0.049     \\
+\textbf{NO$_2$, Stockholm Sveavägen 59 , lag1}         &      -0.0474  &        0.004     &   -11.677  &         0.000        &       -0.055    &       -0.039     \\
+\textbf{NO$_2$, Stockholm E4/E20 Lilla Essingen, lag1} &       0.1424  &        0.005     &    28.236  &         0.000        &        0.132    &        0.152     \\
+\textbf{Sine day}                                         &       0.0024  &        0.001     &     1.960  &         0.050        &    -1.57e-07    &        0.005     \\
+\textbf{Cosine day}                                       &      -0.0569  &        0.001     &   -40.906  &         0.000        &       -0.060    &       -0.054     \\
+\textbf{Temperature}                                      &      -0.0079  &        0.003     &    -3.058  &         0.002        &       -0.013    &       -0.003     \\
+\textbf{Relative humidity}                                &      -0.0201  &        0.002     &    -8.296  &         0.000        &       -0.025    &       -0.015     \\
+\textbf{Solar radiation}                                  &      -0.0970  &        0.003     &   -35.575  &         0.000        &       -0.102    &       -0.092     \\
+\textbf{Wind speed}                                       &      -0.1157  &        0.003     &   -33.988  &         0.000        &       -0.122    &       -0.109     \\
 \bottomrule
 \end{tabular}
 \begin{tabular}{lclc}
-\textbf{Omnibus:}       & 1679.821 & \textbf{  Durbin-Watson:     } &    1.957  \\
-\textbf{Prob(Omnibus):} &   0.000  & \textbf{  Jarque-Bera (JB):  } & 6211.319  \\
-\textbf{Skew:}          &   0.237  & \textbf{  Prob(JB):          } &     0.00  \\
-\textbf{Kurtosis:}      &   5.333  & \textbf{  Cond. No.          } &     57.2  \\
+\textbf{Omnibus:}       & 1784.052 & \textbf{  Durbin-Watson:     } &    1.943  \\
+\textbf{Prob(Omnibus):} &   0.000  & \textbf{  Jarque-Bera (JB):  } & 6377.932  \\
+\textbf{Skew:}          &   0.282  & \textbf{  Prob(JB):          } &     0.00  \\
+\textbf{Kurtosis:}      &   5.346  & \textbf{  Cond. No.          } &     52.5  \\
 \bottomrule
 \end{tabular}
-\caption{OLS Regression Results.}
+\caption{OLS regression results.}
 \label{tab:OLS_table}
 \end{center}
 \end{table}
@@ -67,37 +65,35 @@ In Table \ref{tab:OLS_table} and \ref{tab:Robust_table}, summary statistics are 
 \begin{center}
 \begin{tabular}{lclc}
 \toprule
-\textbf{Dep. Variable:}                                     & NO$_2$, Torkel Knutssonsgatan & \textbf{  No. Observations:  } &    26305    \\
-\textbf{Model:}                                             &               RLM                & \textbf{  Df Residuals:      } &    26291    \\
-\textbf{Method:}                                            &               IRLS               & \textbf{  Df Model:          } &       13    \\
-\textbf{Norm:}                                              &              HuberT              & \textbf{                     } &             \\
-\textbf{Scale Est.:}                                        &               mad                & \textbf{                     } &             \\
-\textbf{Cov Type:}                                          &                H1                & \textbf{                     } &             \\
-\textbf{Date:}                                              &         Wed, 24 Aug 2022         & \textbf{                     } &             \\
-\textbf{Time:}                                              &             21:40:50             & \textbf{                     } &             \\
-\textbf{No. Iterations:}                                    &                23                & \textbf{                     } &             \\
+\textbf{Dep. Variable:}                                   & NO$_2$, Torkel Knutssonsgatan & \textbf{  No. Observations:  } &    26305    \\
+\textbf{Model:}                                           &               RLM                & \textbf{  Df Residuals:      } &    26293    \\
+\textbf{Method:}                                          &               IRLS               & \textbf{  Df Model:          } &       11    \\
+\textbf{Norm:}                                            &              HuberT              & \textbf{                     } &             \\
+\textbf{Scale Est.:}                                      &               mad                & \textbf{                     } &             \\
+\textbf{Cov Type:}                                        &                H1                & \textbf{                     } &             \\
+\textbf{Date:}                                            &         Mon, 29 Aug 2022         & \textbf{                     } &             \\
+\textbf{Time:}                                            &             18:03:09             & \textbf{                     } &             \\
+\textbf{No. Iterations:}                                  &                26                & \textbf{                     } &             \\
 \bottomrule
 \end{tabular}
 \begin{tabular}{lcccccc}
-                                                            & \textbf{coef} & \textbf{std err} & \textbf{z} & \textbf{P$> |$z$|$} & \textbf{[0.025} & \textbf{0.975]}  \\
+                                                          & \textbf{coef} & \textbf{std err} & \textbf{z} & \textbf{P$> |$z$|$} & \textbf{[0.025} & \textbf{0.975]}  \\
 \midrule
-\textbf{intercept}                                          &       0.1120  &        0.005     &    23.295  &         0.000        &        0.103    &        0.121     \\
-\textbf{NO$_2$, Stockholm Torkel Knutssonsgatan, lag1}   &       0.9533  &        0.006     &   166.039  &         0.000        &        0.942    &        0.965     \\
-\textbf{NO$_2$, Stockholm Torkel Knutssonsgatan, lag2}   &      -0.1873  &        0.005     &   -36.973  &         0.000        &       -0.197    &       -0.177     \\
-\textbf{NO$_2$, Stockholm Torkel Knutssonsgatan, lag 24} &       0.1421  &        0.005     &    28.022  &         0.000        &        0.132    &        0.152     \\
-\textbf{NO$_2$, Stockholm Torkel Knutssonsgatan, lag 25} &      -0.1146  &        0.005     &   -22.574  &         0.000        &       -0.125    &       -0.105     \\
-\textbf{NO$_2$, Stockholm Hornsgatan 108 , lag1}         &       0.0338  &        0.003     &    10.160  &         0.000        &        0.027    &        0.040     \\
-\textbf{NO$_2$, Stockholm Sveavägen 59 , lag1}           &      -0.0326  &        0.004     &    -9.081  &         0.000        &       -0.040    &       -0.026     \\
-\textbf{NO$_2$, Stockholm E4/E20 Lilla Essingen, lag1}   &       0.1126  &        0.004     &    25.144  &         0.000        &        0.104    &        0.121     \\
-\textbf{Sine day}                                           &       0.0011  &        0.001     &     0.990  &         0.322        &       -0.001    &        0.003     \\
-\textbf{Cosine day}                                         &      -0.0458  &        0.001     &   -36.580  &         0.000        &       -0.048    &       -0.043     \\
-\textbf{Temperature}                                        &      -0.0073  &        0.002     &    -3.183  &         0.001        &       -0.012    &       -0.003     \\
-\textbf{Relative humidity}                                  &      -0.0182  &        0.002     &    -8.534  &         0.000        &       -0.022    &       -0.014     \\
-\textbf{Solar radiation}                                    &      -0.0805  &        0.002     &   -33.116  &         0.000        &       -0.085    &       -0.076     \\
-\textbf{Wind speed}                                         &      -0.1021  &        0.003     &   -33.935  &         0.000        &       -0.108    &       -0.096     \\
+\textbf{intercept}                                        &       0.1276  &        0.005     &    26.660  &         0.000        &        0.118    &        0.137     \\
+\textbf{NO$_2$, Stockholm Torkel Knutssonsgatan, lag1} &       0.9688  &        0.006     &   167.776  &         0.000        &        0.957    &        0.980     \\
+\textbf{NO$_2$, Stockholm Torkel Knutssonsgatan, lag2} &      -0.1999  &        0.005     &   -39.270  &         0.000        &       -0.210    &       -0.190     \\
+\textbf{NO$_2$, Stockholm Hornsgatan 108 , lag1}       &       0.0330  &        0.003     &     9.802  &         0.000        &        0.026    &        0.040     \\
+\textbf{NO$_2$, Stockholm Sveavägen 59 , lag1}         &      -0.0379  &        0.004     &   -10.456  &         0.000        &       -0.045    &       -0.031     \\
+\textbf{NO$_2$, Stockholm E4/E20 Lilla Essingen, lag1} &       0.1246  &        0.004     &    27.702  &         0.000        &        0.116    &        0.133     \\
+\textbf{Sine day}                                         &       0.0008  &        0.001     &     0.687  &         0.492        &       -0.001    &        0.003     \\
+\textbf{Cosine day}                                       &      -0.0522  &        0.001     &   -42.106  &         0.000        &       -0.055    &       -0.050     \\
+\textbf{Temperature}                                      &      -0.0071  &        0.002     &    -3.086  &         0.002        &       -0.012    &       -0.003     \\
+\textbf{Relative humidity}                                &      -0.0200  &        0.002     &    -9.268  &         0.000        &       -0.024    &       -0.016     \\
+\textbf{Solar radiation}                                  &      -0.0900  &        0.002     &   -36.969  &         0.000        &       -0.095    &       -0.085     \\
+\textbf{Wind speed}                                       &      -0.1045  &        0.003     &   -34.420  &         0.000        &       -0.110    &       -0.099     \\
 \bottomrule
 \end{tabular}
-\caption{Robust linear Model Regression Results.}
+\caption{Robust linear model regression results.}
 \label{tab:Robust_table}
 \end{center}
 \end{table}
