@@ -35,7 +35,7 @@ From a statistical learning perspective, forecasting air pollution can be viewed
 J(\bm{\hat{\beta}}) = \frac{1}{n} \sum_{i=1}^{n} \big(\hat{y}_i - y_i \big)^2
 \label{eq:cost}
 \end{align}
-where $\bm{\hat{\beta}}$ is the vector of estimated model parameters ($\hat{\beta}_0, \: \hat{\beta}_1, ..., \: \hat{\beta}_n$), $\hat{y}_i$ is a prediction and $y_i$ is a training data value\cite{smlbook}. In \cref{eq:cost} the squared error loss is used as loss function, and the cost is simply the loss averaged over the training data.\footnote{How cost and loss functions are defined can vary slightly in the literature, but in this work, the same definitions as in Lindholm et al. \cite{smlbook} are adopted.} Depending on the model, minimizing $J(\bm{\hat{\beta}})$ is approached differently, as explained further in the sections below. 
+where $\bm{\hat{\beta}}$ is the vector of estimated model parameters ($\hat{\beta}_0, \: \hat{\beta}_1, ..., \: \hat{\beta}_n$), $\hat{y}_i$ is a prediction and $y_i$ is an observed value\cite{smlbook}. In \cref{eq:cost} the squared error loss is used as loss function, and the cost is simply the loss averaged over the training data.\footnote{How cost and loss functions are defined can vary slightly in the literature, but in this work, the same definitions as in Lindholm et al. \cite{smlbook} are adopted.} Depending on the model, minimizing $J(\bm{\hat{\beta}})$ is approached differently, as explained further in the sections below. 
 
 \subsection{Linear regression models}
 
@@ -67,9 +67,10 @@ A commonly used test for detecting autocorrelation is the Durbin-Watson test, wh
 %where a value of the $\sim 2$ is expected in the case if uncorrelated errors \cite{Montgomery2015}.
 
 \subsubsection{Robust linear regression models}
-The errors of a MLR model should ideally be independent, have constant variance, and be approximately normally distributed \cite{Montgomery2012}. For inference and prediction, the normality assumption is important. Deviations from normality can sometimes be reasonably ignored, however, when the error distribution has long (or heavy) tails, this can be a sign of frequent extreme values in the data, in which case so-called robust estimation techniques are more appropriate than OLS \cite{Montgomery2012}.
+The errors of a MLR model should ideally be independent, have constant variance, and be approximately normally distributed \cite{Montgomery2012}. For inference and prediction, the normality assumption is important. Deviations from normality can sometimes be reasonably ignored, however, when the error distribution has long (or heavy) tails, this can be a sign of many extreme values in the data, in which case so-called robust estimation techniques are more appropriate than OLS \cite{Montgomery2012}. Typically for air pollution data, there are recurring periods where extreme values are frequent (for NO$_2$ this often happens during winter months, see \vref{fig:time_series_plots}), and for this reason, robust regression might be better suited than OLS regression for modeling and forecasting. 
 
-$M$-estimators is a class of robust estimators where a modified version of \cref{eq:cost} is used to find the best parameter estimates:
+One robust estimation technique is $M$-estimation, where a modified cost function is minimized to find the best parameter estimates:
+%a modified version of \cref{eq:cost} is used to find the best parameter estimates:
 \begin{align}
 J(\bm{\hat{\beta}}) = \sum_{i=1}^{n} \rho \big(\hat{y}_i - y_i \big)^2.
 \label{eq:robust_eq} 
@@ -82,7 +83,7 @@ $$
 \end{cases}
 \label{eq:robust}
 $$
-where $t$ is a robust estimate of $\sigma$ \cite{Faraway2020}. Minimizing \cref{eq:robust_eq} is done iteratively by solving weighted versions of the least squares normal equations and recomputing the weights until convergence is reached \cite{Montgomery2012}. In effect, this results in less importance being put on outliers and extreme observations in the data. 
+and where $t$ is a robust estimate of $\sigma$ \cite{Faraway2020}. In general, minimizing \cref{eq:robust_eq} is done iteratively by solving weighted least squares normal equations and (at each iteration) recomputing the weights until convergence is reached \cite{Montgomery2012}. In effect, this makes the parameter estimation procedure much less sensitive to outliers and extreme observations in the data.
 
 %Air pollution typically has periodicity where frequent extreme values are more common during certain seasons...
 
@@ -103,10 +104,10 @@ where $t$ is a robust estimate of $\sigma$ \cite{Faraway2020}. Minimizing \cref{
 
 \subsubsection{Additional considerations for linear models}
 %As pointed out in \cref{sec:airpollutants}, weather conditions can affect pollution levels, which is why meteorological parameters often is included as input variables \cite{atmos7020015}. 
-Careful variable selection in MLR is also crucial as it can influence the performance of a model, and one is often concerned with finding an optimal ”subset” of predictors, where multicollinearity should also not be an issue \cite{Montgomery2012}. To this end, variable selection techniques based on optimizing a quantity of interest, e.g.\ the Akaike information criterion or the root mean squared error (RMSE) are common, and a widely used diagnostic for multicollinearity is the condition number, where a value below 100 is preferred \cite{Montgomery2012}. 
+Careful variable selection in MLR is also crucial as it can influence the performance of a model, and one is often concerned with finding an optimal ”subset” of predictors, where multicollinearity should also not be an issue \cite{Montgomery2012}. To this end, variable selection techniques based on optimizing a quantity of interest, e.g.\ the Akaike information criterion or the root mean squared error (RMSE) are common, and a diagnostic for multicollinearity is the condition number, where a value below 100 is preferred (i.e., does not indicate any problem) \cite{Montgomery2012}. 
 %With many input variables, it is common to use regularized versions of MLR such as ridge or lasso regression, in which an extra so-called "penalty" term is added to the cost function to shrink (and essentially stabilize) the model parameter estimates \cite{Montgomery2012, smlbook}.
 
-The extensive use of MLR for air pollution forecasts is many times motivated by its simplicity and straightforward implementation \cite{atmos7020015}. Another advantage is interpretability; for example, inference can be made on all input variables, allowing one to investigate their individual importance and relationship to the response variable \cite{Montgomery2012}. However, the statistical properties of MLR make it rather restrictive as a model, and not all violations of the assumptions can be remedied (like non-linearity) \cite{Montgomery2015}. Non-linear regression models, better suited to capture complex input-output relationships, have also found extensive use in air pollution forecasts, and in the next section, some of these models are reviewed. 
+The extensive use of MLR for air pollution forecasts is many times motivated by its simplicity and straightforward implementation \cite{atmos7020015}. Another advantage is interpretability; for example, inference can be made on all input variables, allowing one to investigate their individual importance and relationship to the response variable \cite{Montgomery2012}. However, the statistical properties of MLR make it rather restrictive as a model, and not all violations of the assumptions can be remedied (like non-linearity) \cite{Montgomery2015}. More flexible regression models, better suited to capture complex input-output relationships, have also found extensive use in air pollution forecasts \cite{atmos7020015}, and in the next section, some of these models are reviewed. 
 
 %and large forecast errors have been observed at times of pollution peaks \cite{atmos7020015}. Moreover, with data from several (but nearby) monitoring stations, multicollinearity among the input variables can be an issue, which is why ridge or lasso regression are common alternatives to the non-regularized MLR model \cite{atmos7020015}. \textcolor{red}{ARIMA models???}
 
@@ -115,16 +116,40 @@ The extensive use of MLR for air pollution forecasts is many times motivated by 
 %\paragraph{Bayesian methods}
 %While the forecasting techniques discussed above produce point-predictions of a pollutant, Bayesian methods can be used to predict distributions (or put another way, make density forecasts) \cite{FaganeliPucer2018}. A Bayesian approach can offer some advantages if thresholds are of interest, since with a density forecast, the probability of pollution levels exceeding a certain value can be estimated \cite{FaganeliPucer2018, smlbook}. For example, in Pucer et al. \cite{FaganeliPucer2018}, a Gaussian process model was used to give Gaussian density predictions of PM$_{10}$ and O$_3$. Bayesian methods have also been used for spatial predictions of PM by spatial interpolation (using values from monitored locations to estimate levels at other locations without any monitoring) \cite{atmos7020015}. 
 
-\subsection{Non-linear regression models and deep neural networks}
+\subsection{More complex regression techniques and deep learning}
+For air pollution, more versatile and flexible regression techniques tend to give better forecasting results than the more simplistic linear models \cite{atmos7020015}. Some examples include regression trees, support vector regression (SVR), and artificial neural networks \cite{atmos7020015, FaganeliPucer2018}. In many ways, these regression techniques are extensions to the linear model, e.g., SVR is built on the idea of constructing non-linear transformations of the regressors, whereas the building blocks of artificial neural networks are generalized linear regression models \cite{smlbook}. In this work, a number of deep neural network architectures are utilized, and a deeper dive into the theory behind artificial neural networks is warranted. 
 
-\subsection{Evaluating regression models}
+\subsubsection{Artificial neural network models}
+The fundamental building block of an artificial neural network is what is often called the perceptron (or artificial neuron) \cite{smlbook}. In an artificial neuron, the output of a linear regression model is passed through a non-linear activation function; common choices for activation functions include the rectified linear unit (ReLU), or the tanh function:
 
-\subsubsection{Common evaluation metrics}
+\begin{equation}
+\setlength{\jot}{10pt}
+    \begin{aligned}
+        \text{ReLU}(x) = \text{max}(0,x) \\ \nonumber
+        \text{tanh}(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}} \\ \nonumber
+    \end{aligned}
+\end{equation}
+A collection of connected artificial neurons is what constitutes a layer in a neural network, and a network with many such layers stacked sequentially is what is referred to as a deep neural network \cite{smlbook}. When a set of input data is taken and passed through the layers of a neural network, each layer produces a slightly more abstract representation of its input by non-linear transformations, and with several such transformations, complex relationships in the data can be learned \cite{LeCun2015}.
 
-\subsubsection{Classifying prediction results}
+%Common activation functions include the sigmoid function, the rectified linear unit (ReLU) function, and the Tanh functions:
+
+%As indicated above, artificial neural networks are made up of linear regression models stacked sequentially, where the output of each such layer is 
+
+%is the building block of neural networks \cite{smlbook}. Often, several layers of such regression models are stacked sequentially, resulting in what is called a deep neural network. 
+
+%output modified
+ 
+\subsection{Evaluating regression models and forecasting performance}
+When evaluating the performance of a forecasting model, one is often concerned with the one-step ahead forecast error, defined as
+$$e_t(1) = y_t - \hat{y}_t (t-1)$$ 
+where $\hat{y}_t (t-1)$ is the forecasted value of $y_t$ made one time step back (i.e.\ at time $t-1$)\cite{Montgomery2015}. Accuracy metrics such as the mean error (ME), the mean absolute error (MAE), the mean squared error (MSE), and the mean absolute percent forecast error (MAPE) are often utilized \cite{Montgomery2015}. These performance metrics are standard in regression evaluation, and the equations will not be repeated here. It can be noted though that the ME is an estimate of the expected value of $e_t(1)$, and strong departures from zero would indicate bias in the forecasts \cite{Montgomery2015}. Also, commonly the root mean squared error (RMSE) is used in connection with the MSE, as the RMSE gives the magnitude of the errors on the original scale. 
+
+Similarly as the errors pertaining to model fitting, the forecast errors, $e_t(1)$, should also (ideally) be uncorrelated, normally distributed, and have constant variance. In the statistical literature, such forecast errors are referred to as Gaussian white noise \cite{Montgomery2015}. 
+
+%Besides the common regression metrics described in the section above, 
 %If the linearity assumption does not hold, a linear model is not an appropriate choice.  
 
-%More versatile and flexible regression models tend to give better forecasting results than linear models \cite{atmos7020015}. Some examples include regression trees, generalized additive models, and support vector machines (SVM) \cite{atmos7020015, FaganeliPucer2018}. These models can handle more complex non-linear input-output relationships, and especially SVM has been successfully applied for PM$_{10}$ prediction, sometimes with better results than artificial neural networks \cite{atmos7020015}. 
+%More versatile and flexible regression models tend to give better forecasting results than linear models \cite{atmos7020015}. Some commonly used models include regression trees, generalized additive models, and support vector machines (SVM) \cite{atmos7020015, FaganeliPucer2018}. These models can handle more complex non-linear input-output relationships, and especially SVM has been successfully applied for PM$_{10}$ prediction, sometimes with better results than artificial neural networks \cite{atmos7020015}. 
 %
 %Artificial neural networks (ANNs), in particular the multilayer perceptron (MLP), have also been extensively used as a forecasting technique \cite{atmos7020015}. ANNs are flexible models able to handle non-linear input-output relationships, however, over-fitting can be an issue, especially with high-dimensional input and if training data is limited \cite{atmos7020015, FaganeliPucer2018}. 
 %

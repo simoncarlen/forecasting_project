@@ -1,2 +1,7 @@
 % MLR model simple, but lots of data prep
+
 % deep learning models not as much data prep (and checking model assumptions), but longer to train
+
+% autoregressive version could be tried, but would require predicting/forecasting NO2 values att ALL stations
+
+% if LSTM/RNN don't perform so well, its probably because the autocorrelation don't run so far back! i.e., autocorrelation function is...whatever... and if only recent hours matter, dense performs best, but also MLR is a good model for this type of time series. 

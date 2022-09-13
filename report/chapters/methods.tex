@@ -22,7 +22,7 @@
 Air pollution data was retrieved from the Swedish Meteorological and Hydrological Institute's (SMHI) centralized database for air quality measurements \cite{smhi-luftmatningar}. This data is part of the national and regional environmental monitoring of Sweden, a program coordinated and funded by the Swedish Environmental Protection Agency (Swedish EPA) and the Swedish Agency for Marine and Water Management. There are in total ten different program areas, of which air is one, and all data are licensed under CC0 and therefore freely accessible to the public \cite{naturvardsverket-miljodata}. For the national air monitoring (under Swedish EPA's responsibility), SMHI acts as a national data host and stores (quality checked) historical data reported yearly from municipalities in Sweden \cite{smhi-luftmatningar}.
 
 \subsubsection{Monitoring stations}
-In Stockholm County, there are 19 stationary sites for air pollution monitoring \cite{slb-matningar}, and initially, data from each site was considered. However, not all stations measure hourly NO$_2$, and for some stations the data were irregular. Therefore, data from four sites with hourly NO$_2$ measurements (in \textmugreek g/m$^3$) for the time period 2016-01-01 to 2022-01-01 was subsequently chosen, giving a total of 52,609 data points. (However, as explained further below, a year worth of data, i.e., 8760 data points had to be excluded.) For the station at which NO$_2$ predictions subsequently were to be made (Torkel Knutssonsgatan), hourly meteorological data was also utilized. More specifically, these meteorological variables were temperature (in $^\circ$C), precipitation (mm), atmospheric pressure (hPa), relative humidity (as \%), solar radiation (W/m$^2$), and wind speed (m/s). The meteorological data were downloaded from SLB-analys' webpage \cite{slb-analys-meteorologi}. 
+In Stockholm County, there are 19 stationary sites for air pollution monitoring \cite{slb-matningar}, and initially, data from each was considered. However, not all sites measure hourly NO$_2$, and for some sites the data were irregular. Therefore, data from four sites with hourly NO$_2$ measurements (in \textmugreek g/m$^3$) for the time period 2016-01-01 to 2022-01-01 was subsequently chosen, giving a total of 52,609 data points. (However, as explained further below, a year worth of data, i.e., 8760 data points had to be excluded.) For the station at which NO$_2$ predictions subsequently were to be made (Torkel Knutssonsgatan), hourly meteorological data was also utilized. More specifically, these meteorological variables were temperature (in $^\circ$C), precipitation (mm), atmospheric pressure (hPa), relative humidity (as \%), solar radiation (W/m$^2$), and wind speed (m/s). The meteorological data were downloaded from SLB-analys' webpage \cite{slb-analys-meteorologi}. 
 
 In general, air pollution monitoring can be classified by the surrounding area (rural, rural-regional, rural-remote, suburban, and urban), and by the predominant emission sources (background, industrial, or traffic) \cite{smhi-luftmatningar}. The chosen stations included data from both traffic and background monitoring, in urban as well as rural-regional areas. More information about the stations are given in Table \ref{tab:stations} in appendix \ref{chapt:appendix_A}. 
 
@@ -123,7 +123,7 @@ Initially, a simple linear regression model was fit with OLS where the response 
 
 NO$_2$ data from other stations, meteorological variables, and the temporal variables were subsequently added to the model. These extra predictors did not lead to any serious multicollinearity, as indicated by the condition number. The NO$_2$ data was fit with the values at lag one, since for a forecast at time $t+1$, these predictors cannot be known. However, lagged values of the meteorological variables were not used as these can more easily be replaced with their forecasted values. A similar MLR approach to the one taken here, but for predicting daily means of PM$_{10}$, can be found Stadlober et al. \cite{Stadlober2008}. 
 
-A log transformation of all NO$_2$ data was required before normalization to stabilize the variance of the errors, and also make the error distribution more normal. Even so, deviation from normality was indicated, and as can be seen in \cref{fig:residuals_MLR} in Appendix \ref{chapt:appendix_B} where OLS model diagnostics are shown, the error distribution had long/heavy tails. For this reason, a robust regression model with $M$-estimates (and Huber's function) was judged to be a more suitable alternative to OLS regression.
+A log transformation of all NO$_2$ data was required before normalization to stabilize the variance of the errors, and also make the error distribution more normal. Even so, deviation from normality was indicated, and as can be seen in \cref{fig:residuals_MLR} in Appendix \ref{chapt:appendix_B} where OLS model diagnostics are shown, the error distribution had long/heavy tails. For this reason, a robust regression model with $M$-estimation (and Huber's $t$ function) was judged to be a more suitable alternative to OLS regression.
 %as can be seen in the residual plots in \cref{fig:residuals_MLR} in Appendix \ref{chapt:appendix_B}. More specifically, the error distribution had long tails, which is why robust regression with $M$-estimates (and Huber's function) was judged to be a more suitable alternative to OLS regression. 
 
 At this point, with many input variables in the model, recursive feature elimination (RFE) was used as a variable selection technique, in which the model is repeatedly re-fit after having removed the least significant predictor \cite{Faraway2020}. Each candidate model generated by RFE was evaluated on the validation set (as well as the training set for comparison), and the results are shown in \vref{fig:RFE}. 
@@ -134,13 +134,14 @@ At this point, with many input variables in the model, recursive feature elimina
 \label{fig:RFE}
 \end{center}
 \end{figure}
+
 From \cref{fig:RFE}, it is evident that the least important predictors brought essentially no improvements to the model, and they were therefore removed. More specifically, these variables were; precipitation, atmospheric pressure, the Norr Malma NO$_2$ data, and the temporal variables for week and year. The final MLR model thus had the form
 \begin{align}
 %\log y_t = \beta_0 + \sum_{\mathclap{\substack{i=1,\\ l\in\{1,2,23,24\}\\}}}^{4} \beta_{i} \log y_{i,t-l} + \sum_{i=5}^{7} \beta_{i} \log x_{i,t-1} + \sum_{i=8}^{11} \beta_{i} z_{i,t}  + \sum_{i=12}^{13} \beta_{i} w_{i,t} +  \varepsilon_t
 \log y_t = \beta_0 + \sum_{i=1}^{2} \beta_{i} \log y_{i,t-i} + \sum_{i=3}^{5} \beta_{i} \log x_{i,t-1} + \sum_{i=6}^{9} \beta_{i} z_{i,t}  + \sum_{i=10}^{11} \beta_{i} w_{i,t} +  \varepsilon_t
 \label{eq:mlr}
 \end{align}
-where $x$ denotes input variables with NO$_2$ data from other than the target station, $z$ meteorological variables, $w$ the temporal variables for day, and t = 1, 2, ..., T. Also, the errors ($\varepsilon_t$) in \cref{eq:mlr} are assumed to follow a Gaussian-shaped, heavy-tailed probability distribution (see \cref{fig:residuals_MLR}b in Appendix \ref{chapt:appendix_B}). Summary statistics for this model, together with values and inference for the estimated parameters, are given in \cref{tab:Robust_table} in Appendix \ref{chapt:appendix_B}. Also, in \cref{tab:OLS_table} in Appendix \ref{chapt:appendix_B}, summary statistics for the OLS regression model are given, though this model was not used to make any forecasts. \\
+where $x$ denotes input variables with NO$_2$ data from other than the target station, $z$ meteorological variables, $w$ the temporal variables for day, and t = 1, 2, ..., T. Also, the errors ($\varepsilon_t$) in \cref{eq:mlr} are assumed to follow a Gaussian-shaped, heavy-tailed probability distribution (see \cref{fig:residuals_MLR}b in Appendix \ref{chapt:appendix_B}). Summary statistics for this robust regression model, together with values and inference for the estimated parameters, are given in \cref{tab:Robust_table} in Appendix \ref{chapt:appendix_B}. Also, in \cref{tab:OLS_table} in Appendix \ref{chapt:appendix_B}, summary statistics for the OLS regression model are given, though this model was not used to make any forecasts. \\
 
 %\begin{equation}
 %\sum_{\mathclap{\substack{i=1,\\ j\in\{1,2,23,24\}\\}}}^{4}
@@ -165,24 +166,38 @@ where $x$ denotes input variables with NO$_2$ data from other than the target st
 %With data from three stations in the Stockholm area, some collinearity was expected, and regularized MLR models were initially tried. However, 
 
 \subsection{Deep learning models}
+
+\subsubsection{Model fitting}
+At first, a fully connected neural network (dense model) was trained with the same input data as for the MLR model (i.e., the values at lag one and two for the response variable, lag one values for the NO$_2$ data from the other three stations, as well as the meteorological and temporal variables). Subsequent deep learning models, namely an additional dense model, a simple RNN, an LSTM, and a GRU model, were all fit with data windows of different input lengths (6, 12, and 24 hours, with the next hour as the target window), however with the same set of input variables as for the MLR and the first dense model. 
+
+It should be emphasized that these two model fitting strategies differ in that the models with rolling windows utilize multivariate time series from the immediate past, whereas the first dense and the MLR model utilize past pollution data, as well as "real-time" data of the meteorological variables (and hence the meteorological variables would need to be replaced with forecasted values should the models be used in operational mode). Having the same set of input variables (again, being NO$_2$ data from the target site as well as three adjacent sites, four meteorological variables, and the two temporal variables) for all models allows for a more direct comparison between the baseline MLR model and the deep learning models, as well as the two different model fitting strategies. 
+
+\subsubsection{Hyperparameter tuning}
 \label{sec:tuning_deep_learning}
-Initially for all deep learning models, the hyperparameters tuned were; number of layers (1--5), number of units in each layer (32--512, with step size 32), and learning rate (sampled in the range $[1\cdot10^{-5},\: 1\cdot10^{-2}]$). If a model showed signs of overfitting (checked by inspecting the learning curves during training), a drop-out layer was added as a last layer, where the dropout rate was also tuned (0--0.3, with step size 0.05). Moreover, input windows of different lengths (12 h and 24 h) were tested as well. 
+For all deep learning models, the hyperparameters tuned were; number of hidden layers (up to five were tested), number of units in each hidden layer (32--512, with step size 32), and learning rate (sampled in the range $[1\times10^{-5},\: 1\times10^{-2}]$). For the two dense models, ReLU was used as activation function, whereas for the RNN, LSTM, and GRU models, the tanh function was used. 
 
-Due to the large number of hyperparameter combinations (making it infeasible to test all within a reasonable amount of time), the Bayesian optimization tuner provided by the Keras library was used \cite{omalley2019kerastuner}. This tuner uses Gaussian processes to select hyperparameters that are likely to improve the model, given previous results, and it was assumed that convergence to an optimal set of hyperparameters would be found relatively quickly. Furthermore, the same input variables as for the final MLR model were used as this provides a more direct comparison of the performance between the two type of models (i.e., the MLR model and the deep neural networks). 
+To prevent overfitting, a dropout layer was added after each hidden layer for the dense models, whereas for the simple RNN, LSTM, and GRU models, recurrent dropout were used. For all models, the dropout rate was also tuned (0.0--0.5 with step size 0.1, where a dropout rate of zero is equivalent to no dropout). The simple RNN, LSTM, and GRU models all had a dense output layer, and to regularize this as well, a dropout layer was added before the dense output (where the dropout rate was tuned as described above). 
+%If a model showed signs of overfitting (to check this, the learning curves during training were consulted), a drop-out layer was added after each layer, where the dropout rate was also tuned (0.0--0.5, with step size 0.05). Moreover, input windows of different lengths (3, 6, 12, and 24 h) were tested for all models as well. 
 
-As a last step, the optimal number of epochs were tuned as well, and all models were re-trained with the best set of hyperparameters (including the best epoch), and finally evaluated on the test set. The final hyperparameters for each model are summarized in \cref{tab:hyperparams}.
+Due to the large number of hyperparameter combinations (making it infeasible to test all within a reasonable amount of time), the Bayesian optimization tuner provided by the Keras library was used \cite{omalley2019kerastuner}. This tuner uses Gaussian processes to select hyperparameters that are likely to improve the model given previous results, and it was assumed that convergence to an optimal set of hyperparameters would be found relatively quickly (maximum number of trials were set to 50). 
+%Furthermore, the same input variables as for the final MLR model were used in all deep learning models as this provides a more direct comparison of the performance between the two type of models.
+As a last step, the optimal number of epochs were tuned as well, and the final models were re-trained with the best set of hyperparameters (including the best epoch), and finally evaluated on the test sets. 
 
+The best set of hyperparameters for the two dense models are given in \cref{tab:hyperparams_dense}, and for the simple RNN, LSTM, and GRU models in \cref{tab_hyperparams_RNN}. For the models that were fit with rolling windows, the length of the input windows can be viewed as a hyperparameter as well, and in \cref{tab:hyperparams_dense} and \cref{tab:hyperparams_RNN}, only the window length (indicated in parentheses) for the best performing models are given.
+
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+% \usepackage{graphicx}
 \begin{table}[h]
 \centering
-\caption{Hyperparameters for the best performing models.}
-\label{tab:hyperparams}
+\caption{The best hyperparameters for the two dense models. }
+\label{tab:hyperparams_dense}
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{@{}lcccc@{}}
+\begin{tabular}{@{}cccccc@{}}
 \toprule
-                   & \multicolumn{1}{l}{No. of layers} & \multicolumn{1}{l}{No. of units per layer} & \multicolumn{1}{l}{Learning rate} & \multicolumn{1}{l}{Dropout rate} \\ \midrule
-Dense model (12 h) & 4                                 & 256/256/256/256                            & $1 \cdot 10^{-5}$                 & 0.2                              \\ \midrule
-RNN model (12 h)   & 3                                 & 126/160/32                                 & $6.79 \cdot 10^{-3}$              & -                                \\ \midrule
-LSTM model (12 h)  & 2                                 & 32/160                                     & $4.69 \cdot 10^{-5}$              & 0.2                              \\ \bottomrule
+Model      & Learning rate & \begin{tabular}[c]{@{}c@{}}Units/dropout,\\ 1st layer\end{tabular} & \begin{tabular}[c]{@{}c@{}}Units/dropout,\\ 2nd layer\end{tabular} & \begin{tabular}[c]{@{}c@{}}Units/dropout,\\ 3rd layer\end{tabular} & \begin{tabular}[c]{@{}c@{}}Units/dropout,\\ 4th layer\end{tabular} \\ \midrule
+Dense      & 0.00001       & 512 / 0.0                                                          & 32 / 0.0                                                           & 512 / 0.3                                                          & 32 / 0.0                                                           \\
+Dense (6h) & 0.00001       & 512 / 0.0                                                          & -                                                                  & -                                                                  & -                                                                  \\ \bottomrule
 \end{tabular}%
 }
 \end{table}

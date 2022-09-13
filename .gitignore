@@ -9,3 +9,6 @@ report/*
 !report/chapters
 report/chapters/*.log
 jupyter_notebooks/__pycache__/
+/prediction_results/*
+/report/*.tgn
+
