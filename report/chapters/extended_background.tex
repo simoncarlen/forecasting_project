@@ -49,9 +49,9 @@ However, air pollution monitoring typically produces time series data, for which
 If fitting a MLR model to time series data, successive errors will typically be correlated (often referred to as autocorrelation), and this will cause several problems with the model if the correlation is not accounted for \cite{Montgomery2015}. To this end, adjustments to the MLR model can be made, some of which will require other parameter estimation techniques than the standard method of ordinary least squares (OLS). However, a simple and commonly used procedure to eliminate the autocorrelation is to include one or more lagged values of the response variable as predictors. For example, if the value of the response variable at lag one ($y_{t-1}$) is included, the MLR model will have the form 
 \begin{align}
 y_t = \beta_0 + \beta_{1} y_{t-1} + \beta_2 x_{2,t} + ... + \beta_{k} x_{k,t} + \varepsilon_t, \: \: \: t = 1, 2, ..., T
-\label{eq:mlr}
+\label{eqn:mlr}
 \end{align}
-where $\varepsilon_t$ is the the error term, and $t$ denotes time steps \cite{Montgomery2015}. The model in \cref{eq:mlr} can be fit with OLS, which in linear regression is the standard way of finding model parameters so that $J(\bm{\hat{\beta}})$ is minimized \cite{Montgomery2012}. This is done by solving the so-called least squares normal equations,
+where $\varepsilon_t$ is the the error term, and $t$ denotes time steps \cite{Montgomery2015}. The model in \cref{eqn:mlr} can be fit with OLS, which in linear regression is the standard way of finding model parameters so that $J(\bm{\hat{\beta}})$ is minimized \cite{Montgomery2012}. This is done by solving the so-called least squares normal equations,
 %\begin{align}
 %(\bm{X}^T\bm{X})\bm{\hat{\beta}} = \bm{X}^T\bm{y}
 %\label{eq:normal_eq}
@@ -104,7 +104,7 @@ and where $t$ is a robust estimate of $\sigma$ \cite{Faraway2020}. In general, m
 
 \subsubsection{Additional considerations for linear models}
 %As pointed out in \cref{sec:airpollutants}, weather conditions can affect pollution levels, which is why meteorological parameters often is included as input variables \cite{atmos7020015}. 
-Careful variable selection in MLR is also crucial as it can influence the performance of a model, and one is often concerned with finding an optimal ”subset” of predictors, where multicollinearity should also not be an issue \cite{Montgomery2012}. To this end, variable selection techniques based on optimizing a quantity of interest, e.g.\ the Akaike information criterion or the root mean squared error (RMSE) are common, and a diagnostic for multicollinearity is the condition number, where a value below 100 is preferred (i.e., does not indicate any problem) \cite{Montgomery2012}. 
+Careful variable selection in MLR is also crucial as it can influence the performance of a model, and one is often concerned with finding an optimal ”subset” of predictors, where multicollinearity should also not be an issue \cite{Montgomery2012}. To this end, variable selection techniques based on optimizing a quantity of interest, e.g.\ the Akaike information criterion or the root mean squared error (RMSE) are common, and a diagnostic for multicollinearity is the condition number, where a value below 100 does not indicate any serious problems \cite{Montgomery2012}. 
 %With many input variables, it is common to use regularized versions of MLR such as ridge or lasso regression, in which an extra so-called "penalty" term is added to the cost function to shrink (and essentially stabilize) the model parameter estimates \cite{Montgomery2012, smlbook}.
 
 The extensive use of MLR for air pollution forecasts is many times motivated by its simplicity and straightforward implementation \cite{atmos7020015}. Another advantage is interpretability; for example, inference can be made on all input variables, allowing one to investigate their individual importance and relationship to the response variable \cite{Montgomery2012}. However, the statistical properties of MLR make it rather restrictive as a model, and not all violations of the assumptions can be remedied (like non-linearity) \cite{Montgomery2015}. More flexible regression models, better suited to capture complex input-output relationships, have also found extensive use in air pollution forecasts \cite{atmos7020015}, and in the next section, some of these models are reviewed. 
@@ -116,20 +116,31 @@ The extensive use of MLR for air pollution forecasts is many times motivated by 
 %\paragraph{Bayesian methods}
 %While the forecasting techniques discussed above produce point-predictions of a pollutant, Bayesian methods can be used to predict distributions (or put another way, make density forecasts) \cite{FaganeliPucer2018}. A Bayesian approach can offer some advantages if thresholds are of interest, since with a density forecast, the probability of pollution levels exceeding a certain value can be estimated \cite{FaganeliPucer2018, smlbook}. For example, in Pucer et al. \cite{FaganeliPucer2018}, a Gaussian process model was used to give Gaussian density predictions of PM$_{10}$ and O$_3$. Bayesian methods have also been used for spatial predictions of PM by spatial interpolation (using values from monitored locations to estimate levels at other locations without any monitoring) \cite{atmos7020015}. 
 
-\subsection{More complex regression techniques and deep learning}
-For air pollution, more versatile and flexible regression techniques tend to give better forecasting results than the more simplistic linear models \cite{atmos7020015}. Some examples include regression trees, support vector regression (SVR), and artificial neural networks \cite{atmos7020015, FaganeliPucer2018}. In many ways, these regression techniques are extensions to the linear model, e.g., SVR is built on the idea of constructing non-linear transformations of the regressors, whereas the building blocks of artificial neural networks are generalized linear regression models \cite{smlbook}. In this work, a number of deep neural network architectures are utilized, and a deeper dive into the theory behind artificial neural networks is warranted. 
+\subsection{More complex regression models and neural networks}
+For air pollution, more flexible regression techniques tend to give better forecasting results than the more simplistic linear models \cite{atmos7020015}. Some examples include regression trees, support vector regression (SVR), and artificial neural networks \cite{atmos7020015, FaganeliPucer2018}. In many ways, these regression techniques are extensions to the linear model, e.g., SVR is built on the idea of constructing non-linear transformations of the regressors, whereas the building blocks of artificial neural networks are what is often called (artificial) neurons, where the output of a linear regression model is transformed through a non-linear activation function \cite{smlbook}. In this work, a number of neural network architectures are utilized, and a deeper dive into the theory behind deep learning is warranted. 
 
-\subsubsection{Artificial neural network models}
-The fundamental building block of an artificial neural network is what is often called the perceptron (or artificial neuron) \cite{smlbook}. In an artificial neuron, the output of a linear regression model is passed through a non-linear activation function; common choices for activation functions include the rectified linear unit (ReLU), or the tanh function:
+\subsubsection{The artificial neural network model}
+As described above, in an artificial neuron, the output of a linear regression model is passed through a non-linear activation function; some choices for activation functions include the rectified linear unit (ReLU), or the tanh function:
 
-\begin{equation}
-\setlength{\jot}{10pt}
-    \begin{aligned}
-        \text{ReLU}(x) = \text{max}(0,x) \\ \nonumber
-        \text{tanh}(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}} \\ \nonumber
-    \end{aligned}
-\end{equation}
-A collection of connected artificial neurons is what constitutes a layer in a neural network, and a network with many such layers stacked sequentially is what is referred to as a deep neural network \cite{smlbook}. When a set of input data is taken and passed through the layers of a neural network, each layer produces a slightly more abstract representation of its input by non-linear transformations, and with several such transformations, complex relationships in the data can be learned \cite{LeCun2015}.
+\begin{gather}
+    \text{ReLU}(x) = \text{max}(0,x) \label{eq:relu} \\[1ex]
+    \text{tanh}(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}} \label{eq:tanh}
+\end{gather}
+
+A common way to illustrate an artificial neuron is shown in \cref{fig:perceptron}, where the linear combination (z) of the input variables (including the so-called bias term, which is always equal to 1), gets transformed by the activation function $f$ in the node, before an output is produced.
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=1.15]{perceptron}
+\caption{An artificial neuron illustrated.}
+\label{fig:perceptron}
+\end{center}
+\end{figure}
+A layer in a neural network is made up of several nodes (also called units), and in a deep neural network, many such layers are stacked sequentially, so that the outputs of the nodes in one layer becomes the input to the nodes in the next \cite{smlbook}. When a set of input data is taken and passed through the layers of a deep neural network, each layer produces a slightly more abstract representation of its input by non-linear transformations, and with several such transformations, complex relationships in the data can be learned \cite{LeCun2015, smlbook}. Artificial neural network models can have many thousands or even millions of trainable parameters/weights, which makes them extremely flexible. However, this flexibility comes with a great computational cost, and neural networks are also very prone to overfitting, which is why regularization techniques frequently have to be used \cite{smlbook}. 
+
+\subsubsection{Deep learning architectures}
+The most basic type of deep neural network model is the feedforward 
+
+%A collection of connected artificial neurons is what constitutes a layer in a neural network, and a network with many such layers stacked sequentially is what is referred to as a deep neural network \cite{smlbook}. .
 
 %Common activation functions include the sigmoid function, the rectified linear unit (ReLU) function, and the Tanh functions:
 
@@ -140,11 +151,38 @@ A collection of connected artificial neurons is what constitutes a layer in a ne
 %output modified
  
 \subsection{Evaluating regression models and forecasting performance}
+\subsubsection{Common regression metrics}
 When evaluating the performance of a forecasting model, one is often concerned with the one-step ahead forecast error, defined as
 $$e_t(1) = y_t - \hat{y}_t (t-1)$$ 
-where $\hat{y}_t (t-1)$ is the forecasted value of $y_t$ made one time step back (i.e.\ at time $t-1$)\cite{Montgomery2015}. Accuracy metrics such as the mean error (ME), the mean absolute error (MAE), the mean squared error (MSE), and the mean absolute percent forecast error (MAPE) are often utilized \cite{Montgomery2015}. These performance metrics are standard in regression evaluation, and the equations will not be repeated here. It can be noted though that the ME is an estimate of the expected value of $e_t(1)$, and strong departures from zero would indicate bias in the forecasts \cite{Montgomery2015}. Also, commonly the root mean squared error (RMSE) is used in connection with the MSE, as the RMSE gives the magnitude of the errors on the original scale. 
+where $\hat{y}_t (t-1)$ is the forecasted value of $y_t$ made at time $t-1$, and accuracy metrics such as the mean error (ME), the mean absolute error (MAE), the mean squared error (MSE), and the mean absolute percent forecast error (MAPE) are often utilized \cite{Montgomery2015}. These performance metrics are standard when evaluating regression models, and the equations for them are not repeated here. It can be noted though that the ME is an estimate of the expected value of $e_t(1)$, and strong departures from zero would indicate bias in the forecasts \cite{Montgomery2015}. Also, commonly the root mean squared error (RMSE) is used in connection with the MSE, as the MSE gives the magnitude of the errors in squared units. The MSE is an estimate of the variance of $e_t(1)$, and consequently the RMSE becomes an estimate of the standard deviation \cite{Montgomery2012}. 
 
-Similarly as the errors pertaining to model fitting, the forecast errors, $e_t(1)$, should also (ideally) be uncorrelated, normally distributed, and have constant variance. In the statistical literature, such forecast errors are referred to as Gaussian white noise \cite{Montgomery2015}. 
+\subsubsection{Tests for autocorrelation in forecast errors}
+An important concept in time series analysis is that of autocovariance and autocorrelation \cite{Montgomery2015}. The autocovariance and  the autocorrelation coefficient for two observations $k$ lags apart in a time series are given, respectively, by \cref{eq:covariance} and \cref{eq:correlation} below.  
+
+\begin{gather}
+     \upgamma_k = \text{Cov}(y_t, y_{t+k}) = E[(y_t - \mu)(y_{t+k} - \mu)] \label{eq:covariance} \\[1ex]
+     \rho_k = \frac{E[(y_t - \mu)(y_{t+k} - \mu)]}{\sqrt{E[(y_t - \mu)^2]E[(y_{t+k} - \mu)^2]}} = \frac{\text{Cov}(y_t, y_{t+k})}{\text{Var}(y_t)} = \frac{\upgamma_k}{\upgamma_0}\label{eq:correlation}
+\end{gather}
+The autocovariance function is the sequence of values of $\upgamma_k$ for $k=0,1,2 ..., T$, and similarly, the autocorrelation function (ACF) is the sequence of values of $\rho_k$ for $k=0,1,2 ..., T$. In practice, these functions can only be estimated, and the estimates for the autocovariance function and the ACF (called the sample ACF) are given by \cref{eq:sample_covariance} and \cref{eq:sample_correlation}, respectively.
+
+\begin{gather}
+     c_k=\hat{\upgamma}_k = \frac{1}{T} \sum_{t=1}^{T-k} (y_t - \bar{y})(y_{t+k} - \bar{y}), \:\:\:\: k = 0,1,2,...,K \label{eq:sample_covariance} \\[1ex]
+     r_k = \hat{\rho}_k = \frac{c_k}{c_0}, \:\:\:\: k = 0,1,2,...,K \label{eq:sample_correlation}
+\end{gather}
+
+In general, a time series is said to be white noise if the observations are uncorrelated and have constant variance. If the observations are also normally distributed, the time series is said to be Gaussian white noise, and ideally, this should be the case for the forecast errors \cite{Montgomery2015}. If the forecast errors are white noise, the sample ACF (of the errors) will approximately follow a normal distribution with zero mean and variance $1/T$. To test whether any of a set of autocorrelations are not zero (which then would indicate that the forecast errors are not white noise) the Box-Pierce test can be used \cite{Montgomery2015}. Essentially, this is a goodness-of-fit test where it is determined how well the sample ACF fits to the ACF of white noise. A similar and commonly used test for smaller sample sizes is the Ljung-Box test \cite{Montgomery2015}.
+
+\subsubsection{Additional evaluation metrics}
+There are many additional ways in which the performance of a forecasting model can be evaluated. For example, in Pucer et al.\cite{FaganeliPucer2018}, predictions are classified and cost matrices are utilized as part of model evaluation. In Stablober et al. \cite{Stadlober2008}, a quality function is defined in which each observation-forcast pair is rated, and where a larger penalty is also put on faulty forecasts in a specific range. In this work however, the common regression metrics are used together with a close examination of the forecast errors (using the methods described above) in order to answer the main research question of the thesis.  
+
+%Therefore, the hypothesis that the autocorrelation is zero at each lag can be tested for every $k$ up to a desired timestep $T$. However, a more convenient approach is to test whether a set of autocorrelations are zero, thereby indicating if the time series is white noise.  
+
+
+%have an approximate normal distribution with zero mean and variance $1/T$ \cite{Montgomery2015}. 
+%
+%normal with zero mean and variance $1/T$. 
+
+%Similarly as the errors pertaining to model fitting in linear regression, also the forecast errors should ideally be uncorrelated, normally distributed, and have constant variance (i.e., the forecast errors should be Gaussian white noise) \cite{Montgomery2015}. If the errors 
 
 %Besides the common regression metrics described in the section above, 
 %If the linearity assumption does not hold, a linear model is not an appropriate choice.  

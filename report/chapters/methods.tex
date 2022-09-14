@@ -165,7 +165,7 @@ where $x$ denotes input variables with NO$_2$ data from other than the target st
 % lagged response variables as predictors was fit with OLS. The Durbin-Watson test showed that for both PM$_{10}$ and PM$_{2.5}$, including one response variable ($y_{t-1}$ and $y_{t-2}$) was enough to eliminate any autocorrelation, but 
 %With data from three stations in the Stockholm area, some collinearity was expected, and regularized MLR models were initially tried. However, 
 
-\subsection{Deep learning models}
+\subsection{Deep neural network models}
 
 \subsubsection{Model fitting}
 At first, a fully connected neural network (dense model) was trained with the same input data as for the MLR model (i.e., the values at lag one and two for the response variable, lag one values for the NO$_2$ data from the other three stations, as well as the meteorological and temporal variables). Subsequent deep learning models, namely an additional dense model, a simple RNN, an LSTM, and a GRU model, were all fit with data windows of different input lengths (6, 12, and 24 hours, with the next hour as the target window), however with the same set of input variables as for the MLR and the first dense model. 
