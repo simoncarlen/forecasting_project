@@ -168,6 +168,7 @@ where $x$ denotes input variables with NO$_2$ data from other than the target st
 \subsection{Deep neural network models}
 
 \subsubsection{Model fitting}
+\label{sec:model_fitting}
 At first, a fully connected neural network (dense model) was trained with the same input data as for the MLR model (i.e., the values at lag one and two for the response variable, lag one values for the NO$_2$ data from the other three stations, as well as the meteorological and temporal variables). Subsequent deep learning models, namely an additional dense model, a simple RNN, an LSTM, and a GRU model, were all fit with data windows of different input lengths (6, 12, and 24 hours, with the next hour as the target window), however with the same set of input variables as for the MLR and the first dense model. 
 
 It should be emphasized that these two model fitting strategies differ in that the models with rolling windows utilize multivariate time series from the immediate past, whereas the first dense and the MLR model utilize past pollution data, as well as "real-time" data of the meteorological variables (and hence the meteorological variables would need to be replaced with forecasted values should the models be used in operational mode). Having the same set of input variables (again, being NO$_2$ data from the target site as well as three adjacent sites, four meteorological variables, and the two temporal variables) for all models allows for a more direct comparison between the baseline MLR model and the deep learning models, as well as the two different model fitting strategies. 
@@ -183,21 +184,22 @@ Due to the large number of hyperparameter combinations (making it infeasible to 
 %Furthermore, the same input variables as for the final MLR model were used in all deep learning models as this provides a more direct comparison of the performance between the two type of models.
 As a last step, the optimal number of epochs were tuned as well, and the final models were re-trained with the best set of hyperparameters (including the best epoch), and finally evaluated on the test sets. 
 
-The best set of hyperparameters for the two dense models are given in \cref{tab:hyperparams_dense}, and for the simple RNN, LSTM, and GRU models in \cref{tab_hyperparams_RNN}. For the models that were fit with rolling windows, the length of the input windows can be viewed as a hyperparameter as well, and in \cref{tab:hyperparams_dense} and \cref{tab:hyperparams_RNN}, only the window length (indicated in parentheses) for the best performing models are given.
+The best set of hyperparameters for each model are given in \cref{tab:hyperparams}. For the models that were fit with rolling windows, the length of the input windows can be viewed as a hyperparameter as well, and in \cref{tab:hyperparams}, only the window length (indicated in parentheses) for the best performing models are given.
 
-% Please add the following required packages to your document preamble:
-% \usepackage{booktabs}
-% \usepackage{graphicx}
 \begin{table}[h]
+\Large
 \centering
-\caption{The best hyperparameters for the two dense models. }
-\label{tab:hyperparams_dense}
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{@{}cccccc@{}}
+\caption{Best hyperparameters for each model.}
+\label{tab:hyperparams}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{@{}lllllll@{}}
 \toprule
-Model      & Learning rate & \begin{tabular}[c]{@{}c@{}}Units/dropout,\\ 1st layer\end{tabular} & \begin{tabular}[c]{@{}c@{}}Units/dropout,\\ 2nd layer\end{tabular} & \begin{tabular}[c]{@{}c@{}}Units/dropout,\\ 3rd layer\end{tabular} & \begin{tabular}[c]{@{}c@{}}Units/dropout,\\ 4th layer\end{tabular} \\ \midrule
-Dense      & 0.00001       & 512 / 0.0                                                          & 32 / 0.0                                                           & 512 / 0.3                                                          & 32 / 0.0                                                           \\
-Dense (6h) & 0.00001       & 512 / 0.0                                                          & -                                                                  & -                                                                  & -                                                                  \\ \bottomrule
+Model            & Learning rate & \begin{tabular}[c]{@{}l@{}}Units/dropout,\\ 1st layer\end{tabular} & \begin{tabular}[c]{@{}l@{}}Units/dropout,\\ 2nd layer\end{tabular} & \begin{tabular}[c]{@{}l@{}}Units/dropout,\\ 3rd layer\end{tabular} & \begin{tabular}[c]{@{}l@{}}Units/dropout,\\ 4th layer\end{tabular} & \begin{tabular}[c]{@{}l@{}}Dropout before\\ output layer\end{tabular} \\ \midrule
+Dense model      & $1\times10^{-5}$       & 512 / 0.0                                                          & 32 / 0.0                                                           & 512 / 0.3                                                          & 32 / 0.0                                                           & -                                                                     \\
+Dense model (6h) & $1\times10^{-5}$       & 512 / 0.0                                                          & -                                                                  & -                                                                  & -                                                                  & -                                                                     \\
+RNN model (12h)  & $1\times10^{-5}$       & 32 / 0.0                                                           & 32 / 0.0                                                           & -                                                                  & -                                                                  & 0.0                                                                   \\
+LSTM model (12 h & $1\times10^{-4}$        & 32 / 0.0                                                           & 32 / 0.0                                                           & -                                                                  & -                                                                  & 0.0                                                                   \\
+GRU (12h)        & $1\times10^{-2}$          & 160 / 0.0                                                          & 256 / 0.5                                                          & -                                                                  & -                                                                  & 0.0                                                                   \\ \bottomrule
 \end{tabular}%
 }
 \end{table}

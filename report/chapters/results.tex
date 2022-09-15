@@ -1,6 +1,67 @@
 
-\section{egression metrics}
+\section{Model evaluation}
 Forecasts on the original scale of a time series are easier to interpret, and therefore the transformations made before model fitting were reversed to convert back to \textmugreek g/m$^3$. This required inverting the normalization, and also for the MLR model, using exp($\hat{y}$) for the predictions. 
+\subsection{Common regression metrics}
+%In this section, commonly used regression metrics for each model are given and the results are briefly discussed. Further down however (section ??), a more formal comparison of the metrics are carried out with two statistical tests.  
+Performance metrics for the robust MLR model and the neural network models are given in \cref{tab:performance_metrics}. Again, for the neural network models that were fit with rolling windows, the length of the input windows are indicated in parenthesis, and only the best performing models (in terms of lowest RMSE) are included here. 
+
+As can be inferred from \cref{tab:performance_metrics}, the neural network models all had lower RMSE than the baseline MLR model, with the LSTM model having the lowest value (3.10), closely followed by the dense model (3.18) that was not fit with rolling windows (see \vref{sec:model_fitting}). Looking at the MAE, also the LSTM model had the lowest value (1.89), again followed by the dense model (1.93), however, for the three remaining neural network models, the MAE were higher than for the baseline MLR model. 
+\begin{table}[h]
+\small
+\centering
+\caption{Performance metrics (best models). }
+\label{tab:performance_metrics}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Model            & \multicolumn{1}{l}{RMSE} & \multicolumn{1}{l}{MAE} & \multicolumn{1}{l}{ME} \\ \midrule
+Robust MLR model & 3.51                     & 1.99                    & 0.48                   \\
+Dense model      & 3.18                     & 1.93                    & -0.24                  \\
+Dense model (6h) & 3.23                     & 2.05                    & -0.32                  \\
+Simple RNN model (12h)  & 3.32                     & 2.09                    & -0.05                  \\
+LSTM model (12h) & 3.10                     & 1.89                    & -0.08                  \\
+GRU model (12h)  & 3.26                     & 2.06                    & -0.02                  \\ \bottomrule
+\end{tabular}
+\end{table}
+
+\noindent
+Though both the RMSE and the MAE measure variability in $e_t(1)$ , squaring the errors before averaging (as is done with the MSE) will weight the errors differently than when taking the absolute value. More specifically, the MSE/RMSE penalizes large errors more than does the MAE, and the three neural network models having comparatively high MAE's (2.05, 2.09, and 2.06) most likely still gave better predictions during episodes with frequent pollution peaks than did the baseline MLR model, even though the MLR model had a lower MAE (1.99). Finally, looking at the ME in \cref{tab:performance_metrics}, all recurrent neural network models showed considerably less bias in the forecast errors than did the two dense models and the baseline MLR model (which had the highest ME of 0.48). Clearly, the recurrent models were superior in terms of generating less biased forecasts. 
+
+\subsection{Examining the forecast errors}
+%As described in \cref{sec:deep_learning}, the RNN, LSTM, and GRU models are all recurrent neural network models. Out of these, the LSTM model showed superior performance over two common evaluation metrics (\cref{tab:performance_metrics}). Similarly, for the two dense models, the one fit with the same input data as for the MLR model had better performance compared to the one fit with rolling windows. Therefore, in the sections below where forecast errors are examined closer, the RNN and GRU models as well as the dense model fit with rolling windows are not analyzed further. Hence, the discussion will be limited to the robust MLR model, the first one of the two dense models, and the LSTM model. 
+\subsubsection{Residual autocorrelations}
+In \cref{fig:qq-plot-errors}, normal probability plots of the forecast errors are shown for all models. Clearly, the forecast errors were not normally distributed for any of the models, as indicated by the deviations from the straight line. 
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[width=1\textwidth]{../plots/qq_pred_errors_all}}
+\caption{Normal probability plots for the forecast errors.}
+\label{fig:qq-plot-errors}
+\end{figure}
+
+\noindent
+The Box-Pierce test was utilized as well to see if the distribution of $r_k$ (the sample ACF) was approximately normally distributed at lag $k$, i.e., the hypothesis $\rho_k = 0$ vs.\ $\rho_k \neq 0$ was tested (or equivalently, whether the forecast errors were white noise). Using the 50 first lags, for all models the Box-Pierce test statistic ($Q_{\text{BP}}$) were very large, and the corresponding $p$-values were (for all practical purposes) equal to zero. The results from the Box-Pierce tests are summarized in \cref{tab:boxpierce}.
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+\begin{table}[h]
+\centering
+\caption{Results from the Box-Pierce tests.}
+\label{tab:boxpierce}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+Model                  & $Q_{\text{BP}}$ & $p$-value             \\ \midrule
+Robust MLR model       & 1520.07         & $1.91\times10^{-285}$ \\
+Dense model            & 866.76          & $2.0\times10^{-149}$  \\
+Dense model (6h)       & 607.94          & $6.58\times10^{-97}$  \\
+Simple RNN model (12h) & 238.62          & $2.13\times10^{-26}$  \\
+LSTM model (12h)       & 315.34          & $3.55\times10^{-40}$  \\
+GRU model (12h)        & 504.71          & $2.0\times10^{-76}$   \\ \bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Structure of the forecast errors}
+The results from \cref{tab:boxpierce} and \cref{fig:qq-plot-errors} suggests strong correlation and a non-normal distribution in the forecast errors for all models. A clue about the structure of the errors can be given by looking at the scatter plots shown in \cref{fig:correlations}, together with the Pearson correlation coefficient ($\rho$) for all models.
+
+%and the Box-Pierce statistic together with corresponding $p$-values for the robust MLR model as well as the dense and LSTM models are given in \ref{tab:box-pierce}. 
+
 
 %For all deep learning architectures, the 12 h input window gave better predictions than with the 24 h input window, and in \cref{tab:metrics}, common performance metrics for the best performing deep learning models are summarized together with the corresponding performance for the MLR model.
 
@@ -13,19 +74,16 @@ Forecasts on the original scale of a time series are easier to interpret, and th
  
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics[width=1\textwidth]{../plots/correlations}}
+\makebox[\textwidth][c]{\includegraphics[width=1.05\textwidth]{../plots/correlations_all}}
 \caption{Actual vs.\ predicted NO$_2$ levels. }
 \label{fig:correlations}
 \end{figure}
 
-\begin{figure}[h]
-\centering
-\makebox[\textwidth][c]{\includegraphics[width=1\textwidth]{../plots/predictions}}
-\caption{Actual and predicted NO$_2$ for 10 days in Dec.}
-\label{fig:predictions}
-\end{figure}
-
-\clearpage
-\section{}
+%\begin{figure}[h]
+%\centering
+%\makebox[\textwidth][c]{\includegraphics[width=1\textwidth]{../plots/predictions}}
+%\caption{Observed and predicted NO$_2$ for 10 days in Dec 2021.}
+%\label{fig:predictions}
+%\end{figure}
 
 % sine and cosine for hours important for hourly predictions... but day and year unimportant
