@@ -116,6 +116,7 @@ Lastly, the data was split into training, validation, and test sets, where the v
 %Being sequence data, the sampling was done consecutively, without random shuffling, so that order information would be preserved 
 
 \section{Model fitting and hyperparameter tuning}
+\label{sec:model_fitting_hp_tuning}
 
 \subsection{Multiple linear regression models}
 Initially, a simple linear regression model was fit with OLS where the response variable at lag one was used as predictor. No significant autocorrelation was seen with this model, but when also including the response variable at lag two as predictor, the Durbin-Watson statistic improved (i.e., was brought closer to 2). Including additional response variables after the first two lags did not lead to further improvements in terms of eliminating autocorrelation.
@@ -135,6 +136,7 @@ At this point, with many input variables in the model, recursive feature elimina
 \end{center}
 \end{figure}
 
+\noindent
 From \cref{fig:RFE}, it is evident that the least important predictors brought essentially no improvements to the model, and they were therefore removed. More specifically, these variables were; precipitation, atmospheric pressure, the Norr Malma NO$_2$ data, and the temporal variables for week and year. The final MLR model thus had the form
 \begin{align}
 %\log y_t = \beta_0 + \sum_{\mathclap{\substack{i=1,\\ l\in\{1,2,23,24\}\\}}}^{4} \beta_{i} \log y_{i,t-l} + \sum_{i=5}^{7} \beta_{i} \log x_{i,t-1} + \sum_{i=8}^{11} \beta_{i} z_{i,t}  + \sum_{i=12}^{13} \beta_{i} w_{i,t} +  \varepsilon_t
@@ -186,20 +188,28 @@ As a last step, the optimal number of epochs were tuned as well, and the final m
 
 The best set of hyperparameters for each model are given in \cref{tab:hyperparams}. For the models that were fit with rolling windows, the length of the input windows can be viewed as a hyperparameter as well, and in \cref{tab:hyperparams}, only the window length (indicated in parentheses) for the best performing models are given.
 
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+% \usepackage{graphicx}
 \begin{table}[h]
-\Large
 \centering
-\caption{Best hyperparameters for each model.}
+\caption{The best set of hyperparameters for each model. (NA = not applicable.)}
 \label{tab:hyperparams}
-\resizebox{\columnwidth}{!}{%
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{@{}lllllll@{}}
 \toprule
-Model            & Learning rate & \begin{tabular}[c]{@{}l@{}}Units/dropout,\\ 1st layer\end{tabular} & \begin{tabular}[c]{@{}l@{}}Units/dropout,\\ 2nd layer\end{tabular} & \begin{tabular}[c]{@{}l@{}}Units/dropout,\\ 3rd layer\end{tabular} & \begin{tabular}[c]{@{}l@{}}Units/dropout,\\ 4th layer\end{tabular} & \begin{tabular}[c]{@{}l@{}}Dropout before\\ output layer\end{tabular} \\ \midrule
-Dense model      & $1\times10^{-5}$       & 512 / 0.0                                                          & 32 / 0.0                                                           & 512 / 0.3                                                          & 32 / 0.0                                                           & -                                                                     \\
-Dense model (6h) & $1\times10^{-5}$       & 512 / 0.0                                                          & -                                                                  & -                                                                  & -                                                                  & -                                                                     \\
-RNN model (12h)  & $1\times10^{-5}$       & 32 / 0.0                                                           & 32 / 0.0                                                           & -                                                                  & -                                                                  & 0.0                                                                   \\
-LSTM model (12 h & $1\times10^{-4}$        & 32 / 0.0                                                           & 32 / 0.0                                                           & -                                                                  & -                                                                  & 0.0                                                                   \\
-GRU (12h)        & $1\times10^{-2}$          & 160 / 0.0                                                          & 256 / 0.5                                                          & -                                                                  & -                                                                  & 0.0                                                                   \\ \bottomrule
+Model &
+  Learning rate &
+  \begin{tabular}[c]{@{}l@{}}Units/dropout,\\ 1st layer\end{tabular} &
+  \begin{tabular}[c]{@{}l@{}}Units/dropout,\\ 2nd layer\end{tabular} &
+  \begin{tabular}[c]{@{}l@{}}Units/dropout,\\ 3rd layer\end{tabular} &
+  \begin{tabular}[c]{@{}l@{}}Units/dropout,\\ 4th layer\end{tabular} &
+  \begin{tabular}[c]{@{}l@{}}Dropout before\\ output layer\end{tabular} \\ \midrule
+Dense model      & $1\times10^{-5}$ & 512 / 0.0 & 32 / 0.0 & 512 / 0.3 & 32 / 0.0  & NA  \\
+Dense model (6h) & $1\times10^{-5}$ & 512 / 0.0 & -        & -         & -         & NA  \\
+RNN model (12h)  & $1\times10^{-5}$ & 32 / 0.0  & 32 / 0.0 & -         & -         & 0.0 \\
+LSTM model (12h) & $1\times10^{-4}$ & 32 / 0.0  & 32 / 0.0 & -         & -         & 0.0 \\
+GRU (24h)        & $1\times10^{-5}$ & 32 / 0.5  & 32 / 0.0 & 32 / 0.4  & 256 / 0.5 & 0.0 \\ \bottomrule
 \end{tabular}%
 }
 \end{table}

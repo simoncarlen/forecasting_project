@@ -1,61 +1,44 @@
 
 \section{Model evaluation}
-Forecasts on the original scale of a time series are easier to interpret, and therefore the transformations made before model fitting were reversed to convert back to \textmugreek g/m$^3$. This required inverting the normalization, and also for the MLR model, using exp($\hat{y}$) for the predictions.
+Forecasts on the original scale of a time series are easier to interpret, and therefore the transformations made before model fitting were reversed to convert back to \textmugreek g/m$^3$ before proceeding with the model evaluation. This required inverting the normalization, and also for the MLR model, using exp($\hat{y}$) for the predictions.
+
 \subsection{Common regression metrics}
 %In this section, commonly used regression metrics for each model are given and the results are briefly discussed. Further down however (section ??), a more formal comparison of the metrics are carried out with two statistical tests.  
-The RMSE, MAE, and ME for the robust MLR model and the neural network models are given in \cref{tab:performance_metrics}. Again, for the neural network models that were fit with rolling windows, the length of the input windows are indicated in parenthesis, and only the best performing models (in terms of lowest RMSE) are included here. 
+The RMSE, MAE, and ME for the robust MLR model and the neural network models are shown in \cref{fig:metrics_barchart}. Again, for the neural network models that were fit with rolling windows, the length of the input windows are indicated in parenthesis, and only the best performing models (in terms of lowest RMSE) are included here. 
 
-As can be inferred from \cref{tab:performance_metrics}, the neural network models all had lower RMSE than the baseline MLR model, with the LSTM model having the lowest value (3.10), closely followed by the dense model (3.18) that was not fit with rolling windows (see \vref{sec:model_fitting}). Looking at the MAE, also the LSTM model had the lowest value (1.89), again followed by the dense model (1.93), however, for the three remaining neural network models, the MAE were higher than for the baseline MLR model. 
-\begin{table}[h]
-\small
-\centering
-\caption{Performance metrics (best models). }
-\label{tab:performance_metrics}
-\begin{tabular}{@{}lccc@{}}
-\toprule
-Model            & \multicolumn{1}{l}{RMSE} & \multicolumn{1}{l}{MAE} & \multicolumn{1}{l}{ME} \\ \midrule
-Robust MLR model & 3.51                     & 1.99                    & 0.48                   \\
-Dense model      & 3.18                     & 1.93                    & -0.24                  \\
-Dense model (6h) & 3.23                     & 2.05                    & -0.32                  \\
-Simple RNN model (12h)  & 3.32                     & 2.09                    & -0.05                  \\
-LSTM model (12h) & 3.10                     & 1.89                    & -0.08                  \\
-GRU model (12h)  & 3.26                     & 2.06                    & -0.02                  \\ \bottomrule
-\end{tabular}
-\end{table}
+As can be inferred from \cref{fig:metrics_barchart}, the neural network models all had lower RMSE than the baseline MLR model, with the LSTM model having the lowest value (3.10), closely followed by the dense model (3.18) that was not fit with rolling windows (see \cref{sec:model_fitting}). Looking at the MAE, also the LSTM model had the lowest value (1.89), again followed by the dense model (1.93), however, for the three remaining neural network models, the MAE were higher than for the baseline MLR model. Though both the RMSE and the MAE measure variability in $e_t(1)$, squaring the errors before averaging (as is done with the MSE) will weight the errors differently than when taking the absolute value. More specifically, the MSE/RMSE penalize large errors more than does the MAE \cite{reg_metrics2018}.
+%and the three neural network models having comparatively high MAE's (2.05, 2.09, and 2.06), but still lower RMSE's, \textcolor{red}{most likely generated better forecasts during episodes with frequent pollution peaks than did the MLR model, even though the MLR model had a lower MAE (1.99)}. 
+Given the objective of this thesis, where the focus is more on pollution peaks where larger errors are expected, the MSE/RMSE would be the more logical measure to focus on here. 
 
-\noindent
-Though both the RMSE and the MAE measure variability in $e_t(1)$, squaring the errors before averaging (as is done with the MSE) will weight the errors differently than when taking the absolute value. More specifically, the MSE/RMSE penalize large errors more than does the MAE, and the three neural network models having comparatively high MAE's (2.05, 2.09, and 2.06) most likely gave better predictions during episodes with frequent pollution peaks than did the baseline MLR model, even though the MLR model had a lower MAE (1.99). Finally, looking at the ME in \cref{tab:performance_metrics}, all recurrent neural network models showed considerably less bias in the forecast errors than did the two dense models and the baseline MLR model (which had the highest ME of 0.48). Consequently, the recurrent models appeared to be superior in terms of generating less biased forecasts. 
+Finally, looking at the ME in \cref{fig:metrics_barchart}, the recurrent neural network models all had small ME's, indicating considerably less bias in the forecasts than for the two dense models and the MLR model (which had the largest ME of 0.48). Not only the magnitude, but also the sign of the ME is important, as a positive ME indicates an underestimation bias, whereas a negative ME indicate bias in the opposite direction. Consequently, the robust MLR model clearly gave predictions that were too low, whereas the opposite is true for the two dense models. 
+
+%Clearly, the recurrent models appeared to be superior in this regard. In \cref{sec:inference} further down, inference for the regression metrics are given. 
+
+\begin{figure}[h] 
+\begin{center}
+\makebox[\textwidth][c]{\includegraphics[width=1\textwidth]{../plots/metrics_barchart}}
+%\includegraphics[scale=1]{../plots/}
+\caption{Performance metrics for all models.}
+\label{fig:metrics_barchart}
+\end{center}
+\end{figure}
 
 \subsection{Examining the forecast errors}
 %As described in \cref{sec:deep_learning}, the RNN, LSTM, and GRU models are all recurrent neural network models. Out of these, the LSTM model showed superior performance over two common evaluation metrics (\cref{tab:performance_metrics}). Similarly, for the two dense models, the one fit with the same input data as for the MLR model had better performance compared to the one fit with rolling windows. Therefore, in the sections below where forecast errors are examined closer, the RNN and GRU models as well as the dense model fit with rolling windows are not analyzed further. Hence, the discussion will be limited to the robust MLR model, the first one of the two dense models, and the LSTM model. 
+
 \subsubsection{Residual autocorrelations}
 
-The Box-Pierce test was used with all models to see if the distribution of the sample ACF for the forecast errors were approximately normal. As described in \cref{sec:auto_errors}, this is equivalent to testing whether the forecast errors are white noise. Using the 50 first autocorrelations, the Box-Pierce test statistic ($Q_{\text{BP}}$) were very large for all models, and the corresponding $p$-values were, for all practical purposes, equal to zero. The results from the Box-Pierce tests are summarized in \cref{tab:boxpierce}.
-
-\begin{table}[h]
-\small
-\centering
-\caption{Results from the Box-Pierce tests.}
-\label{tab:boxpierce}
-\begin{tabular}{@{}lll@{}}
-\toprule
-Model                  & $Q_{\text{BP}}$ & $p$-value             \\ \midrule
-Robust MLR model       & 1520.07         & $1.91\times10^{-285}$ \\
-Dense model            & 866.76          & $2.0\times10^{-149}$  \\
-Dense model (6h)       & 607.94          & $6.58\times10^{-97}$  \\
-Simple RNN model (12h) & 238.62          & $2.13\times10^{-26}$  \\
-LSTM model (12h)       & 315.34          & $3.55\times10^{-40}$  \\
-GRU model (12h)        & 504.71          & $2.0\times10^{-76}$   \\ \bottomrule
-\end{tabular}
-\end{table}
-
-\noindent
-QQ-plots of the forecast errors for all models are shown in \cref{fig:qq-plot-errors}. Clearly, the errors were not normally distributed for any of the models, as indicated by the deviations from the straight line. Consequently, from \cref{fig:qq-plot-errors} and \cref{tab:boxpierce}, it can be inferred that the forecast errors were not Gaussian white noise. Instead, the errors appeared to be strongly correlated and non-random. The structure of the errors are discussed next.
+The Box-Pierce test was used with all models to see if the distribution of the sample ACF's for the forecast errors were approximately normal. As described in \cref{sec:auto_errors}, this is equivalent to testing whether the forecast errors are white noise. Using the 50 first autocorrelations, the Box-Pierce test statistic ($Q_{\text{BP}}$) turned out to be very large (well above 100) for all models, and the corresponding $p$-values $\ll0.001$. The results from the Box-Pierce tests are summarized in \cref{tab:boxpierce} in Appendix \ref{chapt:appendix_C}. QQ-plots of the forecast errors for all models are also shown in \cref{fig:qq-plot-errors}. Clearly, the errors were not normally distributed for any of the models, as indicated by the departures from the diagonal line. Consequently, the results from \cref{fig:qq-plot-errors} and \cref{tab:boxpierce} suggest that the forecast errors were not Gaussian white noise. Instead, the errors appeared to be strongly correlated and non-random for all models. The structure of the errors are discussed next.
 
 \subsubsection{Structure of the forecast errors}
-An understanding of the structure of the forecast errors can be given by looking at the scatter plots of observed vs.\ predicted values for each model, shown in \cref{fig:correlations}. Also in \cref{fig:correlations}, the correlation between observed and predicted values are indicated with the Pearson correlation coefficient ($\rho$). If the forecasts were unbiased, the data points would be evenly distributed around the diagonal line. However, as can be seen for all models, the forecasts had tendencies to underestimate NO$_2$ values, and this tendency gets stronger as the NO$_2$ values increase. 
+A more clear understanding of the structure of the forecast errors can be given by looking at the scatter plots of observed vs.\ predicted values for each model, shown in \cref{fig:correlations}. The correlation between observed and predicted values are also indicated with the Pearson correlation coefficient ($\rho$) in \cref{fig:correlations}. If the models produced unbiased forecasts, the data points would be evenly distributed around the diagonal lines. However, as can be seen, this was not the case for any of the models.
 
-The MLR model had the lowest correlation coefficient ($\rho = 0.916$), and also the strongest tendency to underestimate NO$_2$ values, as indicated by the many data points located below the diagonal line in \cref{fig:correlations}a. Contrary to the neural network models (\cref{fig:correlations}b-f), the MLR model also made some predictions that were strong overestimations. For the neural network models, the correlation coefficients were all higher than for the baseline MLR model, and again, the LSTM model had the best performance for this metric ($\rho=0.934$). Furthermore, the predictions were much less biased, both in the lower ranges of NO$_2$ values, but especially in the higher ranges when compared to the MLR model (which showed strong bias already for observations exceeding 25 \textmugreek g/m$^3$). 
+%noticeable underestimations of NO$_2$ values can be seen for all models  
+%for all models, as the NO$_2$ values increase, the forecasts tended underestimate NO.
+%the forecasts had a tendency to underestimate NO$_2$ values, and this becomes more noticeable as the NO$_2$ values increase. 
+
+The MLR model had the lowest correlation coefficient ($\rho = 0.916$), and also the strongest tendency to underestimate NO$_2$ values, as indicated by the many data points located below the diagonal line (\cref{fig:correlations}a). Contrary to the neural network models (\cref{fig:correlations}b-f), the MLR model also made some predictions that were strongly overestimated. For the neural network models, the correlation coefficients were all higher than for the MLR model, and again, the LSTM model had the best performance for this metric ($\rho=0.934$). Furthermore, the predictions appeared to be less biased, both in the lower ranges of NO$_2$ values, but especially in the higher ranges when compared to the MLR model, which showed clear bias in the predictions already for observations exceeding 25 \textmugreek g/m$^3$. As pointed out above, the ME's for the two dense models (\cref{fig:metrics_barchart}) indicated an overestimation bias. From \cref{fig:correlations}b-c however, it becomes clear that this bias only pertained to the lower NO$_2$ values.   
+ 
 %in the lower ranges of NO$_2$ values compared to the MLR model, which shows strong bias already when observations start to exceed 25 \textmugreek g/m$^3$. In the higher ranges of NO$_2$ observations (say, 50 \textmugreek g/m$^3$ and above), all models tended to make predictions that were too low, though the bias in these ranges was much less severe for the neural network models (\cref{fig:correlations}b-f). 
 \begin{figure}[h]
 \centering
@@ -74,29 +57,59 @@ The MLR model had the lowest correlation coefficient ($\rho = 0.916$), and also 
 \clearpage
 
 \noindent
-In \cref{fig:pred_vs_obs}, observed and predicted NO$_2$ levels during a 10 day period in December 2021 are shown for the robust MLR model (\cref{fig:pred_vs_obs}a), and the LSTM model (\cref{fig:pred_vs_obs}b). (Only the best performing deep learning model is compared to the baseline MLR model here, since the forecast errors were similar in character for all models.) From these plots, the structure of the forecast errors also become apparent. For example, it can be seen that both models had difficulties predicting the magnitude, as well as duration, of the large NO$_2$ peak occurring around 7--8 December. However, as is also evident, the forecasts of the LSTM model were still better than those of the MLR model for this specific pollution peak. More accurate forecasts for the LSTM model are also seen for the smaller NO$_2$ peaks (e.g.\ the peaks occuring around 3--4 and 6--7 December). At low NO$_2$ values however, predictions for both models followed the observed NO$_2$ values closely.
+In \cref{fig:pred_vs_obs}, observed and predicted NO$_2$ levels during a 10 day period in December 2021 are shown for the robust MLR model (\cref{fig:pred_vs_obs}a), and the LSTM model (\cref{fig:pred_vs_obs}b). (Only the best performing model is compared to the baseline MLR model here, since the forecast errors were similar in character for all models.) From these plots, the structure of the forecast errors also become apparent (and merely corroborate the findings related to \cref{fig:correlations}). For example, it can be seen that both models had difficulties predicting the magnitude, as well as duration of, the large NO$_2$ peak occurring around 7--8 December, though the forecasts of the LSTM model are still better. More accurate forecasts for the LSTM model are also seen during the smaller NO$_2$ peaks (e.g.\ the peaks occuring around 3--4 and 6--7 December). At low NO$_2$ values however, predictions for both models follow the observed NO$_2$ values closely. 
 
 %When looking at the predictions for lower NO$_2$ levels, it is not clear whether the LSTM model . 
 
 \begin{figure}[h] 
 \begin{center}
-%\makebox[\textwidth][c]{\includegraphics[width=1.01\textwidth]{../plots/predictions}}
-\includegraphics[scale=1.05]{../plots/predictions}
+\makebox[\textwidth][c]{\includegraphics[width=1.02\textwidth]{../plots/predictions}}
+%\includegraphics[scale=1]{../plots/predictions}
 \caption{Observed and predicted NO$_2$ levels during 10 days in December.}
 \label{fig:pred_vs_obs}
 \end{center}
 \end{figure}
 
-\section{Significance tests for regression metrics}
+\section{Inference for the regression metrics}
+\label{sec:inference}
 
-Knowing that the forecast errors for none of the models were normally distributed, a Kruskall-Wallis test followed by the Dunn's test were used to see if there were any significant difference between the common performance metrics. 
+Due to the fact that the forecast errors for none of the models were Gaussian white noise (and consequently not normally distributed), the Kruskall-Wallis test was used to test whether there was a significant difference between the models with two of the performance metrics, namely the MSE and the ME. The test indicated a significant difference, both for the MSE ($\chi^2(5) = 299.65$, $p\ll0.001$) and the ME ($\chi^2(5) = 593.40$, $p\ll0.001$), between the different models. 
+
+Following this, Dunn's post-hoc test with Bonferroni adjustment was used to test pairwise comparisons of the models. Again, both measures (MSE and the ME) were tested. For the MSE, the main finding was that there were significant differences between the baseline MLR model and all neural network models (all $p$-values were $\ll0.05$). Between the two best performing models however (the LSTM and the dense model), no significant difference was indicated ($p> $ 0.05). For the ME, there were also significant differences between the MLR model and all neural network models (all $p$-values $\ll0.001$). Moreover, significant differences between all three recurrent neural network models and the two dense models were also indicated ($p$-values $\ll0.001$). (Given the metrics from \cref{fig:metrics_barchart}, this was expected). All $p$-values for the pairwise comparisons from the Dunn's test for the MSE and the ME are summarized in \cref{tab:Dunn_MSE} and \cref{tab:Dunn_ME}, respectively, in Appendix \ref{chapt:appendix_C}. 
+
+\section{Summary and conclusions}
+Common regression metrics indicated that all neural network models generated better forecasts than the baseline MLR model. Moreover, the results were statistically significant, as indicated by the Kruskall-Wallis and the Dunn's test. However, the improvements were not dramatic, as the best performing neural network model generated forecasts with roughly 12\% lower RMSE and about 5\% lower MAE compared to the baseline model (see \cref{fig:metrics_barchart}). (As pointed out above, though not insignificant, less emphasis is put on the MAE here.) 
+
+A more noticeable improvement is seen for the ME, for which all RNN models showed superior performance compared to the baseline, as well as the two dense models. Clearly, the RNN models managed to utilize temporal dependencies in the data in a way so to reduce the bias. However, any further advantage for the RNN models are unclear, as there was no significant difference between the best performing dense model and the LSTM model when looking at the RMSE. Here, the nature of the time series is relevant. For example, if temporal dependencies only are important up to a few past time steps (or just one time step) when the next value is to be predicted, a simpler model not explicitly taking the history of the time series into account will produce successful predictions as well. An indication of the importance of previous time steps for the response variable can be given by looking at the magnitude of the coefficients (or the $z$-statistic) for the robust MLR model (\cref{tab:Robust_table} in Appendix \ref{chapt:appendix_B}). It can be inferred that the value at lag one dominated in importance, whereas the value at lag two, though still significant, mattered much less. Values of the response variable at lags further back were not utilized in the  MLR model, but it can be reasonably assumed that the importance decrease at every time step going back. Another interesting finding is that for both the simple RNN and the LSTM models, using the 12h input window gave better results than with the 24h input window. (For the GRU model, the 24h input window gave better predictions, the improvements over the 12h input window were only subtle however). This also suggests that long-term temporal dependencies were of less importance for predicting NO$_2$ levels the next hour. 
+
+Despite the performance improvements seen for the neural network models (especially the LSTM model), all models failed to successfully capture the structure in the observations, as there was strong autocorrelation in the forecast errors. Judging from \cref{fig:correlations} and \cref{fig:pred_vs_obs}, the autocorrelation in the errors are due to the poor predictions made at high NO$_2$ levels, and especially jerky leaps like the large peak seen around 7--8 of Dec in \cref{fig:pred_vs_obs} are not captured well. Also, the two dense models tended to generate overestimated predictions at lower NO$_2$ levels, as indicated by the ME (though this cannot be clearly seen in \cref{fig:correlations}b-c).
+
+An additional important aspect is that of the two model fitting strategies. As explained in \cref{sec:model_fitting_hp_tuning}, the MLR model and the first dense model were not fit with lagged meteorological variables, and in operational mode these values would need to be replaced with forecasts. Consequently, the performance metrics reported here are under the assumption of meteorological forecasts that are exact. Clearly, this is an unreasonable assumption, and the theoretical performance of the models are expected to be too optimistic. On the other hand, the models fit with rolling windows only utilize past pollution and weather data, and therefore do not suffer from this added uncertainty. The theoretical performance for these models therefore better reflect how they would perform in operational mode. 
+
+% as pointed out above, in this work, more importance is given to the RMSE measure, and it can also be noted that the MSE error is the quantity being minimized during training.) 
+
+%However, more striking is the difference in ME between the baseline MLR and the three recurrent neural network models, where for the 
+
+%
+%The main findings are briefly described here, and in \cref{tab:Dunn_MSE} and \cref{tab:Dunn_ME} in Appendix \ref{chapt:appendix_C}, the results from both tests are summarized. 
+
+%For the MSE, there was a significant difference between the robust MLR model and all the neural network models. Looking specifically at the neural network models, there was no significant difference between the two best performing models (the LSTM and the dense model), nor was it any significant difference between the remaining three models (the RNN, GRU, and dense fit with rolling windows). 
+
+%however, for both of these models, there was a significant difference between the three remaining 
+
+
+%there was also a significant difference between the two best performing models (the LSTM and the dense model) and the remaining three (the simple RNN, the GRU, and the dense fit with rolling windows). 
+
+%\cref{tab:Dunn_MSE} and \ref{tab:Dunn_ME} in Appendix \ref{chapt:appendix_C} summarizes the results. 
+
+
 
 %The largest spread in the data points can be seen for the MLR model (\cref{fig:correlations}a), which also had the lowest correlation coefficient ($\rho = 0.916$). 
 %
 %
 %as well as the highest ME (\cref{tab:performance_metrics}). Contrary to the neural network models, the MLR model also made some predictions that were strongly over-estimated. 
 %
-%All neural network showed stronger correlation between observed and predicted values than , and also for this metric, the LSTM model showed the best performance ($\rho = 0.934$).
+%All neural netwsork showed stronger correlation between observed and predicted values than , and also for this metric, the LSTM model showed the best performance ($\rho = 0.934$).
 
 %and the Box-Pierce statistic together with corresponding $p$-values for the robust MLR model as well as the dense and LSTM models are given in \ref{tab:box-pierce}. 
 
@@ -109,13 +122,5 @@ Knowing that the forecast errors for none of the models were normally distribute
 %In \cref{fig:correlations}, where observed vs.\ predicted NO$_2$ levels are shown for each model together with the corresponding correlation coefficient, the bias in the predictions for the deep learning models can be seen. For example, looking at plots (b)--(d), there is a consistent pattern of too high predictions (indicated by the unequal distribution of observations around the red line). For the MLR model (\cref{fig:correlations}a), though less biased, the bias goes in the opposite direction, with a tendency to make too low predictions. The correlation coefficients followed the same pattern as MSE/RMSE, with the dense model having the highest $\rho$. 
 
 %In \cref{fig:predictions}, predicted and observed NO$_2$ levels for all models during a 9 day window (1st to 9th of Dec) from the test set are shown. Comparing the MLR model with the deep learning models in \cref{fig:predictions}, it is clear that the MLR model performed worse during pollution peaks (e.g.\ the peak observed around 7--8 of Dec was not predicted very accurately). The model best predicting peaks during this time window appears to be the RNN model, but again the RNN model is clearly biased and also had the lowest $\rho$ among the deep learning models. 
-
-
-%\begin{figure}[h]
-%\centering
-%\makebox[\textwidth][c]{\includegraphics[width=1\textwidth]{../plots/predictions}}
-%\caption{Observed and predicted NO$_2$ for 10 days in Dec 2021.}
-%\label{fig:predictions}
-%\end{figure}
 
 % sine and cosine for hours important for hourly predictions... but day and year unimportant

@@ -1,0 +1,63 @@
+\label{chapt:appendix_C}
+
+The results from the Box-Pierce tests for all models are summarized in \cref{tab:boxpierce} below. 
+\begin{table}[h]
+\small
+\centering
+\caption{Results from the Box-Pierce tests.}
+\label{tab:boxpierce}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Model                  & $Q_{\text{BP}}$ & $p$-value             \\ \midrule
+Robust MLR model       & 1520.07         & $\ll0.001$ \\
+Dense model            & 866.76          & $\ll0.001$  \\
+Dense model (6h)       & 607.94          & $\ll0.001$ \\
+Simple RNN model (12h) & 238.62          & $\ll0.001$  \\
+LSTM model (12h)       & 315.34          & $\ll0.001$  \\
+GRU model (24h)        & 506.06          & $\ll0.001$ \\ \bottomrule
+\end{tabular}
+\end{table}
+
+\noindent
+The $p$-values from the Dunn's post hoc test with Bonferroni adjustment for the MSE and the ME measures are given in \cref{tab:Dunn_MSE} and \cref{tab:Dunn_ME}, respectively. 
+
+%MSE
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+% \usepackage{graphicx}
+\begin{table}[h]
+\centering
+\caption{$p$-values for the pairwise comparisons from the Dunn's post hoc test for the MSE. }
+\label{tab:Dunn_MSE}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lllllll@{}}
+\toprule
+Model            & Robust MLR & Dense      & Dense (6h) & Simple RNN (12h) & LSTM (12h) & GRU (24h)  \\ \midrule
+Robust MLR       & 1.0        & 0.00752    & $\ll0.001$ & $\ll0.001$       & 0.00209    & $\ll0.001$ \\
+Dense            & 0.00752    & 1.0        & $\ll0.001$ & $\ll0.001$       & 1.0        & $\ll0.001$ \\
+Dense (6h)       & $\ll0.001$ & $\ll0.001$ & 1.0        & 1.0              & $\ll0.001$ & 1.0        \\
+Simple RNN (12h) & $\ll0.001$ & $\ll0.001$ & 1.0        & 1.0              & $\ll0.001$ & 1.0        \\
+LSTM (12h)       & 0.00209    & 1.0        & $\ll0.001$ & $\ll0.001$       & 1.0        & $\ll0.001$ \\
+GRU (24h)        & $\ll0.001$ & $\ll0.001$ & 1.0        & 1.0              & $\ll0.001$ & 1.0        \\ \bottomrule
+\end{tabular}%
+}
+\end{table}
+
+%ME
+\begin{table}[h]
+\centering
+\caption{$p$-values for the pairwise comparisons from the Dunn's post hoc test for the ME. }
+\label{tab:Dunn_ME}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lllllll}
+\hline
+Model            & Robust MLR & Dense      & Dense (6h) & Simple RNN (12h) & LSTM (12h) & GRU (24h)  \\ \hline
+Robust MLR       & 1.0        & $\ll0.001$ & $\ll0.001$ & $\ll0.001$       & $\ll0.001$ & $\ll0.001$ \\
+Dense            & $\ll0.001$ & 1.0        & 0.13083    & $\ll0.001$       & $\ll0.001$ & $\ll0.001$ \\
+Dense (6h)       & $\ll0.001$ & 0.13083    & 1.0        & $\ll0.001$       & $\ll0.001$ & $\ll0.001$ \\
+Simple RNN (12h) & $\ll0.001$ & $\ll0.001$ & $\ll0.001$ & 1.0              & 1.0        & 0.57372    \\
+LSTM (12h)       & $\ll0.001$ & $\ll0.001$ & $\ll0.001$ & 1.0              & 1.0        & 0.83808    \\
+GRU (24h)        & $\ll0.001$ & $\ll0.001$ & $\ll0.001$ & $\ll0.001$       & 0.83808    & 1.0        \\ \hline
+\end{tabular}%
+}
+\end{table}

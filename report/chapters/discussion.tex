@@ -4,4 +4,18 @@
 
 % autoregressive version could be tried, but would require predicting/forecasting NO2 values att ALL stations
 
-% if LSTM/RNN don't perform so well, its probably because the autocorrelation don't run so far back! i.e., autocorrelation function is...whatever... and if only recent hours matter, dense performs best, but also MLR is a good model for this type of time series. 
+% NO2 also modeled well with a simple linear techniqe sometimes a simpler model can do the job....
+% variance increase as levels increase... not good for MLR? make stattionary with ARIMA models a better idea?
+% confodence indervals
+% additional several steps forecasts..
+
+In this work, several different deep neural network architectures have been explored and compared with a multiple linear regression model for predicting hourly urban background levels of NO$_2$ using time series data. Generally, multiple linear regression models are straightforward to implement compared to deep neural networks, though additional data preparation steps were necessary here, as several of the model assumptions were violated. The deep neural network models required considerably less data preparation, but took a substantial amount of time to train and tune compared to the multiple linear regression model. 
+
+Across several evaluation metrics, the deep neural network models performed better than the multiple linear regression model. Particularly, a recurrent neural network model (the LSTM model) were consistently better than the rest of the models. The theoretical performance of this model should also reflect performance in operational mode well. However, sudden NO$_2$ peaks were poorly predicted, and generally for all models, forecasts at high NO$_2$ values were unsatisfactory. Moreover, none of the models had the desired structure of the forecasts errors, and this warrants further model refinements. 
+
+
+%The forecast horizons here are very short-term (one hour), which of course limits usability. All models in this work could however quite easily be adapted to forecast horizons of arbitrary length by utilizing the predictions made (i.e., by plugging them back into the models). 
+
+ 
+% modelling other pollutatns entierly possible
+% hourly forecasts are valuable as they give 
