@@ -4,9 +4,7 @@ Ambient air pollution is one of the greatest environmental and health concerns o
 
 \subsection{Principal air pollutants}
 \label{sec:airpollutants}
-In densely populated urban areas, air pollution levels can periodically be severe, and with an accelerating urbanization, it has become imperative for regulatory authorities to closely monitor city air and try to mitigate the harmful effects of pollution. Commonly monitored substances include sulphur dioxide (SO$_2$), nitrogen oxides (NO$_x$, i.e., NO and NO$_2$), carbon monoxide (CO), ground-level ozone (O$_3$), volatile organic compounds (VOCs), and particulate matter (PM) \cite{VanLoon2010}. Vehicular traffic is a major source of the gaseous pollutants NO$_x$, SO$_2$, CO, and VOCs, but certain industrial processes also contribute to emissions \cite{VanLoon2010}. Ground-level O$_3$ (also a gas) is a so-called secondary pollutant that forms when NO$_x$ and VOCs react on sunny days with little wind \cite{VanLoon2010}. 
-
-\textcolor{red}{NO$_2$...}
+In densely populated urban areas, air pollution levels can periodically be severe, and with an accelerating urbanization, it has become imperative for public health authorities to closely monitor city air and try to mitigate the harmful effects of pollution. Commonly monitored substances include sulphur dioxide (SO$_2$), nitrogen oxides (NO$_x$, i.e., NO and NO$_2$), carbon monoxide (CO), ground-level ozone (O$_3$), volatile organic compounds (VOCs), and particulate matter (PM) \cite{VanLoon2010}. Vehicular traffic is a major source of the gaseous pollutants NO$_x$, SO$_2$, CO, and VOCs, but certain industrial processes also contribute to emissions \cite{VanLoon2010}. Ground-level O$_3$ (also a gas) is a so-called secondary pollutant that forms when NO$_x$ and VOCs react on sunny days with little wind \cite{VanLoon2010}. PM are atmospheric aerosol particles (particles suspended in the air). They have diverse origins, both natural and anthropogenic, and a complex chemical composition consisting of both solid and liquid species \cite{VanLoon2010}.
 
 %\paragraph{Particulate matter}
 %PM, the group of pollutants being the focus of this work, are atmospheric aerosol particles (i.e., particles suspended in the air). They have diverse origins, both natural and anthropogenic, and a complex chemical composition consisting of both solid and liquid species \cite{Schwarzenbach2016}. Some important sources of PM are forest fires, volcanic eruptions, sand/dust storms, sea spray, vehicular traffic, certain industrial processes, construction sites, and domestic combustion \cite{Querol2004, Schwarzenbach2016}. When entering the atmosphere directly by these routes, one denotes the PM as primary. However, PM can also be formed by the oxidation of gases such as SO$_2$, NO$_x$, and VOCs (followed by a complex chemical reaction process), in which case the PM is said to be secondary \cite{Schwarzenbach2016}. PM is also categorized by particle size (or more specifically, the aerodynamic diameter), and particles measuring smaller than 2.5 \textmugreek m and 10 \textmugreek m are denoted as PM$_{2.5}$ and PM$_{10}$, respectively \cite{Schwarzenbach2016}.
@@ -127,7 +125,7 @@ As described above, in an artificial neuron, the output of a linear regression m
     \text{ReLU}(x) = \text{max}(0,x) \label{eq:relu} \\[1ex]
     \text{tanh}(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}} \label{eq:tanh}
 \end{gather}
-
+\noindent
 A common way to illustrate an artificial neuron is shown in \cref{fig:perceptron}, where the linear combination (z) of the input variables (including the so-called bias term, which is always equal to 1), gets transformed by the activation function $f$ in the node, before an output is produced.
 \begin{figure}[h]
 \begin{center}
@@ -136,12 +134,15 @@ A common way to illustrate an artificial neuron is shown in \cref{fig:perceptron
 \label{fig:perceptron}
 \end{center}
 \end{figure}
-A layer in a neural network is made up of several nodes (also called units), and in a deep neural network, many such layers can be stacked sequentially, so that the outputs of the nodes in one layer becomes the input to the nodes in the next \cite{smlbook}. When a set of input data is taken and passed through the layers of a neural network, each layer produces a slightly more abstract representation of its input by non-linear transformations, and with several such transformations, complex relationships in the data can be learned \cite{LeCun2015, smlbook}. Artificial neural network models can have many thousands or even millions of trainable parameters/weights, which makes them extremely flexible. However, this flexibility comes with a great computational cost, and neural networks are also very prone to overfitting, which is why regularization techniques frequently have to be used \cite{smlbook}. A common regularization technique is dropout, which is explained further below. 
+A layer in a neural network is made up of several nodes (also called units), and in a deep neural network, many such layers can be stacked sequentially, so that the outputs of the nodes in one layer becomes the input to the nodes in the next \cite{smlbook}. When a set of input data is taken and passed through the layers of a neural network, each layer produces a slightly more abstract representation of its input by non-linear transformations, and with several such transformations, complex relationships in the data can be learned \cite{LeCun2015, smlbook}. 
+
+Artificial neural network models can have many thousands of trainable parameters/weights, which makes them extremely flexible. However, this comes at a great computational cost, and neural networks are also very prone to overfitting, which is why regularization techniques frequently have to be used \cite{smlbook}. A common regularization technique is dropout, which is explained further below. 
 
 \subsubsection{Deep learning architectures}
-The most basic type of deep neural network model is the feedforward 
+\label{sec:DL models}
+\textcolor{red}{The most basic type of deep neural network model is the feedforward...}
 
-%A collection of connected artificial neurons is what constitutes a layer in a neural network, and a network with many such layers stacked sequentially is what is referred to as a deep neural network \cite{smlbook}. .
+%A collection of connected artificial neurons is what constitutes a layer in a neural network, and a network with many such layers stacked sequentially is what is referred to as a deep neural network \cite{smlbook}. 
 
 %Common activation functions include the sigmoid function, the rectified linear unit (ReLU) function, and the Tanh functions:
 
@@ -158,7 +159,7 @@ When evaluating the performance of a forecasting model, one is often concerned w
 $$e_t(1) = y_t - \hat{y}_t (t-1)$$ 
 where $\hat{y}_t (t-1)$ is the forecasted value of $y_t$ made at time $t-1$, and accuracy metrics such as the mean error (ME), the mean absolute error (MAE), the mean squared error (MSE), and the mean absolute percent forecast error (MAPE) are often utilized \cite{Montgomery2015}. These performance metrics are standard when evaluating regression models, and the equations for them are not repeated here. It can be noted though that the ME is an estimate of the expected value of $e_t(1)$, and strong departures from zero would indicate bias in the forecasts \cite{Montgomery2015}. Also, commonly the root mean squared error (RMSE) is used in connection with the MSE, as the MSE gives the magnitude of the errors in squared, and not original, units. The MSE is an estimate of the variance of $e_t(1)$, and consequently the RMSE becomes an estimate of the standard deviation \cite{Montgomery2012}. 
 
-\textcolor{red}{Kruskall-Wallis and the Dunn's test...}
+Inference tests can also be carried out for the regression metrics, where one is concerned with whether the differences between competing models hold or are simply due to chance. If the same dataset is used for many models, a suitable test is the one-way analysis of variance (ANOVA) test, in which the means of independent groups under several treatments are compared \cite{Wackerly2007}. One could e.g.\ then test whether there is a significant difference in the MSE between the models. The ANOVA test requires that the samples come from a normal distribution, however, a non-parametric alternative is the Kruskal-Wallis test \cite{Wackerly2007}. Following the ANOVA or the Kruskal-Wallis test, pairwise comparisons between groups can be carried out with either Tukey's test or the Dunn's test (which are, respectively, a parametric and non-parametric test).  
 
 \subsubsection{Tests for autocorrelation in forecast errors}
 \label{sec:auto_errors}
@@ -178,7 +179,7 @@ The autocovariance function is the sequence of values of $\upgamma_k$ for $k=0,1
 In general, a time series is said to be white noise if the observations are uncorrelated and have constant variance. If the observations are also normally distributed, the time series is said to be Gaussian white noise, and ideally, this should be the case for the forecast errors \cite{Montgomery2015}. If the forecast errors are white noise, the sample ACF will approximately follow a normal distribution with zero mean and variance $1/T$. To test whether any of a set of autocorrelations in the sample ACF are not zero (which then would indicate that the forecast errors are not white noise) the Box-Pierce test can be used \cite{Montgomery2015}. Essentially, this is a goodness-of-fit test where it is determined how well the sample ACF fits to the ACF of white noise. A similar and commonly used test for smaller sample sizes is the Ljung-Box test \cite{Montgomery2015}.
 
 \subsubsection{Additional evaluation metrics}
-There are many additional ways in which the performance of a forecasting model can be evaluated. For example, in Pucer et al.\cite{FaganeliPucer2018}, predictions are classified and cost matrices are utilized as part of model evaluation. In Stablober et al. \cite{Stadlober2008}, a quality function is defined in which each observation--forcast pair are rated, and where a larger penalty is also put on faulty forecasts in a specific range. In this work however, the common regression metrics are used together with a close examination of the forecast errors (using the methods described above) in order to answer the main research question of the thesis.  
+There are many additional ways in which the performance of a forecasting model can be evaluated. For example, in a study from 2018 by Pucer et al. \cite{FaganeliPucer2018}, predictions are classified and cost matrices are utilized as part of model evaluation, and in a paper from 2007 by Stablober et al. \cite{Stadlober2008}, a quality function is defined in which each observation--forcast pair are rated, and where a larger penalty is also put on faulty forecasts in a specific range. In this work however, the common regression metrics are used together with a close examination of the forecast errors (using the methods described above) in order to answer the main research question of the thesis.  
 
 %Therefore, the hypothesis that the autocorrelation is zero at each lag can be tested for every $k$ up to a desired timestep $T$. However, a more convenient approach is to test whether a set of autocorrelations are zero, thereby indicating if the time series is white noise.  
 
@@ -237,4 +238,4 @@ There are many additional ways in which the performance of a forecasting model c
 %
 %In this work, in addition to PM$_{10}$ data, meteorological data as well as data on PM$_{2.5}$ and NO$_x$ were utilized. Some features used as input to the models were also derived. A more detailed description of the variables and their preprocessing is given in section \ref{chap:dataprocesschap}.
 
-\section{Summary and motivation for this work}
+%\section{Summary and motivation for this work}

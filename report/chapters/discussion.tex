@@ -9,13 +9,43 @@
 % confodence indervals
 % additional several steps forecasts..
 
-In this work, several different deep neural network architectures have been explored and compared with a multiple linear regression model for predicting hourly urban background levels of NO$_2$ using time series data. Generally, multiple linear regression models are straightforward to implement compared to deep neural networks, though additional data preparation steps were necessary here, as several of the model assumptions were violated. The deep neural network models required considerably less data preparation, but took a substantial amount of time to train and tune compared to the multiple linear regression model. 
+In this work, several different deep neural network architectures have been explored and compared with a multiple linear regression model for predicting hourly urban background levels of NO$_2$ using time series data. Generally, the multiple linear regression model was straightforward to implement compared to the deep neural network models, though additional data preparation steps were necessary to ensure that the model assumptions were not violated. The deep neural network models required less data preparation, but took much longer to train and tune. 
 
-Across several evaluation metrics, the deep neural network models performed better than the multiple linear regression model. Particularly, a recurrent neural network model (the LSTM model) were consistently better than the rest of the models. The theoretical performance of this model should also reflect performance in operational mode well. However, sudden NO$_2$ peaks were poorly predicted, and generally for all models, forecasts at high NO$_2$ values were unsatisfactory. Moreover, none of the models had the desired structure of the forecasts errors, and this warrants further model refinements. 
+Across several evaluation metrics, the deep neural network models performed better than the multiple linear regression model, and in particular, a recurrent neural network model (LSTM) consistently had superior performance. The theoretical performance for the best model should also reflect the expected performance in operational mode. Viewing the results in relation to the research question of the thesis (\cref{sec:research question}), sudden NO$_2$ peaks were poorly predicted however, also by the best model, and for all models, forecasts at high NO$_2$ levels were unsatisfactory. Moreover, none of the models had the desired structure of the forecasts errors, which warrants further model refinements. 
 
+Generally when forecasting air pollution, it is common to focus on daily mean levels rather than hourly means \cite{atmos7020015, Shams2021}. This makes comparison to other work difficult, but the results herein are similar to that of e.g.\ Rahimi, 2017 \cite{Rahimi2017}, Goulier et al., 2020\cite{Goulier2020} and Arsov et al., 2021 \cite{Arsov2021}. Also SLB-analys' forecasts for the Stockholm metropolitan area are given as risk indexes based on daily means of pollutants \cite{slbanalys}. Hourly forecasts though, has the advantage over daily forecasts in that they can indicate during what hours of the day pollution levels could reach hazardous levels, and this knowledge could in some cases be critical. The forecast horizons here are very short-term (one hour), which admittedly limits usability. However, all models in this work could quite easily be adapted for forecast horizons of arbitrary length by simply utilizing the predictions generated. Also, the models could of course be used with other type of air pollutants (PM$_{2.5}$, PM$_{10}$, O$_3$, etc.) and in which case, if all are forecast simultaneously, would allow for prediction of an hourly air quality index \cite{VanLoon2010}. Such detailed forecasts could be of great societal value; they could e.g.\ be used by public health authorities and policy makers. If the forecasts also were made available to the public, they could help with early warning systems aimed at sensitive groups.
 
-%The forecast horizons here are very short-term (one hour), which of course limits usability. All models in this work could however quite easily be adapted to forecast horizons of arbitrary length by utilizing the predictions made (i.e., by plugging them back into the models). 
+Utilizing time series data from multiple air pollution sensors is a challenging task, and this work points to an advantage for the more complex neural networks over the simpler linear model for this type of problem. 
+%and many other modeling and forecasting techniques than the ones herein could also be used for this type of problem. For example, as pointed out in \cref{sec:DL models}, convolutional neural networks are often employed to model spatial features in data, and these networks can be combined with other type of networks to form powerful hybrid-network architectures. There are also convolutional networks tailored to time series \cite{Liao2020, He2019}. 
+%As the machine learning field advances, and the availability of massive datasets from multi-sensor air monitoring systems and other relevant data sources (like weather, traffic, and satellite data) increases, 
+%
+%forecasts are expected to improve, and current limitations in forecasting. 
+Further advances in the field of machine learning (specifically deep learning), together with increased availability of massive datasets from multi-sensor air monitoring systems and other relevant data sources (like weather, traffic, and satellite data), offers the potential to cross the conventional limits of forecasting in the near future. 
 
+% the implications...
+% vulnerable groups can plan their day to day activiies better based on hourly forecasts..
+
+%and as data from multi-sensor air monitoring systems together with data from other relevant sources (like weather, traffic, satellite data) become increasingly, producing massive dataset, the current limitations in forecasting are.
+
+%the challenges of utilizing the ever increasing amount of data (weather, traffic, )
+
+%As air sensors are becoming cheaper and more available, an ever increasing amount of air pollution as well as weather data is produced.  
+
+%together with an increase in the availability of massive datasets from multi-sensor air monitoring systems and other relevant sources (like traffic and satellite data), conventional limits 
+
+%due to an increased availability of data from multi-sensor air monitoring systems and other 
+
+%air pollution sensors, the accuracy of forecasts
+
+%Also, computationally less expensive methods such as Gaussian processes can often deal with the challenges that spatio-temporal data presents \cite{smlbook, FaganeliPucer2018}.
+
+%For example, Gaussian processes are frequently used to deal with the challenges of spatio-temporal data \cite{smlbook, FaganeliPucer2018}. Other neural network models, such as convolutional neural networks, are also frequently employed for modeling spatial features in data, and various deep learning architectures where for example the output of a convolutional neural network is subsequently fed into a recurrent neural network have been tried \cite{Liao2020}. Also, utilizing additional information sources such as motor traffic data (travel speeds, traffic flow and intensity, etc.) and satellite image data could further help improve air quality forecasts \cite{atmos7020015, Liao2020}. 
+
+%Nevertheless, in this work, the deep learning models showed promising results were 
+
+%(i.e., by plugging them back into the models, so for example the forecast for time step $t+2$ would be partially based on the forecast made for time step $t+1$). 
  
-% modelling other pollutatns entierly possible
-% hourly forecasts are valuable as they give 
+% EU goial of AI - this work aligns perfectly with that
+
+% machine learningg has the potential to improve human life and prosper....
+

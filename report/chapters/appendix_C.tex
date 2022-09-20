@@ -61,3 +61,21 @@ GRU (24h)        & $\ll0.001$ & $\ll0.001$ & $\ll0.001$ & $\ll0.001$       & 0.8
 \end{tabular}%
 }
 \end{table}
+
+Quantile-quantile plots and histogram plots of the forecast errors are shown, respectively, in \cref{fig:qq-plot-errors} and \cref{fig:histogram_errors} below. It can be inferred from these plots that none of the models generated forecasts with the desired structure of the errors (i.e., Gaussian white noise).
+
+% forecast errors normal probability plots
+\begin{figure}[h]
+\centering
+\makebox[\textwidth][c]{\includegraphics[width=1.025\textwidth]{../plots/qq_pred_errors_all}}
+\caption{Normal probability plots for the forecast errors.}
+\label{fig:qq-plot-errors}
+%\end{figure}
+%\begin{figure}[]
+%\bigskip
+%\centering
+\vspace*{\floatsep}% https://tex.stackexchange.com/q/26521/5764
+\makebox[\textwidth][c]{\includegraphics[width=1.025\textwidth]{../plots/pred_errors_hist_all}}
+\caption{Histogram for the forecast errors.}
+\label{fig:histogram_errors}
+\end{figure}
