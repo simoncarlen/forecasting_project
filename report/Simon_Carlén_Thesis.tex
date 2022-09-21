@@ -36,6 +36,9 @@
 \usepackage{chngcntr}
 \usepackage{titlesec} % allowing subsubsections
 
+
+
+
 %\pagestyle{fancy}
 %\fancyhead{}
 %\fancyhead[LE, RO]{Research project}
@@ -67,48 +70,76 @@
 \input{chapters/titlepage}
 
 % ABSTRACT
-
 \chapter*{Abstract}
 \thispagestyle{empty}
-%The abstract and the keywords should not exceed the limit of this page
+The abstract and the keywords should not exceed the limit of this page
 %\newline\newline
 %\emph{Keywords:} Keywords should be written in order of relevance
 
 % SYNOPSIS
-
 \chapter*{Synopsis}
 \thispagestyle{empty}
 
-\subsection*{Background}
-%Some text here
-\subsection*{Problem}
-%Some text here
-\subsection*{Research Question}
-%Some text here
-\subsection*{Method}
-%Some text here
-\subsection*{Result}
-%Some text here
-\subsection*{Discussion}
-%Some text here
+\paragraph{Background}
+To mitigate the harmful effects of air pollution, air quality is regularly monitored. Such monitoring produces massive amounts of data, and this enables the development of statistical and machine learning techniques for modeling and forecasting of air pollution.
+\paragraph{Problem}
+Air pollution is a complex phenomenon depending on many factors, and the data from air monitoring has both temporal and spatial dependencies. This makes modeling and forecasting a challenge, and the research problem here is: \textit{To capture and model the complex dynamics of air pollution with machine learning methods, with an emphasis on deep learning}.
+
+\paragraph{Research Question}
+The research question for the thesis is: \textit{How can machine learning, in particular deep learning, be used to forecast air pollution levels and pollution peaks?} The research question emphasizes pollution peaks as these are much harder to accurately predict than pollution levels in lower ranges.  %Also, sudden jerky leaps, where pollution levels quickly rise tend to give strongly underestimated predictions, and this can have undesired consequences
+%
+%All type of forecasts are always imprecise, and generally for air pollution forecasts, the largest errors are seen during episodes with high pollution levels. Also, sudden jerky leaps, where pollution levels quickly rise tend to give strongly underestimated predictions, and this can have undesired consequences. The research question in this work are therefore as follows: 
+
+\paragraph{Method}
+Data was downloaded from SMHI's centralized database for air measurements, carefully examined, and thereafter preprocessed before a linear regression and several deep learning models were fit. All models were trained with historical data and later evaluated on the most recent (test) data. An important aspect of model evaluation was a close examination of the forecast errors. The Python programming language was used together with libraries for scientific programming and data science/machine learning.
+
+\paragraph{Result}
+All deep learning models outperformed the linear regression model. However, for all models, the structure of the forecast errors were not as desired, and this warrants further model refinements. The structure of the errors were due to the inability of the models to capture pollution peaks well. Though the deep learning models showed promising potential, in light of the research question, the results were unsatisfactory. 
+
+\paragraph{Discussion}
+The forecast horizons in this work (one hour) are very short-term, which limits usability. To this end however, adaptations to extend the forecast horizon are possible. Further adaptations to include more than just one air pollutant are also possible; this would result in very comprehensive forecasts that could be of great value to public health authorities and policy makers as they could permit early interventions in order to protect public health, and vulnerable groups in particular.
 
 % ACKNOWLEDGEMENTS
 \chapter*{Acknowledgements}
 \thispagestyle{empty}
 
 \tableofcontents
+\thispagestyle{plain}
+\thispagestyle{plain}
 \setcounter{page}{1}
 \pagenumbering{roman}
-\thispagestyle{plain}
 
 \listoffigures
+%\setcounter{page}{1}
+%\pagenumbering{roman}
 \thispagestyle{plain}
 
 \listoftables
 \thispagestyle{plain}
 
 \chapter*{List of Abbreviations}
+\begin{tabular}{l@{$\dots\dots$}p{12cm}}
+%Convolutional neural network\dotfill  & CNN \\
+Environment and Health Administration \dotfill & EHA \\
+Fully connected neural network\dotfill  & fcNN \\
+Gated recurrent unit \dotfill & GRU \\
+Long short-term memory \dotfill & LSTM \\
+Mean absolute error\dotfill & MAE \\
+Mean error \dotfill & ME \\
+Mean squared error\dotfill & MSE \\
+Multiple linear regression\dotfill & MLR \\
+Ordinary least squares \dotfill & OLS \\
+Recurrent neural network\dotfill & RNN \\
+Root mean squared error\dotfill & RMSE\\
+Particulate matter \dotfill & PM \\
+Swedish Meteorological and Hydrological Institute\dotfill & SMHI \\
+Stockholms Luft- och Bulleranalys \dotfill & SLB-analys \\
+Volatile organic compounds \dotfill & VOCs \\
+World Health Organization \dotfill & WHO \\
+\end{tabular}
+
 \addcontentsline{toc}{chapter}{List of Abbreviations}
+
 \addtocontents{toc}{\bigskip}
 
 
