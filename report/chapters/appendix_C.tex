@@ -19,7 +19,7 @@ GRU model (24h)        & 506.06          & $\ll0.001$ \\ \bottomrule
 \end{table}
 
 \noindent
-The $p$-values from the Dunn's post hoc test with Bonferroni adjustment for the MSE and the ME measures are given in \cref{tab:Dunn_MSE} and \cref{tab:Dunn_ME}, respectively. 
+The $p$-values from the Bonferroni-Dunn post-hoc tests for the MSE are given in \cref{tab:Dunn_MSE}. 
 
 %MSE
 % Please add the following required packages to your document preamble:
@@ -27,40 +27,40 @@ The $p$-values from the Dunn's post hoc test with Bonferroni adjustment for the 
 % \usepackage{graphicx}
 \begin{table}[h]
 \centering
-\caption{$p$-values for the pairwise comparisons from the Dunn's post hoc test for the MSE. }
+\caption{$p$-values for the pairwise comparisons from the Bonferroni-Dunn post-hoc test for the MSE. }
 \label{tab:Dunn_MSE}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{@{}lllllll@{}}
 \toprule
 Model            & Robust MLR & Dense      & Dense (6h) & Simple RNN (12h) & LSTM (12h) & GRU (24h)  \\ \midrule
-Robust MLR       & 1.0        & 0.00752    & $\ll0.001$ & $\ll0.001$       & 0.00209    & $\ll0.001$ \\
-Dense            & 0.00752    & 1.0        & $\ll0.001$ & $\ll0.001$       & 1.0        & $\ll0.001$ \\
-Dense (6h)       & $\ll0.001$ & $\ll0.001$ & 1.0        & 1.0              & $\ll0.001$ & 1.0        \\
-Simple RNN (12h) & $\ll0.001$ & $\ll0.001$ & 1.0        & 1.0              & $\ll0.001$ & 1.0        \\
-LSTM (12h)       & 0.00209    & 1.0        & $\ll0.001$ & $\ll0.001$       & 1.0        & $\ll0.001$ \\
-GRU (24h)        & $\ll0.001$ & $\ll0.001$ & 1.0        & 1.0              & $\ll0.001$ & 1.0        \\ \bottomrule
+Robust MLR       & 1.0        & 0.00665    & $\ll0.001$ & $\ll0.001$       & 0.00170    & $\ll0.001$ \\
+Dense            & 0.00665    & 1.0        & $\ll0.001$ & $\ll0.001$       & 1.0        & $\ll0.001$ \\
+Dense (6h)       & $\ll0.001$ & $\ll0.001$ & 1.0        & 1.0              & $\ll0.001$ & 0.04855        \\
+Simple RNN (12h) & $\ll0.001$ & $\ll0.001$ & 1.0        & 1.0              & $\ll0.001$ & 0.00044        \\
+LSTM (12h)       & 0.00170    & 1.0        & $\ll0.001$ & $\ll0.001$       & 1.0        & 0.00001 \\
+GRU (24h)        & $\ll0.001$ & $\ll0.001$ & 0.04855        & 0.00044              & 0.00001 & 1.0        \\ \bottomrule
 \end{tabular}%
 }
 \end{table}
 
-%ME
-\begin{table}[h]
-\centering
-\caption{$p$-values for the pairwise comparisons from the Dunn's post hoc test for the ME. }
-\label{tab:Dunn_ME}
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{lllllll}
-\hline
-Model            & Robust MLR & Dense      & Dense (6h) & Simple RNN (12h) & LSTM (12h) & GRU (24h)  \\ \hline
-Robust MLR       & 1.0        & $\ll0.001$ & $\ll0.001$ & $\ll0.001$       & $\ll0.001$ & $\ll0.001$ \\
-Dense            & $\ll0.001$ & 1.0        & 0.13083    & $\ll0.001$       & $\ll0.001$ & $\ll0.001$ \\
-Dense (6h)       & $\ll0.001$ & 0.13083    & 1.0        & $\ll0.001$       & $\ll0.001$ & $\ll0.001$ \\
-Simple RNN (12h) & $\ll0.001$ & $\ll0.001$ & $\ll0.001$ & 1.0              & 1.0        & 0.57372    \\
-LSTM (12h)       & $\ll0.001$ & $\ll0.001$ & $\ll0.001$ & 1.0              & 1.0        & 0.83808    \\
-GRU (24h)        & $\ll0.001$ & $\ll0.001$ & $\ll0.001$ & $\ll0.001$       & 0.83808    & 1.0        \\ \hline
-\end{tabular}%
-}
-\end{table}
+%%ME
+%\begin{table}[h]
+%\centering
+%\caption{$p$-values for the pairwise comparisons from the Dunn's post hoc test for the ME. }
+%\label{tab:Dunn_ME}
+%\resizebox{\textwidth}{!}{%
+%\begin{tabular}{lllllll}
+%\hline
+%Model            & Robust MLR & Dense      & Dense (6h) & Simple RNN (12h) & LSTM (12h) & GRU (24h)  \\ \hline
+%Robust MLR       & 1.0        & $\ll0.001$ & $\ll0.001$ & $\ll0.001$       & $\ll0.001$ & $\ll0.001$ \\
+%Dense            & $\ll0.001$ & 1.0        & 0.13083    & $\ll0.001$       & $\ll0.001$ & $\ll0.001$ \\
+%Dense (6h)       & $\ll0.001$ & 0.13083    & 1.0        & $\ll0.001$       & $\ll0.001$ & $\ll0.001$ \\
+%Simple RNN (12h) & $\ll0.001$ & $\ll0.001$ & $\ll0.001$ & 1.0              & 1.0        & 0.57372    \\
+%LSTM (12h)       & $\ll0.001$ & $\ll0.001$ & $\ll0.001$ & 1.0              & 1.0        & 0.83808    \\
+%GRU (24h)        & $\ll0.001$ & $\ll0.001$ & $\ll0.001$ & $\ll0.001$       & 0.83808    & 1.0        \\ \hline
+%\end{tabular}%
+%}
+%\end{table}
 
 Quantile-quantile plots and histogram plots of the forecast errors are shown, respectively, in \cref{fig:qq-plot-errors} and \cref{fig:histogram_errors} below. It can be inferred from these plots that none of the models generated forecasts with the desired structure of the errors (i.e., Gaussian white noise).
 

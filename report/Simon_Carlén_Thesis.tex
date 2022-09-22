@@ -36,9 +36,6 @@
 \usepackage{chngcntr}
 \usepackage{titlesec} % allowing subsubsections
 
-
-
-
 %\pagestyle{fancy}
 %\fancyhead{}
 %\fancyhead[LE, RO]{Research project}
@@ -66,15 +63,15 @@
 \begin{document}
 
 % TITLEPAGE
-
 \input{chapters/titlepage}
 
 % ABSTRACT
 \chapter*{Abstract}
 \thispagestyle{empty}
-The abstract and the keywords should not exceed the limit of this page
-%\newline\newline
-%\emph{Keywords:} Keywords should be written in order of relevance
+In today's world, ambient air pollution is a pressing environmental concern, as the majority of the world's population is regularly exposed to air pollution levels higher than what is deemed healthy. To mitigate harmful effects, city air is regularly monitored, and such monitoring can produce massive amounts of data. This enables the development of statistical and machine learning techniques for detailed air quality forecasts. The data from multi-sensor air monitoring systems can be challenging to utilize though, as there are dependencies over both space and time. However, for this type of problem, deep neural network models have shown promising results, and in this work, several neural network architectures, as well as a more straightforward multiple linear regression technique, are developed to forecast nitrogen dioxide levels at a forecast horizon of one hour. For several evaluation metrics, the neural network models outperformed the multiple linear regression model. However, none of the models had the desired structure of the forecast errors, and all models failed to successfully capture sudden pollution peaks. Nevertheless, the results point to an advantage for the more complex neural network techniques, and further advances in the field of deep learning, together with higher resolution data, have the potential to improve air quality forecasts even more and cross conventional limits. \\ 
+
+\noindent
+\emph{\textbf{Keywords}:} Air pollution forecasts, neural networks, linear regression, time series analysis, nitrogen dioxide
 
 % SYNOPSIS
 \chapter*{Synopsis}
@@ -83,10 +80,10 @@ The abstract and the keywords should not exceed the limit of this page
 \paragraph{Background}
 To mitigate the harmful effects of air pollution, air quality is regularly monitored. Such monitoring produces massive amounts of data, and this enables the development of statistical and machine learning techniques for modeling and forecasting of air pollution.
 \paragraph{Problem}
-Air pollution is a complex phenomenon depending on many factors, and the data from air monitoring has both temporal and spatial dependencies. This makes modeling and forecasting a challenge, and the research problem here is: \textit{To capture and model the complex dynamics of air pollution with machine learning methods, with an emphasis on deep learning}.
+Air pollution is a complex phenomenon depending on many factors, and the data from air monitoring has both temporal and spatial dependencies. This makes modeling and forecasting a challenge, and the research problem in this work is: \textit{To capture and model the complex dynamics of air pollution with machine learning methods, with an emphasis on deep learning}.
 
 \paragraph{Research Question}
-The research question for the thesis is: \textit{How can machine learning, in particular deep learning, be used to forecast air pollution levels and pollution peaks?} The research question emphasizes pollution peaks as these are much harder to accurately predict than pollution levels in lower ranges.  %Also, sudden jerky leaps, where pollution levels quickly rise tend to give strongly underestimated predictions, and this can have undesired consequences
+The research question for the thesis is: \textit{How can machine learning, in particular deep learning, be used to forecast air pollution levels and pollution peaks?} The research question emphasizes pollution peaks, as these are much harder to accurately predict and forecast than pollution levels at lower ranges.  %Also, sudden jerky leaps, where pollution levels quickly rise tend to give strongly underestimated predictions, and this can have undesired consequences
 %
 %All type of forecasts are always imprecise, and generally for air pollution forecasts, the largest errors are seen during episodes with high pollution levels. Also, sudden jerky leaps, where pollution levels quickly rise tend to give strongly underestimated predictions, and this can have undesired consequences. The research question in this work are therefore as follows: 
 
@@ -97,21 +94,20 @@ Data was downloaded from SMHI's centralized database for air measurements, caref
 All deep learning models outperformed the linear regression model. However, for all models, the structure of the forecast errors were not as desired, and this warrants further model refinements. The structure of the errors were due to the inability of the models to capture pollution peaks well. Though the deep learning models showed promising potential, in light of the research question, the results were unsatisfactory. 
 
 \paragraph{Discussion}
-The forecast horizons in this work (one hour) are very short-term, which limits usability. To this end however, adaptations to extend the forecast horizon are possible. Further adaptations to include more than just one air pollutant are also possible; this would result in very comprehensive forecasts that could be of great value to public health authorities and policy makers as they could permit early interventions in order to protect public health, and vulnerable groups in particular.
+The forecast horizons in this work (one hour) are very short-term, which limits usability. To this end, however, adaptations to extend the forecast horizons are possible. Further adaptations to include more than just one air pollutant is also an option; this would result in comprehensive forecasts that could be of great value to public health authorities and policymakers, as it could permit early interventions to protect public health, and vulnerable groups in particular.
 
 % ACKNOWLEDGEMENTS
 \chapter*{Acknowledgements}
 \thispagestyle{empty}
 
+First of all, I would like to give a large amount of thanks to my supervisor Sindri Magnússon, as well as my co-supervisor Ali Beikmohammadi, for guiding me through this project. Your help has been indispensable. I would also like to thank the reviewer, Petter Karlström, for valuable feedback on the first thesis draft. Lastly, I would like to thank my fiancée Anna for all the support and love you continuously give. Without you, this thesis would not have been possible. 
+
 \tableofcontents
 \thispagestyle{plain}
-\thispagestyle{plain}
-\setcounter{page}{1}
-\pagenumbering{roman}
 
 \listoffigures
-%\setcounter{page}{1}
-%\pagenumbering{roman}
+\setcounter{page}{1}
+\pagenumbering{roman}
 \thispagestyle{plain}
 
 \listoftables
@@ -120,22 +116,29 @@ The forecast horizons in this work (one hour) are very short-term, which limits 
 \chapter*{List of Abbreviations}
 \begin{tabular}{l@{$\dots\dots$}p{12cm}}
 %Convolutional neural network\dotfill  & CNN \\
-Environment and Health Administration \dotfill & EHA \\
-Fully connected neural network\dotfill  & fcNN \\
-Gated recurrent unit \dotfill & GRU \\
-Long short-term memory \dotfill & LSTM \\
-Mean absolute error\dotfill & MAE \\
-Mean error \dotfill & ME \\
-Mean squared error\dotfill & MSE \\
-Multiple linear regression\dotfill & MLR \\
-Ordinary least squares \dotfill & OLS \\
-Recurrent neural network\dotfill & RNN \\
-Root mean squared error\dotfill & RMSE\\
-Particulate matter \dotfill & PM \\
-Swedish Meteorological and Hydrological Institute\dotfill & SMHI \\
-Stockholms Luft- och Bulleranalys \dotfill & SLB-analys \\
-Volatile organic compounds \dotfill & VOCs \\
-World Health Organization \dotfill & WHO \\
+ANOVA \dotfill &  Analysis of variance  \\
+ACF \dotfill & Autocorrelation function \\
+EHA \dotfill & Environment and Health Administration \\
+fcNN \dotfill & Fully connected neural network   \\
+GRU \dotfill & Gated recurrent unit \\
+LSTM \dotfill &  Long short-term memory\\
+MAE\dotfill & Mean absolute error \\
+MAPE \dotfill & Mean absolute percent forecast error \\
+ME \dotfill & Mean error \\
+MSE\dotfill & Mean squared error \\
+MLR \dotfill & Multiple linear regression \\
+OLS \dotfill & Ordinary least squares \\
+RNN\dotfill & Recurrent neural network \\
+RFE \dotfill & Recursive feature elimination \\
+RMSE\dotfill & Root mean squared error\\
+PM \dotfill & Particulate matter \\
+QQ  \dotfill & Quantile-Quantile \\
+SGD \dotfill & Stochastic gradient descent \\
+SMHI\dotfill & Swedish Meteorological and Hydrological Institute \\
+SVR \dotfill & Support vector regression \\
+SLB-analys \dotfill & Stockholms Luft- och Bulleranalys \\
+VOCs \dotfill & Volatile organic compounds \\
+WHO \dotfill & World Health Organization \\
 \end{tabular}
 
 \addcontentsline{toc}{chapter}{List of Abbreviations}
