@@ -1,12 +1,11 @@
 \label{chapt:appendix_B}
-Residual plots for the OLS regression are shown in \cref{fig:residuals_MLR}. From plot (a) and (c), the long-tailed error distribution can be seen, especially in plot (a) where the long tails are indicated by deviations from the straight line. Looking at plot (b), the variance appears stable, and the residuals are scattered in a reasonably random fashion, with no indications of non-linearity. The variance of the residuals also appear stable over time, as indicated in plot (d). 
+Residual plots for the OLS regression are shown in \cref{fig:residuals_MLR}. From plot (a) and (c), the long-tailed error distribution can be seen, especially in plot (a) where the long tails are indicated by deviations from the diagonal line. Looking at plot (b), the variance appears stable, and the residuals are scattered in a reasonably random fashion, with no indications of non-linearity. The variance of the residuals also appear stable over time, as indicated in plot (d). 
 %An additional numeric test for constant variance was performed where a regression line was fit to $\sqrt{|\hat{\varepsilon}}|$. This line had a non-significant slope (with $x = -0.0045$ and $p=0.262$), giving further support to the homoscedasticity assumption \cite{Montgomery2012}. 
-
-In Table \ref{tab:OLS_table} and \ref{tab:Robust_table}, summary statistics are shown for the OLS regression and robust regression, respectively. For the OLS regression (\cref{tab:OLS_table}), the Durbin-Watson statistic (with a value of 1.943) did not indicate any autocorrelation, and judging from the condition number (52.5), there were no serious issues with multicollinearity among the predictors. The coefficients in the OLS and robust regression models had very similar values (though not identical), and for both models it is clear that the response variable at lag 1 dominated in terms of importance. Also, for both models, the sine wave variable had a high $p$-value, however, it was not removed as both the sine and cosine waves are needed to model the periodicity.   
+In Table \ref{tab:OLS_table} and \ref{tab:Robust_table}, summary statistics are shown for the OLS regression and robust regression, respectively. For the OLS regression (\cref{tab:OLS_table}), the Durbin-Watson statistic (with a value of 1.943) did not indicate any autocorrelation, and judging from the condition number (52.5), there were no serious issues with multicollinearity among the predictors. The coefficients in the OLS and robust regression models had very similar values (though not identical), and for both models it is clear that the response variable at lag 1 dominated in terms of importance. Also, for both models, the sine wave variable had a high $p$-value, however, it was not removed as both the sine and cosine waves are needed to model periodicity.   
 
 \begin{figure}[h]
 \centering
-\makebox[\textwidth][c]{\includegraphics[width=1\textwidth]{../plots/Residual_plots_MLR_NO2}}
+\makebox[\textwidth][c]{\includegraphics[width=1\textwidth]{../plots/Residual_plots_MLR_NO2_24_SEP}}
 \caption{Residual plots for the OLS regression model.}
 \label{fig:residuals_MLR}
 \end{figure}

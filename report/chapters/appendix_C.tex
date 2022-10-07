@@ -1,6 +1,6 @@
 \label{chapt:appendix_C}
 
-The results from the Box-Pierce tests for all models are summarized in \cref{tab:boxpierce} below. 
+The results from the Box-Pierce tests for all models are summarized in \cref{tab:boxpierce}. In \cref{fig:qq-plot-errors} and \vref{fig:histogram_errors}, quantile-quantile plots and histogram plots of the forecast errors are shown, respectively. It can be inferred from these plots that none of the models generated forecasts with the desired structure of the errors (i.e., Gaussian white noise).
 \begin{table}[h]
 \small
 \centering
@@ -62,10 +62,8 @@ GRU (24h)        & $\ll0.001$ & $\ll0.001$ & 0.04855        & 0.00044           
 %}
 %\end{table}
 
-Quantile-quantile plots and histogram plots of the forecast errors are shown, respectively, in \cref{fig:qq-plot-errors} and \cref{fig:histogram_errors} below. It can be inferred from these plots that none of the models generated forecasts with the desired structure of the errors (i.e., Gaussian white noise).
-
 % forecast errors normal probability plots
-\begin{figure}[h]
+\begin{figure}[]
 \centering
 \makebox[\textwidth][c]{\includegraphics[width=1.025\textwidth]{../plots/qq_pred_errors_all}}
 \caption{Normal probability plots for the forecast errors.}

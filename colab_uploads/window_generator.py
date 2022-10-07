@@ -145,7 +145,7 @@ def make_dataset(self, data):
       targets=None,
       sequence_length=self.total_window_size,
       sequence_stride=1,
-      shuffle=False,
+      shuffle=True,
       batch_size=256)
       # batch_size=128,)
 

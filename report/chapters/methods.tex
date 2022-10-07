@@ -1,7 +1,7 @@
 %General implementation of the stategy here before going into details about sources, preprocessing, hyperparameter tuning etc, ... Perhaps also a pic?
 The major steps of the implemented workflow were as follows; data were retrieved, examined, and preprocessed. Thereafter, a MLR model and several deep neural network models were fit to the data with the appropriate input variables. The models were then used to make forecasts for NO$_2$ with a one-hour forecast horizon. The NO$_2$ forecasts were limited to one station measuring background levels of air pollution in the center of Stockholm (Torkel Knutssonsgatan, see \cref{tab:stations} in Appendix \ref{chapt:appendix_A}). Detailed descriptions of each step in the process are given in subsequent sections. 
 
-The programming language used was Python, together with several libraries for scientific programming, statistics, machine learning, and plotting/visualization (NumPy, pandas, statsmodels, scikit-learn, SciPy, TensorFlow and KerasTuner). All code can be found on the GitHub page\footnote{\url{https://github.com/simoncarlen/forecasting_project}} for the project (invite needed).
+The programming language used was Python, together with several libraries for scientific programming, statistics, machine learning, and plotting/visualization (NumPy, pandas, statsmodels, scikit-learn, SciPy, TensorFlow and KerasTuner). All code can be found on the GitHub page\footnote{\url{https://github.com/simoncarlen/forecasting_project}} for the project.
 
 %is shown in Figure \ref{fig:dataflow}. Historical air pollution data from several monitoring stations, together with meteorological data from one station, was retrieved, preprocessed (with some features engineered), and divided into data windows. Three deep learning models (feed forward neural network, RNN, and LSTM) were trained and tested for short-term predictions (one hour ahead) of PM$_{10}$ for one station at Torkel Knutssongatan (measuring urban background levels, see Table \ref{tab:stations}). As baseline models for comparison, multiple linear regression and ARIMA were used. Detailed descriptions of each step in the process are given in subsequent sections. 
 
@@ -19,7 +19,7 @@ The programming language used was Python, together with several libraries for sc
 \subsection{Data sources}
 \label{sec:data-sources}
 
-Air pollution data was retrieved from the Swedish Meteorological and Hydrological Institute's (SMHI) centralized database for air quality measurements \cite{smhi-luftmatningar}. This data is part of the national and regional environmental monitoring of Sweden, a program coordinated and funded by the Swedish Environmental Protection Agency (Swedish EPA) and the Swedish Agency for Marine and Water Management. There are in total ten different program areas, of which air is one, and all data are licensed under CC0 and therefore freely accessible to the public \cite{naturvardsverket-miljodata}. For the national air monitoring (under Swedish EPA's responsibility), SMHI acts as a national data host and stores (quality checked) historical data reported yearly from municipalities in Sweden \cite{smhi-luftmatningar}.
+Air pollution data was retrieved from the Swedish Meteorological and Hydrological Institute's (SMHI) centralized database for air quality measurements \cite{smhi-luftmatningar}. This data is part of the national and regional environmental monitoring of Sweden, a program coordinated and funded by the Swedish Environmental Protection Agency (Swedish EPA) and the Swedish Agency for Marine and Water Management. There are in total ten different program areas, of which air is one, and all data are licensed under CC0 and therefore freely accessible to the public \cite{naturvardsverket-miljodata}. For the national air monitoring (under Swedish EPA's responsibility), SMHI is the national data host and stores quality checked historical data reported yearly from municipalities in Sweden \cite{smhi-luftmatningar}.
 
 \subsubsection{Monitoring stations}
 In Stockholm County, there are 19 stationary sites for air pollution monitoring \cite{slb-matningar}, and initially, data from each was considered. However, not all sites measure hourly NO$_2$, and for some sites the data were irregular. Therefore, data from four sites with hourly NO$_2$ measurements (in \textmugreek g/m$^3$) for the time period 2016-01-01 to 2022-01-01 was subsequently chosen, giving a total of 52,609 data points. (However, as explained further below, a year worth of data, i.e., 8760 data points were subsequently excluded.) For the station at which NO$_2$ predictions were to be made (Torkel Knutssonsgatan), hourly meteorological data was also utilized. More specifically, these meteorological variables included temperature (in $^\circ$C), precipitation (mm), atmospheric pressure (hPa), relative humidity (as \%), solar radiation (W/m$^2$), and wind speed (m/s). The meteorological data were downloaded from SLB-analys' webpage \cite{slb-analys-meteorologi}. 
@@ -89,7 +89,7 @@ where timestamp is in UNIX epoch time\footnote{The UNIX epoch time for a given t
 \begin{figure}[h] 
 \begin{center}
 %\makebox[\textwidth][c]{\includegraphics[width=.585\textwidth]{../plots/time_signals}}
-\includegraphics[scale=1.05]{../plots/time_signals}
+\includegraphics[scale=1.025]{../plots/time_signals}
 \caption{Temporal variables for day as sine and cosine waves.}
 \label{fig:time_sine_cos}
 \end{center}
@@ -130,7 +130,7 @@ At this point, with many input variables in the model, recursive feature elimina
 
 \begin{figure}[h] 
 \begin{center}
-\includegraphics[scale=1.05]{../plots/RMSE_predictors}
+\includegraphics[scale=1]{../plots/RMSE_predictors_NEW}
 \caption{RMSE for each candidate model generated by RFE.}
 \label{fig:RFE}
 \end{center}
@@ -176,42 +176,81 @@ It should be emphasized that these two model fitting strategies differ in that t
 
 \subsubsection{Hyperparameter tuning}
 \label{sec:tuning_deep_learning}
-For all deep learning models, the hyperparameters tuned were; number of hidden layers (up to five were tested), number of units in each hidden layer (32--512, with step size 32), and learning rate (sampled in the range $[1\times10^{-5},\: 1\times10^{-2}]$). For the two dense models, ReLU was used as activation function, whereas for the RNN, LSTM, and GRU models, the tanh function was used. 
-
-To prevent overfitting, a dropout layer was added after each hidden layer for the dense models, whereas for the simple RNN, LSTM, and GRU models, recurrent dropout were used. For all models, the dropout rate was also tuned (0.0--0.5 with step size 0.1, where a dropout rate of zero is equivalent to no dropout). The simple RNN, LSTM, and GRU models all had a dense output layer, and to regularize this as well, a dropout layer was added before the dense output (where the dropout rate was tuned as described above). 
+For all deep learning models, the hyperparameters tuned were; number of hidden layers (up to five were tested), number of units in each hidden layer (32--512, with step size 32), and initial learning rate (sampled in the range $[1\times10^{-5},\: 1\times10^{-2}]$). Also (for all models), to adapt the learning rate, the Adam optimizer was used \cite{chollet2015keras}. For the two dense models, ReLU was used as activation function whereas for the simple RNN, LSTM, and GRU models, the tanh function was used. To prevent overfitting, a dropout layer was added after each hidden layer for the dense models, whereas for the simple RNN, LSTM, and GRU models, recurrent dropout were used. The dropout rate was also tuned (0.0--0.5 with step size 0.1, where a dropout rate of zero is equivalent to no dropout). The simple RNN, LSTM, and GRU models all had a dense output layer, and to regularize this as well, a dropout layer was added before the dense output (where the dropout rate was also tuned as described above). 
 %If a model showed signs of overfitting (to check this, the learning curves during training were consulted), a drop-out layer was added after each layer, where the dropout rate was also tuned (0.0--0.5, with step size 0.05). Moreover, input windows of different lengths (3, 6, 12, and 24 h) were tested for all models as well. 
 
-Due to the large number of hyperparameter combinations (making it infeasible to test all within a reasonable amount of time), the Bayesian optimization tuner provided by the Keras library was used \cite{omalley2019kerastuner}. This tuner uses Gaussian processes to select hyperparameters that are likely to improve the model given previous results, and it was assumed that convergence to an optimal set of hyperparameters would be found relatively quickly (maximum number of trials were set to 50). 
+Due to the large number of hyperparameter combinations (making it infeasible to test all within a reasonable amount of time), the Bayesian optimization tuner provided by the Keras library was utilized \cite{omalley2019kerastuner}. This tuner uses Gaussian processes to select hyperparameters that are likely to improve the model given previous results, and it was assumed that convergence to an optimal set of hyperparameters would be found relatively quickly (maximum number of trials were set to 50). 
 %Furthermore, the same input variables as for the final MLR model were used in all deep learning models as this provides a more direct comparison of the performance between the two type of models.
 As a last step, the optimal number of epochs were tuned as well, and the final models were re-trained with the best set of hyperparameters (including the best epoch), and finally evaluated on the test sets. 
 
-The best set of hyperparameters for each model are given in \cref{tab:hyperparams}. For the models that were fit with rolling windows, the length of the input windows can be viewed as a hyperparameter as well, and in \cref{tab:hyperparams}, only the window length (indicated in parentheses) for the best performing models are given.
+The best set of hyperparameters for each model are given in \cref{tab:hyperparams}. For the models that were fit with rolling windows, the length of the input windows can be viewed as a hyperparameter as well, and in \cref{tab:hyperparams}, only the window length (indicated in parentheses) for the best performing models are given. 
 
-% Please add the following required packages to your document preamble:
-% \usepackage{booktabs}
-% \usepackage{graphicx}
+%\begin{table}[h]
+%\centering
+%\caption{The best set of hyperparameters for each model. (NA = not applicable.)}
+%\label{tab:hyperparams}
+%\resizebox{\textwidth}{!}{%
+%\begin{tabular}{@{}lllllll@{}}
+%\toprule
+%Model &
+%  Learning rate &
+%  \begin{tabular}[c]{@{}l@{}}Units/dropout,\\ 1st layer\end{tabular} &
+%  \begin{tabular}[c]{@{}l@{}}Units/dropout,\\ 2nd layer\end{tabular} &
+%  \begin{tabular}[c]{@{}l@{}}Units/dropout,\\ 3rd layer\end{tabular} &
+%  \begin{tabular}[c]{@{}l@{}}Units/dropout,\\ 4th layer\end{tabular} &
+%  \begin{tabular}[c]{@{}l@{}}Dropout before\\ output layer\end{tabular} \\ \midrule
+%Dense model      & $1\times10^{-5}$ & 512 / 0.0 & 32 / 0.0 & 512 / 0.3 & 32 / 0.0  & NA \\
+%Dense model (6h) & $1\times10^{-5}$ & 512 / 0.0 & -        & -         & -         & NA  \\
+%RNN model (12h)  & $1\times10^{-5}$ & 32 / 0.0  & 32 / 0.0 & -         & -         & 0.0 \\
+%LSTM model (12h) & $1\times10^{-4}$ & 32 / 0.0  & 32 / 0.0 & -         & -         & 0.0 \\
+%GRU (24h)        & $1\times10^{-5}$ & 32 / 0.5  & 32 / 0.0 & 32 / 0.4  & 256 / 0.5 & 0.0 \\ \bottomrule
+%\end{tabular}}
+%\end{table}
+
 \begin{table}[h]
 \centering
-\caption{The best set of hyperparameters for each model. (NA = not applicable.)}
+\caption{The best set of hyperparameters for each model.}
 \label{tab:hyperparams}
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{@{}lllllll@{}}
-\toprule
-Model &
-  Learning rate &
-  \begin{tabular}[c]{@{}l@{}}Units/dropout,\\ 1st layer\end{tabular} &
-  \begin{tabular}[c]{@{}l@{}}Units/dropout,\\ 2nd layer\end{tabular} &
-  \begin{tabular}[c]{@{}l@{}}Units/dropout,\\ 3rd layer\end{tabular} &
-  \begin{tabular}[c]{@{}l@{}}Units/dropout,\\ 4th layer\end{tabular} &
-  \begin{tabular}[c]{@{}l@{}}Dropout before\\ output layer\end{tabular} \\ \midrule
-Dense model      & $1\times10^{-5}$ & 512 / 0.0 & 32 / 0.0 & 512 / 0.3 & 32 / 0.0  & NA  \\
-Dense model (6h) & $1\times10^{-5}$ & 512 / 0.0 & -        & -         & -         & NA  \\
-RNN model (12h)  & $1\times10^{-5}$ & 32 / 0.0  & 32 / 0.0 & -         & -         & 0.0 \\
-LSTM model (12h) & $1\times10^{-4}$ & 32 / 0.0  & 32 / 0.0 & -         & -         & 0.0 \\
-GRU (24h)        & $1\times10^{-5}$ & 32 / 0.5  & 32 / 0.0 & 32 / 0.4  & 256 / 0.5 & 0.0 \\ \bottomrule
+\begin{tabular}{lccccccccc}
+\hline
+\multirow{2}{*}{Model} & \multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}Initial learning \\ rate\end{tabular}} & \multicolumn{2}{c}{1st layer} & \multicolumn{2}{c}{2nd layer} & \multicolumn{2}{c}{3rd layer} & \multicolumn{2}{c}{4th layer} \\ \cline{3-10} 
+ &  & Units & \begin{tabular}[c]{@{}c@{}}Dropout\\ rate\end{tabular} & Units & \begin{tabular}[c]{@{}c@{}}Dropout\\ rate\end{tabular} & Units & \begin{tabular}[c]{@{}c@{}}Dropout\\ rate\end{tabular} & Units & \begin{tabular}[c]{@{}c@{}}Dropout\\ rate\end{tabular} \\ \hline
+Dense model & $1\times10^{-5}$ & 512 & 0.0 & 32 & 0.0 & 512 & 0.3 & 32 & 0.0 \\
+Dense model (6h) & $1\times10^{-5}$ & 512 & 0.0 & - & - & - & - & - & - \\
+Simple RNN model (12h) & $1\times10^{-5}$ & 32 & 0.0 & 32 & 0.0 & - &  & - &  \\
+LSTM model (12h) & $1\times10^{-4}$ & 32 & 0.0 & 32 & 0.0 & - &  & - &  \\
+GRU model (24h) & $1\times10^{-5}$ & 32 & 0.5 & 32 & 0.0 & 32 & 0.4 & 256 & 0.5 \\ \hline
 \end{tabular}%
 }
 \end{table}
+
+%\begin{table}
+%  \begin{threeparttable}
+%    \caption{Sample ANOVA table}
+%     \begin{tabular}{lllll}
+%        \toprule
+%        Stubhead & \( df \) & \( f \) & \( \eta \) & \( p \) \\
+%        \midrule
+%                 &     \multicolumn{4}{c}{Spanning text}     \\
+%        Row 1    & 1        & 0.67    & 0.55*       & 0.41    \\
+%        Row 2    & 2        & 0.02    & 0.01       & 0.39    \\
+%        Row 3    & 3        & 0.15    & 0.33       & 0.34    \\
+%        Row 4    & 4        & 1.00    & 0.76       & 0.54    \\
+%        \bottomrule
+%     \end{tabular}
+%    \begin{tablenotes}
+%      \small
+%      \item[*] This is where authors provide additional information about
+%      the data, including whatever notes are needed.
+%    \end{tablenotes}
+%  \end{threeparttable}
+%\end{table}
+
+% Please add the following required packages to your document preamble:
+% \usepackage{multirow}
+% \usepackage{graphicx}
+
 
 %The Keras Tuner library \cite{omalley2019kerastuner} was used to find the best set of hyperparameters for each model (except for the MLR and ARIMA models used as baseline). 
 %%Hyperparameters at both the model architecture-level as well as the input data-level were included in the search space. More specifically, at the input data-level, the width of the windows were set to 3 h, 6 h, or 12 h, and the models were fit with the different versions of the input data. 

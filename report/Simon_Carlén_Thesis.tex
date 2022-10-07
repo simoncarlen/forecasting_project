@@ -8,8 +8,23 @@
 %\usepackage{caption}
  \usepackage{lscape}
 
-%\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm,bindingoffset=6mm]{geometry}
+%\usepackage[a4paper, twoside, width=155mm, top=24mm, bottom=24mm, bindingoffset=6mm]{geometry}
 \usepackage[a4paper, width=155mm, top=24mm, bottom=24mm]{geometry}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[RO,LE]{\nouppercase{\leftmark}}
+\fancyfoot{}
+\fancyfoot[LE, RO]{\thepage}
+
+%% for page number in first page of chapter to also be on right/left side
+\fancypagestyle{plain}{%
+\fancyhf{} % clear all header and footer fields
+\fancyfoot[LE, RO]{\thepage} % except the right
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}}
+
 
 \usepackage{amsmath}
 \usepackage{mathtools}
@@ -17,9 +32,13 @@
 
 \usepackage{booktabs} % table package
 %\usepackage{tabularx} % table package for width
+%\usepackage{tablefootnote}
+\usepackage{threeparttable}
+\usepackage{multirow}
+\usepackage{graphicx} 
+
 \usepackage{lscape}
-\usepackage{fancyhdr}
-\usepackage[nottoc,numbib]{tocbibind} % references in table of contents
+\usepackage[nottoc,numbib]{tocbibind} % references in table of contents % commented out, check later!!!
 \usepackage[euler]{textgreek}
 \usepackage{upgreek}
 \usepackage{varioref}
@@ -36,12 +55,13 @@
 \usepackage{chngcntr}
 \usepackage{titlesec} % allowing subsubsections
 
+
 %\pagestyle{fancy}
 %\fancyhead{}
 %\fancyhead[LE, RO]{Research project}
 %\fancyfoot{}
 %\fancyfoot[LE, RO]{\thepage}
-%\renewcommand{\headrulewidth}{0.4pt}
+%\renewcommand{\headrulewidth}{0.4pt}    
 %\renewcommand{\footrulewidth}{0.4pt}
 %\showthe\textwidth
 
@@ -65,87 +85,59 @@
 % TITLEPAGE
 \input{chapters/titlepage}
 
+% set new geometry after title page
+\newgeometry{a4paper, twoside, width=155mm, top=24mm, bottom=24mm, bindingoffset=6mm}
+
 % ABSTRACT
 \chapter*{Abstract}
-\thispagestyle{empty}
-In today's world, ambient air pollution is a pressing environmental concern, as the majority of the world's population is regularly exposed to air pollution levels higher than what is deemed healthy. To mitigate harmful effects, city air is regularly monitored, and such monitoring can produce massive amounts of data. This enables the development of statistical and machine learning techniques for detailed air quality forecasts. The data from multi-sensor air monitoring systems can be challenging to utilize though, as there are dependencies over both space and time. However, for this type of problem, deep neural network models have shown promising results, and in this work, several neural network architectures, as well as a more straightforward multiple linear regression technique, are developed to forecast nitrogen dioxide levels at a forecast horizon of one hour. For several evaluation metrics, the neural network models outperformed the multiple linear regression model. However, none of the models had the desired structure of the forecast errors, and all models failed to successfully capture sudden pollution peaks. Nevertheless, the results point to an advantage for the more complex neural network techniques, and further advances in the field of deep learning, together with higher resolution data, have the potential to improve air quality forecasts even more and cross conventional limits. \\ 
-
-\noindent
-\emph{\textbf{Keywords}:} Air pollution forecasts, neural networks, linear regression, time series analysis, nitrogen dioxide
+\input{chapters/abstract}
 
 % SYNOPSIS
 \chapter*{Synopsis}
-\thispagestyle{empty}
-
-\paragraph{Background}
-To mitigate the harmful effects of air pollution, air quality is regularly monitored. Such monitoring produces massive amounts of data, and this enables the development of statistical and machine learning techniques for modeling and forecasting of air pollution.
-\paragraph{Problem}
-Air pollution is a complex phenomenon depending on many factors, and the data from air monitoring has both temporal and spatial dependencies. This makes modeling and forecasting a challenge, and the research problem in this work is: \textit{To capture and model the complex dynamics of air pollution with machine learning methods, with an emphasis on deep learning}.
-
-\paragraph{Research Question}
-The research question for the thesis is: \textit{How can machine learning, in particular deep learning, be used to forecast air pollution levels and pollution peaks?} The research question emphasizes pollution peaks, as these are much harder to accurately predict and forecast than pollution levels at lower ranges.  %Also, sudden jerky leaps, where pollution levels quickly rise tend to give strongly underestimated predictions, and this can have undesired consequences
-%
-%All type of forecasts are always imprecise, and generally for air pollution forecasts, the largest errors are seen during episodes with high pollution levels. Also, sudden jerky leaps, where pollution levels quickly rise tend to give strongly underestimated predictions, and this can have undesired consequences. The research question in this work are therefore as follows: 
-
-\paragraph{Method}
-Data was downloaded from SMHI's centralized database for air measurements, carefully examined, and thereafter preprocessed before a linear regression and several deep learning models were fit. All models were trained with historical data and later evaluated on the most recent (test) data. An important aspect of model evaluation was a close examination of the forecast errors. The Python programming language was used together with libraries for scientific programming and data science/machine learning.
-
-\paragraph{Result}
-All deep learning models outperformed the linear regression model. However, for all models, the structure of the forecast errors were not as desired, and this warrants further model refinements. The structure of the errors were due to the inability of the models to capture pollution peaks well. Though the deep learning models showed promising potential, in light of the research question, the results were unsatisfactory. 
-
-\paragraph{Discussion}
-The forecast horizons in this work (one hour) are very short-term, which limits usability. To this end, however, adaptations to extend the forecast horizons are possible. Further adaptations to include more than just one air pollutant is also an option; this would result in comprehensive forecasts that could be of great value to public health authorities and policymakers, as it could permit early interventions to protect public health, and vulnerable groups in particular.
+\input{chapters/synopsis}
 
 % ACKNOWLEDGEMENTS
 \chapter*{Acknowledgements}
-\thispagestyle{empty}
+\input{chapters/acknowledgements}
 
-First of all, I would like to give a large amount of thanks to my supervisor Sindri Magnússon, as well as my co-supervisor Ali Beikmohammadi, for guiding me through this project. Your help has been indispensable. I would also like to thank the reviewer, Petter Karlström, for valuable feedback on the first thesis draft. Lastly, I would like to thank my fiancée Anna for all the support and love you continuously give. Without you, this thesis would not have been possible. 
 
-\tableofcontents
-\thispagestyle{plain}
+% TABLE OF CONTENTS
+%\tableofcontents
+%\thispagestyle{plain}
 
+% used method from: https://tex.stackexchange.com/questions/5787/table-of-contents-with-page-style-empty 
+% to remove page number in TOC
+\clearpage                       % Otherwise \pagestyle affects the previous page.
+{                                % Enclosed in braces so that re-definition is temporary.
+  \pagestyle{empty}              % Removes numbers from middle pages.
+  \fancypagestyle{plain}         % Re-definition removes numbers from first page.
+  {
+    \fancyhf{}%                       % Clear all header and footer fields.
+    \renewcommand{\headrulewidth}{0pt}% Clear rules (remove these two lines if not desired).
+    \renewcommand{\footrulewidth}{0pt}%
+  }
+  \tableofcontents
+  \thispagestyle{empty}          % Removes numbers from last page.
+}
+
+% LIST OF FIGURES
 \listoffigures
 \setcounter{page}{1}
 \pagenumbering{roman}
 \thispagestyle{plain}
 
+% LIST OF TABLES
 \listoftables
 \thispagestyle{plain}
 
+% LIST OF ABBREVIATIONS
 \chapter*{List of Abbreviations}
-\begin{tabular}{l@{$\dots\dots$}p{12cm}}
-%Convolutional neural network\dotfill  & CNN \\
-ANOVA \dotfill &  Analysis of variance  \\
-ACF \dotfill & Autocorrelation function \\
-EHA \dotfill & Environment and Health Administration \\
-fcNN \dotfill & Fully connected neural network   \\
-GRU \dotfill & Gated recurrent unit \\
-LSTM \dotfill &  Long short-term memory\\
-MAE\dotfill & Mean absolute error \\
-MAPE \dotfill & Mean absolute percent forecast error \\
-ME \dotfill & Mean error \\
-MSE\dotfill & Mean squared error \\
-MLR \dotfill & Multiple linear regression \\
-OLS \dotfill & Ordinary least squares \\
-RNN\dotfill & Recurrent neural network \\
-RFE \dotfill & Recursive feature elimination \\
-RMSE\dotfill & Root mean squared error\\
-PM \dotfill & Particulate matter \\
-QQ  \dotfill & Quantile-Quantile \\
-SGD \dotfill & Stochastic gradient descent \\
-SMHI\dotfill & Swedish Meteorological and Hydrological Institute \\
-SVR \dotfill & Support vector regression \\
-SLB-analys \dotfill & Stockholms Luft- och Bulleranalys \\
-VOCs \dotfill & Volatile organic compounds \\
-WHO \dotfill & World Health Organization \\
-\end{tabular}
+\input{chapters/listofabbreviations}
 
 \addcontentsline{toc}{chapter}{List of Abbreviations}
-
 \addtocontents{toc}{\bigskip}
 
-
+% START OF THESIS CHAPTERS
 \chapter{Introduction}
 \setcounter{page}{1}
 \pagenumbering{arabic}
@@ -163,26 +155,48 @@ WHO \dotfill & World Health Organization \\
 \chapter{Conclusions}
 \input{chapters/discussion}
 
-% references section
+% REFERENCES
 \bibliography{references}{}
 \bibliographystyle{ieeetr}
+%\addtocontents{toc}{\bigskip} % added according to thesis template
+%\addcontentsline{toc}{part}{Bibliography} % added according to thesis template
+
 %\bibliographystyle{agsm}
 
-%\appendix
-%\chapter{Monitoring Stations}
-%\input{chapters/appendix_A}
-\chapter*{Appendices}
-\counterwithin{figure}{section}
-\counterwithin{table}{section}
-%% provide three setup instructions:
-\addcontentsline{toc}{chapter}{Appendices} % write to the toc file
-\setcounter{section}{0}
-\renewcommand\thesection{\Alph{section}}
+% APPENDICES
+\appendix
+\addcontentsline{toc}{part}{Appendices}
 
-\section{Monitoring stations}
+\chapter{Monitoring Stations}
 \input{chapters/appendix_A}
-\section{Model diagnostics and summary statistics for the multiple linear regression models}
+
+\chapter{Model diagnostics and summary statistics for the multiple linear regression models}
 \input{chapters/appendix_B}
-\section{Histogram and qq-plots of the forecast errors, Box-Pierce test results, and results from the Dunn's test}
+
+\chapter{Histogram and qq-plots for the forecast errors, Box-Pierce test results, and results from the Dunn's test}
 \input{chapters/appendix_C}
+
+\chapter{Reflection document}
+\input{chapters/reflection_document}
+
+%\chapter*{Appendices}
+%\counterwithin{figure}{section}
+%\counterwithin{table}{section}
+%%% provide three setup instructions:
+%\addcontentsline{toc}{chapter}{Appendices} % write to the toc file
+%\setcounter{section}{0}
+%\renewcommand\thesection{\Alph{section}}
+%
+%\section{Monitoring stations}
+%\input{chapters/appendix_A}
+%\section{Model diagnostics and summary statistics for the multiple linear regression models}
+%\input{chapters/appendix_B}
+%\section{Histogram and qq-plots of the forecast errors, Box-Pierce test results, and results from the Dunn's test}
+%\input{chapters/appendix_C}
+
+%\newpage % empty page in end of thesis
+%\thispagestyle{plain} % empty
+%\mbox{}
+\newpage\null\thispagestyle{empty}\newpage
+
 \end{document}
